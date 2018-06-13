@@ -1,0 +1,562 @@
+
+<script type="text/javascript">
+var default_level_1 = "{{ multilevel_barchart_1.default_level_1 }}"
+var default_level_2 = "{{ multilevel_barchart_1.default_level_2 }}"
+
+</script>
+
+
+
+
+<div class="graficos_interativos" class="grid">
+<h2 class="title_primary">Stacked bar</h2>
+<p>Selecione o elemento abaixo e a dimensão que deseja visualizar.</p>
+
+<!-- Botoes para abrir o modal de filtragem do grafico multinivel -->
+<div class="content_section__actions row">
+	<div class="col-md-3">
+    <h4 class="title_secondary">
+      Elemento <small>(eixo Y)</small>
+			<a href="#modalElemento" role="button" data-target="#modalElemento" data-toggle="modal">
+				<i class="fa fa-plus"></i></a>
+    </h4>
+    <a class="btn btn-tag active a_button" href="#modalElemento" id="elemento_legend_label" role="button" data-target="#modalElemento" data-toggle="modal"></a>
+
+
+    <span class="span_ordena" id="ordena_barchart_ordena" style="margin-left:10px">
+			<button id="ordena_barchart_y_axis" class="btn btn-default" data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Eixo Y crescente" data-original-title="Ordena pelo eixy Y">
+				<i class="glyphicon glyphicon-sort-by-alphabet ordena_barchart_ordena"></i>
+			</button>
+				<button id="ordena_barchart_y_axis-rev" class="btn btn-default" data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Eixo Y descrescente" data-original-title="Ordena pelo eixy Y">
+					<i class="glyphicon glyphicon-sort-by-alphabet-alt ordena_barchart_ordena"></i>
+				</button>
+				<button id="ordena_barchart_qt" class="btn btn-default"  data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Eixo X crescente" data-original-title="Ordena pelo tamanho das barras">
+					<i class="glyphicon glyphicon-sort-by-order ordena_barchart_ordena"></i>
+				</button>
+				<button id="ordena_barchart_qt-rev" class="btn btn-default" data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Eixo X decrescente" data-original-title="Ordena pelo tamanho barras">
+					<i class="glyphicon glyphicon-sort-by-order-alt ordena_barchart_ordena"></i>
+				</button>
+		</span>
+	</div>
+
+	<div class="col-md-3">
+    <h4 class="title_secondary">
+      Estratificação <small>(detalhamento)</small>
+			<a href="#modalExtratificacao" role="button" data-target="#modalExtratificacao" data-toggle="modal">
+				<i class="fa fa-plus"></i></a>
+    </h4>
+    <a class="btn btn-tag active a_button" href="#modalExtratificacao" id="extratificacao_legend_label" role="button" data-target="#modalExtratificacao" data-toggle="modal"></a>
+
+    <span  class="span_ordena" id="ordena_barchart_estrat" style="margin-left:10px">
+			<button id="ordena_barchart_anterior" class="btn btn-default" data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Ordena pelo elemento anterior" data-original-title="Ordena os elementos estratificados">
+				<i class="glyphicon glyphicon-menu-left ordena_barchart_ordena"></i>
+			</button>
+				<button id="ordena_barchart_proximo" class="btn btn-default" data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Ordena pelo próximo elemento" data-original-title="Ordena os elementos estratificados">
+					<i class="glyphicon glyphicon-menu-right ordena_barchart_ordena"></i>
+				</button>
+		</span>
+
+	</div>
+
+  <div class="col-md-3">
+    <h4 class="title_secondary">
+      Normalização
+    </h4>
+    <a class="btn btn-tag active a_button"  id="normaliza_pct_abs" role="button" >(% / Absoluto)</a>
+	</div>
+
+  <div id="tooltip" class="hidden">
+      <p><span id="value">100</span>
+      </p>
+  </div>
+</div>
+
+
+
+<!-- Modais dos botoes de selecao do grafico multinivel -->
+<div id="modalElemento" class="modal" data-easein="swoopIn" tabindex="-2" role="dialog" aria-labelledby="labelModalExtratificacao" aria-hidden="false">
+  <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+         <h4 class="modal-title" id="labelModalExtratificacao">Elemento (Eixo Y)</h4>
+       </div>
+       <div class="modal-body">
+				 <div id="eixo_y">
+           <p>Selecione o elemento do gráfico a ser gerado. Os elementos serão posicionados no eixo Y, para comparação entre eles.</p>
+           {% for mb in  multilevel_barchart_1.y_axis %}
+             <input type="radio" name="rb_eixo_y" value="{{ mb.value }}">
+             <label for="{{ mb.value }}">{{ mb.label }}</label><br>
+           {% endfor %}
+         </div>
+       </div>
+		 </div>
+  </div>
+</div>
+
+<div id="modalExtratificacao" class="modal" data-easein="swoopIn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+  <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+         <h4 class="modal-title" id="myModalLabel">Extratificação (Detalhamento)</h4>
+       </div>
+       <div class="modal-body">
+				 <div id="eixo_x">
+           <p>O item aqui selecionado irá extratificar o elemento selecionado no Eixo Y.</p>
+            {% for mb in  multilevel_barchart_1.y_stratification %}
+              <input type="radio" name="rb_eixo_x" value="{{ mb.value }}">
+              <label for="{{ mb.value }}">{{ mb.label }}</label><br>
+            {% endfor %}
+         </div>
+		   </div>
+     </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+  /*
+  * Funcao para normalizar de barra com valor absoluto para barra com valor percentual.
+  */
+  function normalizaDataset(dataset){
+
+  	total = {}
+  	normalizador = {}
+
+  	/*
+  	* Calcula a maior barra.
+  	*/
+  	dataset.map(function(elem){
+  		elem.data.map(function(d){
+  			if (!(d.val in total)){total[d.val] = 0}
+  			total[d.val] += d.count
+  		})
+  	})
+  	maxValue = Object.keys(total).reduce(function(a, b){ return total[a] > total[b] ? a : b });
+
+  	/*
+  	* Calcula o fator de ajuste para normalizar o grafico de barras.
+  	*/
+  	Object.keys(total).map(function(key, index) {
+  		fator = total[maxValue]/total[key]  ;
+  		normalizador[key] = fator;
+  	});
+
+  	/*
+  	* Normaliza os dados
+  	*/
+  	dataset.map(function(elem){
+  		elem.data.map(function(d){
+  			d.count = d.count * normalizador[d.val]
+  		})
+  	})
+  	return dataset
+  }
+
+
+  </script>
+
+
+
+<script>
+// var parentDiv = document.getElementById("content_section");
+var parentDiv = $( ".content_section" )[0]
+
+var margins = {
+    top: 12,
+    left: 50,
+    right: 50,
+    bottom: 0
+},
+legendPanel = {
+    width: 180
+},
+width = parentDiv.clientWidth - margins.left - margins.right;
+
+
+var y_state = 'asc'
+var bar_state = 'desc'
+var normaliza_tgl = false
+
+
+function arrayRotate(arr, reverse){
+  if(reverse)
+    arr.unshift(arr.pop())
+  else
+    arr.push(arr.shift())
+  return arr
+}
+
+
+
+function Comparator(a, b) {
+	// Para ordenar o array de objetos com base no valor do count do primeiro objeto.
+	// console.log(b)
+	// console.log(a)
+	// debugger;
+	if (a.count < b.count) return -1;
+	if (a.count > b.count) return 1;
+	return 0;
+}
+
+
+function drawStackChart(original_dataset, redraw_legend, y_axis, qt_bar, normaliza, order_estrat){
+  if (order_estrat){
+		// console.log(original_dataset)
+    if (order_estrat == 'next'){
+      arrayRotate(original_dataset)
+    }
+    else if  (order_estrat == 'prev'){
+      arrayRotate(original_dataset, true)
+    }
+  }
+
+  if (y_axis){y_state = y_axis; bar_state = null}
+  if (qt_bar){bar_state = qt_bar; y_axis = null}
+
+
+  // Deep copy original array of objects
+  var dataset = $.map(original_dataset, function (obj) {
+                        return $.extend(true, {}, obj);
+                    });
+
+	// console.log(original_dataset)
+	// console.log(dataset[0].data)
+
+	dataset[0].data = dataset[0].data.sort(Comparator);
+	// console.log(dataset)
+	// debugger;
+
+  // Toogle normalization
+  if (normaliza){
+    normaliza_tgl = ! normaliza_tgl
+  }
+  if (normaliza_tgl){
+    dataset = normalizaDataset(dataset);
+  }
+
+
+
+  // Cleanup DOM before redraw.
+  $('#facet_multiplo').empty()
+  $('#facet_multiplo').append('<div class="resize-legend"></div>')
+
+  var larger_item = 0;
+  var larger_legend = 0;
+
+  // var qt_items_horiz = Object.keys(dataset).length;
+  var qt_items_vert = dataset['0']['data'].length;
+  var height = (20 * qt_items_vert);
+  var total = {}
+
+
+
+  series = dataset.map(function (d) {
+      return d.name;
+  }),
+  dataset = dataset.map(function (d) {
+      // Sorteia pelo eixo Y
+      d.data   = sortByKey(d.data, 'val');
+
+      if (larger_legend < d.name.length){
+        larger_legend = d.name.length
+      }
+
+
+      return d.data.map(function (o, i) {
+          totalization(o.val, o.count)
+
+          if (larger_item < o.val.length){
+            larger_item = o.val.length
+          }
+
+          return {
+              y: o.count,
+              x: o.val,
+          };
+
+      });
+  }),
+  stack = d3.layout.stack();
+
+  if (bar_state){
+    dataset = sortBytotal(dataset);
+  }
+  stack(dataset);
+
+  // Totaliza por barra
+  function totalization(key, val){
+    if (key in total){total[key] += val}
+    else{total[key] = val}
+  }
+
+  // Sorteia por barra
+  function sortBytotal(dataset){
+    return dataset.map(function(array){
+      sorted =  array.sort(function(a,b){
+        var x = total[a.x]; var y = total[b.x];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+      })
+      if (bar_state == 'asc'){ return sorted }
+      else if (bar_state == 'desc'){ return sorted.reverse() }
+
+      })
+  }
+
+  /*
+  * Funcao para ordenar o array de dict, que vem desordenado.
+  */
+  function sortByKey(array, key) {
+      sorted = array.sort(function(a, b) {
+          var x = a[key]; var y = b[key];
+          return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+      });
+
+      if (y_state == 'asc'){ return sorted }
+      else if (y_state == 'desc'){ return sorted.reverse() }
+  }
+
+  // debugger;
+
+  /*
+  Configura a altura minima da div do grafico de acordo com a altura da div da
+  legenda, para o caso da altura da div da legenda ser maior que altura da
+  div do  grafico.
+  */
+  var height_chart = height ;
+  if (height_chart  < 400){
+    height_chart = 400
+  }
+
+  var height_legend = 15 * dataset.length;
+  // debugger;
+
+  if (height_legend  < 400){
+    $('.resize-legend').height(15 * dataset.length + 50)
+  }
+
+  var colours = d3.scale.category10()
+
+  /*
+  Se a funcao eh chamada para redesenhar somente a legenda, nao executa o resto
+  senao multiplica os graficos na tela.
+  */
+  if (! redraw_legend){
+    var dataset = dataset.map(function (group) {
+        return group.map(function (d) {
+            // Invert the x and y values, and y0 becomes x0
+            return {
+                x: d.y,
+                y: d.x,
+                x0: d.y0
+            };
+        });
+    }),
+
+
+    svg = d3.select('#facet_multiplo')
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height_chart)
+        .attr('display', 'block')
+        .attr('margin', 'auto')
+        // .attr("preserveAspectRatio", "xMinYMin meet")
+        .call(responsivefy)
+
+        .append('g')
+        .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')'),
+    xMax = d3.max(dataset, function (group) {
+        return d3.max(group, function (d) {
+            return d.x + d.x0;
+        });
+    }),
+
+    xScale = d3.scale.linear()
+        .domain([0, xMax])
+        .range([0, width]),
+    months = dataset[0].map(function (d) {
+        return d.y;
+    }),
+    // _ = console.log(months),
+
+    yScale = d3.scale.ordinal()
+        .domain(months)
+        .rangeRoundBands([0, height], .1),
+
+    groups = svg.selectAll('g')
+        .data(dataset)
+        .enter()
+        .append('g')
+        .style('fill', function (d, i) {
+        return colours(i);
+    }),
+    rects = groups.selectAll('rect')
+        .data(function (d) {
+        return d;
+    })
+        .enter()
+        .append('rect')
+        .attr('transform', 'translate(0,' + 1 + ')')
+
+        .attr('x', function (d) {
+        return xScale(d.x0);
+    })
+        .attr('y', function (d, i) {
+        return yScale(d.y);
+    })
+        .attr('height', function (d) {
+        return yScale.rangeBand();
+    })
+        .attr('width', function (d) {
+        return xScale(d.x);
+    })
+        .on('mouseover', function (d) {
+        var xPos = parseFloat(d3.select(this).attr('x')) / 2 + width / 2;
+        var yPos = parseFloat(d3.select(this).attr('y')) + yScale.rangeBand() / 2;
+
+        d3.select('#tooltip')
+            .style('left', xPos + 'px')
+            .style('top', yPos + 'px')
+            .select('#value')
+            .text(d.x);
+
+        d3.select('#tooltip').classed('hidden', false);
+    })
+        .on('mouseout', function () {
+        d3.select('#tooltip').classed('hidden', true);
+    })
+
+
+
+    xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient('bottom'),
+
+    yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient('left')
+        .innerTickSize(-width)
+        .outerTickSize(0)
+        .tickPadding(10),
+
+    yAxisRight = d3.svg.axis()
+        .scale(yScale)
+        .orient('left')
+        .outerTickSize(0),
+
+    svg.append('g')
+        .attr('class', 'axis')
+        .attr('transform', 'translate(0,' + height + ')')
+        .call(xAxis);
+
+    svg.append('g')
+        .attr('class', 'axis')
+        .call(yAxis)
+        .attr('transform', 'translate(0,' + -9 + ')')
+        .selectAll("text")
+        .attr("transform", 'translate( 0, 10 )')
+        .attr( "fill-opacity", // Opacidade do texto do exido da esquerda
+          function(d){
+            if (larger_item <= 6){return 100}
+            else{ return 0 }
+          })
+
+    svg.append('g')
+        .attr('class', 'axis')
+        .call(yAxisRight)
+        .attr('transform', 'translate(' + width + ',' + -9 + ')')
+        .selectAll("text")
+        .attr("transform", 'translate( 0, 10 )')
+        .attr( "fill-opacity", // Opacidade do texto do exido da direita
+          function(d){
+            if (larger_item > 6){return 100}
+            else{ return 0 }
+          })
+  }
+
+
+  /*
+  * Legenda
+  */
+
+  if (larger_legend < extratificacao_legend_label.length){
+    larger_legend = extratificacao_legend_label.length + 17
+  }
+  svg_legend = d3.select('.resize-legend')
+      .append('svg')
+      .attr('width', function(d){
+        // debugger;
+        return (larger_legend * 8) + 150 // Largura do svg da div da legenda.
+      })
+      .attr('height', 15 * dataset.length + 40)
+      .append('g');
+
+  // Label da legenda
+  svg_legend.append('text')
+      .attr('fill', 'black')
+      .attr('x', 0)
+      .attr('y', 15)
+      .text(extratificacao_legend_label + ' (Estratificação)')
+      .attr("font-family", "sans-serif")
+      .attr("font-size", "20px")
+      .attr("fill", "#00008B");
+
+  // Itens da legenda
+  group_legend = svg_legend.append('g')
+      .attr("transform", "translate( 10, 25 )")
+
+  series.forEach(function (s, i) {
+      // Texto da legenda
+      group_legend.append('text')
+          .attr('fill', 'black')
+          .attr('x', 15)
+          .attr('y', i * 15 + 15)
+          .text(s);
+          // console.log(s)
+      // Cor de fundo da legenda
+      group_legend.append('rect')
+          .attr('fill', colours(i))
+          .attr('width', 10)
+          .attr('height', 10)
+          .attr('x', 0)
+          .attr('y', i * 15 + 6);
+  });
+}
+
+
+
+function responsivefy(svg) {
+    // get container + svg aspect ratio
+    var container = d3.select(svg.node().parentNode),
+        width = parseInt(svg.style("width")) + 130,
+        height = parseInt(svg.style("height")) + 100,
+        aspect = width / height;
+
+    // add viewBox and preserveAspectRatio properties,
+    // and call resize so that svg resizes on inital page load
+    svg.attr("viewBox", "0 0 " + width + " " + height)
+        .attr("perserveAspectRatio", "xMinYMid")
+        .call(resize);
+
+    // to register multiple listeners for same event type,
+    // you need to add namespace, i.e., 'click.foo'
+    // necessary if you call invoke this function for multiple svgs
+    // api docs: https://github.com/mbostock/d3/wiki/Selections#on
+    d3.select(window).on("resize." + container.attr("id"), resize);
+
+    // get width of container and resize svg to fit it
+    function resize() {
+        var targetWidth = parseInt(container.style("width"));
+        svg.attr("width", targetWidth);
+        svg.attr("height", Math.round(targetWidth / aspect));
+    }
+}
+</script>

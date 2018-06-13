@@ -1,0 +1,285 @@
+{% load staticfiles %}
+
+<!-- load the d3.js library -->
+<script src='{% static "solr_front/js/external_lib/d3js/d3.tip.v0.6.3.js" %}'></script>
+
+<style media="screen">
+
+body {padding-top:0}
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+
+.node text { font: 12px sans-serif; }
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
+}
+/* Tooltip container
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text
+}
+
+
+
+/* Tooltip text
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 1200px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below!
+  position: absolute;
+  z-index: 1;
+}
+
+
+/* Show the tooltip text when you mouse over the tooltip container
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+} */
+
+/* classe que realmente afeta o tooltip */
+.d3-tip{
+  width: auto;
+  background-color: rgba(0,0,0,.7);
+  color: #fff;
+  text-align: center;
+  /* padding: 5px 0; */
+  border-radius: 6px;
+  padding: 2px;
+  max-width: 250px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 10000!important;
+}
+</style>
+
+<div class="svg_divs" id="svg_navigation_tree_div"></div>
+<script>
+
+
+navigation_tree = {{navigation_tree|safe}}
+
+
+create_svg_navigate(navigation_tree);
+
+function create_svg_navigate(navigation_tree){
+var data = navigation_tree
+// debugger
+  var data2 = []
+  for (i = 0; i < data.length; i++) {
+    if (typeof data[i] == 'object'){
+
+      data2.push(data[i])
+    }else{
+      data2.push(JSON.parse(data[i]))
+    }
+
+    // console.log(data[i])
+  }
+
+// debugger;
+
+// *********** Convert flat data into a nice tree ***************
+// create a name: node map
+var dataMap = data2.reduce(function(map, node) {
+	map[node.id] = node;
+	return map;
+}, {});
+
+
+// create the tree array
+var treeData = [];
+data2.forEach(function(node) {
+	// add to parent
+
+	var parent = dataMap[node.parent_id];
+	if (parent) {
+		// create child array if it doesn't exist
+		(parent.children || (parent.children = []))
+			// add node to child array
+			.push(node);
+	} else {
+		// parent is null or missing
+
+		treeData.push(node);
+	}
+});
+// debugger
+//
+
+// console.log(data2)
+// console.log(dataMap)
+// console.log(treeData)
+
+
+
+// ************** Generate the tree diagram	 *****************
+var margin = {top: 20, right: 120, bottom: 20, left: 220},
+	width = 960 - margin.right - margin.left,
+	height = 200 - margin.top - margin.bottom;
+
+var i = 0;
+
+var tree = d3.layout.tree()
+	.size([height, width]);
+
+var diagonal = d3.svg.diagonal()
+	.projection(function(d) { return [d.y, d.x]; });
+$("#svg_navigation_tree_div").html('')
+var svg_tree = d3.select("#svg_navigation_tree_div").append('svg')
+	.attr("width", width + margin.right + margin.left)
+	.attr("height", height + margin.top + margin.bottom)
+  .append("g")
+	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+root = treeData[0];
+
+
+update(root);
+
+
+
+
+/*
+* Para o tooltip. Reaproveitar do d3_bv.js.
+*/
+function getNumberValue(numberText) {
+    var numberValue = parseFloat(numberText.replace("px", ""));
+    return isNaN(numberValue) ? 0 : numberValue;
+}
+
+function showTip(target, tip, d) {
+    tip.show(d);
+
+    var paddingTop = getNumberValue(tip.style("padding-top"));
+    var paddingBottom = getNumberValue(tip.style("padding-bottom"));
+    var paddingLeft = getNumberValue(tip.style("padding-left"));
+    var paddingRight = getNumberValue(tip.style("padding-right"));
+    var width = getNumberValue(tip.style("width")) + paddingLeft + paddingRight;
+    var height = getNumberValue(tip.style("height")) + paddingTop + paddingBottom;
+    var left = $(target).offset().left + ($(target).offset().width/2) - (width/2);
+    var top = $(target).offset().top - height - 10;
+
+    tip.style("left", left + "px")
+        .style("top", top + "px");
+}
+/*
+* END - Para o tooltip. Reaproveitar do d3_bv.js.
+*/
+
+
+
+
+function update(source) {
+  var tip_historico = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([10, -10])
+
+    .html(function(d) {
+      var span = document.createElement(span)
+      span = $(span)
+      span.append("<strong>" + d.title + "</strong><p>&nbsp;</p>")
+      span.append("<p>Collection: " + d.collection+"</p></br>")
+      span.append("<p>id: " + d.id + "</p></br>")
+      span.append("<p>Descrição: " + d.description + "</p></br>")
+      return span.prop('outerHTML');
+    })
+
+
+    svg_tree.call(tip_historico);
+
+  // Compute the new tree layout.
+  var nodes = tree.nodes(root).reverse(),
+	  links = tree.links(nodes);
+
+
+  // console.log(tree.nodes(root).reverse())
+  // console.log(root)
+  // console.log(nodes)
+  // Normalize for fixed-depth.
+  nodes.forEach(function(d) { d.y = d.depth * 180; });
+  // debugger;
+
+  // Declare the nodes…
+  var node = svg_tree.selectAll("g.node")
+	  //.data(nodes, function(d) { return d.id || (d.id = ++i); });
+    .data(nodes, function(d) { return d.id; });
+
+
+  // Enter the nodes.
+  var nodeEnter = node.enter().append("g")
+	  .attr("class", "node")
+	  .attr("transform", function(d) {
+		  return "translate(" + d.y + "," + d.x + ")"; })
+
+    .on('mouseover', function(d) {
+      this.style.fill = "blue";
+      this.style.textDecoration = "underline"  ;
+
+      // Tooltip
+      showTip(this, tip_historico, d);
+    })
+
+    .on('mouseout', function(d) {
+      // Link style
+      this.style.fill = "black";
+      this.style.textDecoration = "none"  ;
+
+      // Tooltip
+
+      tip_historico.hide()
+
+    })
+
+  nodeEnter.append("circle")
+	  .attr("r", 10)
+	  .style("fill", "#fff");
+
+  nodeEnter.append("text")
+	  .attr("x", function(d) {
+		  return d.children || d._children ? -13 : 13; })
+	  .attr("dy", ".35em")
+	  .attr("text-anchor", function(d) {
+		  return d.children || d._children ? "end" : "start"; })
+	  .text(function(d) { return d.title  })
+    .on("click", function(d) {
+      var href = '/pt/buscador/bv/'+d.collection + '/' + d.id + '/params/';
+      window.open(href, '_blank');
+    })
+
+	  .style("fill-opacity", 1);
+
+
+
+
+
+
+
+  // Declare the links…
+
+  var link = svg_tree.selectAll("path.link")
+	  .data(links, function(d) {  return d.target.id; });
+
+  // Enter the links.
+  link.enter().insert("path", "g")
+	  .attr("class", "link")
+	  .attr("d", diagonal);
+
+}
+}
+</script>

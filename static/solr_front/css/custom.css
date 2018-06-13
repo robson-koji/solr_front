@@ -1,0 +1,416 @@
+  .rules-group-container {
+
+  border: 1px solid #764a92 !important;
+  background-color: rgba(69, 128, 146, 0.5)!important;
+}
+.bloco{
+  background-color: "white";
+}
+
+.main {
+  /* border: 1px solid black; */
+  padding: 0;
+}
+
+.bloco_head {
+  padding: 10px !important;
+  background-color: #f3f6f8;
+  padding: 0;
+  margin: 0;
+}
+.bloco_body {
+  background-color: white;
+  padding: 0;
+  margin: 0;
+}
+
+
+.loader {
+    border: 2px solid #f3f3f3; /* Light grey */
+    border-top: 2px solid 	#0000FF; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 2s linear infinite;
+    display:inline-block;
+    vertical-align:middle;
+    margin-left: 20px;
+}
+
+#alert_screen_div_id{
+  display: table-cell;
+  vertical-align: middle;
+}
+#alert_screen{
+  display:table;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+#busca_filtra{
+    background-color: white;
+    padding-right: 20px;
+    padding-left: 20px;
+
+}
+
+#div_btns_search{
+  text-align: center;
+  clear:left;
+}
+#querybody_btn{
+  display:inline-block;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+#conteudo{
+  padding-right: 20px;
+  padding-left: 20px;
+
+}
+#pai_aux_and{
+  position: absolute;
+}
+#aux_and_esq{
+  float:left;
+  width: 45%;
+  margin: 10px;
+}
+#aux_and_dir{
+  float:right;
+  /*width: 45%;*/
+  /*padding-left: 10px;*/
+}
+
+#busca_cx_total{
+  overflow: hidden;
+}
+#querybody{
+  float: left;
+}
+
+#cx_totalizacao{
+  margin-top:23px;
+  float: right;
+  display: none;
+}
+
+.cx_totalizacao_qt {
+  text-align: right;
+  padding-right: 5px;
+}
+
+.panel-heading{
+  display:inline-flex;
+  width: 100%
+}
+
+#first_section{
+  padding-top: 10px;
+}
+
+hr { margin: 5px 0 5px 0; }
+
+svg>g:after {
+  /*margin: -1px 0 0 0;*/
+  /*top: 100%;*/
+  /*left: 0;*/
+  fill: red;
+}
+
+path.line_chart {
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path{
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+.axis line {
+    fill: none;
+    stroke: #DCDCDC;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 60px;
+    height: 28px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+/*
+.grid .tick {
+    stroke: lightgrey;
+    opacity: 0.7;
+}
+.grid .tick text{
+    stroke: black;
+    opacity: 0.7;
+}
+
+
+.grid line {
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+}
+
+.grid path {
+  stroke-width: 0;
+}
+
+.grid path {
+      stroke-width: 0;
+}*/
+
+
+
+.card {
+
+  border-radius: 2px;
+  display: inline-block;
+  height: auto;
+  margin: 1rem;
+  position: relative;
+  width: auto;
+}
+
+.card-1 {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.card-1:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.card-2 {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.card-3 {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.card-4 {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.card-5 {
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+
+
+/* Grafico Multinivel */
+
+
+.resize-legend {
+  background: rgba(245,245,245,0.8);
+  /* color: #D3D3D3	; */
+    /* font-size: 20px;
+    font-family: sans-serif; */
+  border-radius: 8px;
+  padding: 20px;
+  margin: 60px 100px;
+  width: 400px;
+  box-sizing: border-box;
+  right: 0;
+  position: absolute;
+  bottom: 0;
+  height: 400px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+
+
+#facet_multiplo {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  background-color: white;
+  text-align: center;
+  /* padding-left:20px; */
+  padding-top:25px;
+}
+
+.graficos_interativos{
+
+  /* position: relative; */
+  /* display: inline-block; */
+  width: 100%;
+  background-color: white;
+  text-align: center;
+
+  padding-top:25px;
+  text-align: left;
+  padding-left:20px;
+}
+
+
+.a_button:link, .a_button:visited, .a_button:hover, .a_button:active {
+  text-decoration: none;
+  color: white;
+}
+
+
+/*
+* Grafico do grapho da Home
+*/
+#chordchart{
+  width:100%;
+  text-align: center;
+}
+
+
+/* garante que fonte de popovers seja sempre preta */
+.popover, .popover h3 {
+  color: black!important;
+}
+
+#facets #menu #ordena button{
+  font-size: 20px;
+}
+
+
+.content_section__actions{
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  background-color: white;
+}
+
+.ordena_barchart_ordena{
+  font-size: 18px;
+}
+
+
+.span_ordena{
+  display:block
+}
+
+.list-group .list-group-item  {
+    list-style-position: outside;
+    overflow: hidden;
+}
+
+/*
+* Grafico de meio donut
+*/
+  .half_pie_chart_div{
+  position: relative;
+  overflow-y: none;
+  vertical-align: bottom;
+}
+
+.svg-content{
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+path.slice{
+	stroke-width:2px;
+}
+
+polyline{
+	opacity: .3;
+	stroke: black;
+	stroke-width: 2px;
+	fill: none;
+}
+
+.labelValue
+{
+	font-size: 60%;
+	opacity: .5;
+}
+
+.toolTip {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    position: absolute;
+    display: none;
+    width: auto;
+    height: auto;
+    background: none repeat scroll 0 0 white;
+    border: 0 none;
+    border-radius: 8px 8px 8px 8px;
+    box-shadow: -3px 3px 15px #888888;
+    color: black;
+    font: 12px sans-serif;
+    padding: 5px;
+    text-align: center;
+}
+
+h4.half_donut{
+  text-align: center;
+}
+
+
+.svg_divs{
+    padding-top: 10px;
+}
+
+
+
+
+
+
+/*
+* Slider para o grafico Bubble
+*/
+.slidecontainer {
+    /* width: 250px; */
+}
+
+/* .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+} */
+
+/* .slider:hover {
+    opacity: 1;
+} */
+
+/* .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+} */
+
+/* .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+} */
