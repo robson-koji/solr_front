@@ -1,0 +1,59 @@
+{% comment %}
+Home page para a navegacao da pesquisa do usuario.
+{% endcomment %}
+
+
+<h1>Buscador BV</h1>
+
+{{ navigate_fieds }} 000<br>
+
+
+
+
+
+{{ collection }} <br>
+{{ idioma }} <br>
+{{ navigate }} <br>
+
+
+
+
+
+
+
+
+<h2>{{ erro.titulo }}</h2>
+<p>{{ erro.descricao }}</p>
+
+
+
+{% if navigate_fieds %}
+
+
+<h3>Continuar a pesquisa à partir de uma etapa existente</h3>
+<p>Escolha uma etapa abaixo para continuar</p>
+
+<ul>
+  {% for nf  in navigate_fieds  %}
+    <li><a href="{% url 'params_id' collection=nf.collection  idioma='pt' id=nf.id %}">{{ nf.label }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+
+<h3>Nova pesquisa</h3>
+<p>Caso haja uma pesquisa em andamento, todos os parâmetros serão perdidos.</p>
+<p>Clique <a href="{% url 'clean_session' collection=collection  idioma='pt' id=0 %}">aqui</a> para iniciar uma nova pesquisa.</p>
+
+
+
+
+<h2>Ajuda</h2>
+<p>Inserir texto de ajuda</p>
+
+<h3>Selecione abaixo para obter mais informações sobre as bases de dados</h3>
+
+<ul>
+  <li><a href="{% url 'home_collection' collection='graph_auxilios' idioma=idioma %}">Projetos (Auxílios e Bolsas)</a></li>
+  <li><a href="{% url 'home_collection' collection='bv_memoria' idioma=idioma %}">Publicações Científicas</a></li>
+</ul>

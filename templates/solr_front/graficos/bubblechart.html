@@ -1,0 +1,269 @@
+
+<script type="text/javascript">
+var bubble_chart_options = ""
+{% if bubble_chart_json %}
+  var bubble_chart_options = {{ bubble_chart_json|safe }}
+{% endif %}
+</script>
+
+
+
+<div class="graficos_interativos" class="grid">
+<h2 class="title_primary">Bubble Chart</h2>
+<p>Selecione as dimensões que deseja visualizar.</p>
+
+
+  <div class="content_section__actions row">
+
+  <div class="col-md-3">
+    <h4 class="title_secondary">Eixo x</h4>
+  <select class="bubble_options" id="nivel_1">
+    {% for sc in bubble_chart.options  %}
+      {% if sc.value == bubble_chart.default_level_1.value %}
+        <option value={{ sc.value }} selected>{{ sc.label }}</option>
+      {% else %}
+        <option value={{ sc.value }}>{{ sc.label }}</option>
+      {% endif %}
+    {% endfor %}
+  </select>
+  </div>
+
+  <div class="col-md-3">
+    <h4 class="title_secondary">Eixo y</h4>
+  <select class="bubble_options" id="nivel_2">
+    {% for sc in bubble_chart.options  %}
+      {% if sc.value == bubble_chart.default_level_2.value %}
+        <option value={{ sc.value }} selected>{{ sc.label }}</option>
+      {% else %}
+        <option value={{ sc.value }}>{{ sc.label }}</option>
+      {% endif %}
+    {% endfor %}
+  </select>
+  </div>
+
+
+  <div class="slidecontainer col-md-3">
+    <h4 class="title_secondary">Tamanho das bolhas</h4> <small>Escala linear </small>
+
+    Tamanho mínimo: <span id="bubble_min_value"></span><input type="range" min="1" max="20" value="7" class="slider bubble_range" id="bubble_range_min">
+    Tamanho máximo: <span id="bubble_max_value"></span><input type="range" min="20" max="200" value="75" class="slider bubble_range" id="bubble_range_max">
+  </div>
+
+  {# <button style="display:None" type="button" class="bubble_options"  name="" onclick="criaSelectSankeyChart(this)">Adicionar nova dimensão para análise</button> #}
+  {% comment %}
+  Adicao de novos selects para incluir novas dimensoes.
+  Estah tudo funcionando, soh precisa acertar o algoritmo na view para incluir recursivamente.
+  {% endcomment %}
+  <div id="bubbleSelects"></div>
+
+  </div>
+  <div class="content_section__grafico">
+    <div id="svg_bubblechart"></div>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+var data = [
+        {name: "A", y_tick: 0, x_tick: 100.0, count: 10},
+        {name: "B", y_tick: 45, x_tick: 40.3, count: 20},
+        {name: "C", y_tick: 89, x_tick: 89.7, count: 30},
+        {name: "D", y_tick: 23, x_tick: 10.9, count: 40},
+        {name: "E", y_tick: 56, x_tick: 30.3, count: 50}
+      ];
+
+
+function ajusta_escala(x, out_min, out_max, in_min, in_max){
+  ajuste = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  return ajuste
+  // return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+
+function drawBubbleChart(data, slide_min, slide_max){
+
+    console.log(data)
+    $('#svg_bubblechart').empty()
+
+    var svg;
+    var xscale;
+    var yscale;
+    var circles;
+    var texts;
+
+    var max = d3.entries(data)
+        // sort by value descending
+        .sort(function(a, b) {
+          if (! a.value.count){a.value.count = 0} // Para nao quebrar o sort qdo nao tem valor
+          if (! b.value.count){b.value.count = 0}
+          return d3.descending(a.value.count, b.value.count);
+        })
+        // take the first option
+        [0];
+
+
+    var min = d3.entries(data)
+        // sort by value descending
+        .sort(function(a, b) { return d3.ascending(a.value.count, b.value.count); })
+        // take the first option
+        [0];
+
+    var x_domain = []
+    var x_domain = x_domain.concat(d3.map(data, function(d){return d.x_elemen;}).keys());
+
+    var y_domain = []
+    var y_domain = y_domain.concat(d3.map(data, function(d){return d.y_elemen;}).keys());
+
+    var y_domain_len = y_domain.length
+
+    var margin = {top: 60, right: 100, bottom: 20, left: 60};
+    var width = 800;
+    var height = ((15 * y_domain_len ) + 300)
+    // debugger;
+
+    xscale = d3.scale.ordinal()
+    .domain(x_domain)
+    .rangeBands([0, width - margin.left - margin.right]);
+
+    var xAxis = d3.svg.axis()
+    .scale(xscale)
+    .orient('bottom')
+    .tickSize(-(height - margin.top - margin.bottom), 0)
+    .tickPadding(5)
+    ;
+
+
+    yscale = d3.scale.ordinal()
+		.domain(y_domain)
+		.rangeBands([height - margin.top - margin.bottom, 0]);
+
+    var yAxis = d3.svg.axis()
+        .scale(yscale)
+        .orient('left')
+        // .tickSize(5)
+        .tickSize(-(width - margin.left - margin.right), 0)
+        .tickPadding(5);
+
+
+    var viewbox = '0 0 ' + width + ' ' + height
+    svg = d3.select('#svg_bubblechart')
+		.classed("svg-container", true)
+		.append('svg')
+		.attr('class', 'chart')
+		.attr("viewBox", viewbox)
+		.attr("preserveAspectRatio", "xMinYMin meet")
+		.classed("svg-content-responsive", true)
+		.append("g")
+		.attr("transform", "translate(" + 100 + "," + margin.bottom + ")");
+
+
+		svg.append("g")
+		  .attr("class", "x axis")
+		  .attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
+		  .call(xAxis)
+      .selectAll("text")
+        .attr("font-size", "8px")
+        .attr("transform", 'translate(0,10)rotate(-30)')
+
+    svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis)
+    .selectAll("text")
+    .attr("font-size", "8px")
+    .attr("transform", 'translate(-2,-4)rotate(-45)')
+
+
+	 	var color = d3.scale.category20c();
+
+
+	 	// var local = d3.local();
+		circles = svg.selectAll(null)
+			  .data(data)
+			  .enter()
+			  .append("circle")
+			  .attr("opacity", 0.5)
+
+        .attr("cx", function(d) {
+          return xscale(d.x_elemen);
+        })
+        .attr("transform", 'translate(' + xscale.rangeBand()/2 + ',' + yscale.rangeBand()/2 + ')')
+
+        .attr("cy", function(d) {
+          return yscale(d.y_elemen);
+        })
+        .style("fill", function(d, i) { return color(i); })
+        .attr("r", function(d) {return ajusta_escala(d.count, slide_min, slide_max, min.value.count, max.value.count) })
+
+
+        // var xPos = parseFloat(d3.select(this).attr('x')) / 2 + width / 2;
+
+        /*
+			  .on('mouseover', function(d, i) {
+  			  d3.select(this).style("fill"),
+			    d3.select(this)
+			      .transition()
+		          .duration(1000)
+		          .ease(d3.easeBounce)
+			      .attr("r", 32)
+			      .style("cursor", "pointer")
+			      .attr("text-anchor", "middle");
+	      		  var d = this.__data__;
+	      		  var coll_name = document.getElementById("college_name")
+	      		  coll_name.innerHTML = d.name;
+	      		  var quant = document.getElementById("average_gre_quant");
+		  		  quant.innerHTML = d.gre_quant_median;
+		  		  var verbal = document.getElementById("average_gre_verbal")
+		  		  verbal.innerHTML = d.gre_verbal_median;
+		  		}
+		  	   )
+
+        */
+
+    		texts = svg.selectAll(null)
+    		  .data(data)
+    		  .enter()
+    		  .append('text')
+    		  .attr("x", function(d) {
+    		    return xscale(d.x_elemen);
+    		  })
+          .attr("transform", 'translate(' + (xscale.rangeBand()/2 + 5) + ',' + (yscale.rangeBand()/2 - 5) + ')')
+
+    		  .attr("text-anchor", "middle")
+    		  .attr("y", function(d) {
+    		    return yscale(d.y_elemen);
+    		  })
+    		  .text(function(d) {
+    		    return +d.count;
+    		  })
+    		  .attr("pointer-events", "none")
+    		  .attr("font-family", "sans-serif")
+    		  .attr("font-size", "8px")
+    		  .attr("fill", "#202020");
+
+
+
+    	    // $('circle').tipsy({
+          //   	gravity: 'w',
+          //   	html: true,
+          //   	title: function() {
+          //     		var d = this.__data__;
+          //     		return d.name + '<br/> Rank: ' + d.rank;
+          //   	}
+          // 	});
+}
+
+// $(document).ready(function(){
+// 	drawBubbleChart(data);
+// });
+
+
+</script>

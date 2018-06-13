@@ -1,0 +1,31 @@
+
+{
+  "auxilio":{
+    "area":["equal", "not_equal"],
+    "instituicao":["equal", "not_equal"],
+    "empresa":["equal", "not_equal"],
+    "pesquisador":["equal", "not_equal"],
+    "convenio":["equal", "not_equal", "is_empty", "is_not_empty"],
+    "programa":["equal", "not_equal", "is_empty", "is_not_empty"],
+    "data_inicio":["equal", "less_or_equal", "greater_or_equal"],
+    "data_termino":["equal", "less_or_equal", "greater_or_equal"],
+    "vigencia":["between"]
+  },
+  "bolsa":{
+    "area":["equal", "not_equal"],
+    "instituicao":["equal", "not_equal"],
+    "empresa":["equal", "not_equal"],
+    "pesquisador":["equal", "not_equal"],
+    "convenio":["equal", "not_equal", "is_empty", "is_not_empty"],
+    "programa":["equal", "not_equal", "is_empty", "is_not_empty"],
+    "data_inicio":["equal", "less_or_equal", "greater_or_equal"],
+    "data_termino":["equal", "less_or_equal", "greater_or_equal"],
+    "vigencia":["between"]
+  },
+  "instituicao_sede":{
+    "nome":["equal", "not_equal"],
+    "tipo":["equal", "not_equal"],
+    "super_pai_id":["is_empty", "is_not_empty"],
+    "numero_patentes":["is_empty", "is_not_empty"]
+  }
+}

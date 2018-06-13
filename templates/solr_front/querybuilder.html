@@ -1,0 +1,65 @@
+
+  <style media="screen">
+    .content_section ul li:before{
+      background-color: #28488a00;
+    }
+    .query-builder .rules-list>::after, .query-builder .rules-list>::before{
+
+        border-color: #ccc0
+    }
+    .rules-group-container{
+      background-color:rgba(69, 128, 146, 0)!important;
+      border: 1px solid #764a9200 !important;
+    }
+    .rule-filter-container select, .rule-operator-container select{
+
+      margin-bottom: 5px;
+    }
+
+    .query-builder .rule-container, .query-builder .rule-placeholder, .query-builder .rules-group-container{
+
+      /* background-color: rgba(218, 218, 218, 0.3); */
+      background-color: rgba(218, 218, 218, 0.61);
+    }
+
+    .query-builder .rules-list{
+      padding: 0;
+    }
+  </style>
+  {% csrf_token %}
+
+    {% comment %}
+      Necessário para inclusão dos blocos Querybuilder
+    {% endcomment %}
+    <div id="querybody_btn">
+    <div id="querybody"></div>
+    <div id="div_btns_search">
+      <!--<button style="margin-right:40px;margin-top:20px;" id="btn-get-geo" class="btn btn-primary parse-json" >Geologia</button>-->
+
+      <button style="margin-right:40px;margin-top:20px;" id="btn-get" class="btn btn-primary parse-json" >Pesquisar</button>
+      <button style="margin-right:40px;margin-top:20px;" id="btn-clr" class="btn btn-danger parse-json" onclick="  $('#builder_dinamic').queryBuilder('reset');">Limpar</button>
+      <br><br><br>
+    </div>
+
+    </div>
+
+    <script>
+
+      //passa para javascript token
+      var csrf = "{{csrf_token}}";
+      // inicializa dados do contexto
+      var facetsCategorias = {{ facets_categorias|safe }};
+
+      // Inicializa a collection
+      var bv_collection = "{{ collection }}"
+      var idioma = "{{ idioma }}"
+
+      var vertice = {{ vertice|safe }}
+
+      var navigation_tree = {{ navigation_tree | safe }}
+
+      var id_collection = "{{ id }}"
+
+      var omite_secoes = {{ omite_secoes | safe }}
+
+      </script>
