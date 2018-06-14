@@ -143,6 +143,10 @@ function getData(busca_realizada_str){
           if (omite_secoes.indexOf('sankey') === -1){
             recuperaSankeyChart(busca_realizada)
           }
+
+          recuperaPivotTable(busca_realizada)
+        
+
           if (omite_secoes.indexOf('bubblechart') === -1){
             recuperaBubbleChart(busca_realizada)
           }
@@ -465,6 +469,49 @@ function criaSelectSankeyChart(button){
   $(div).append($(sel));
 
 }
+
+
+/**
+* Monta os Select fields da tabela pivo
+*/
+function criaSelectPivotTable(button){
+
+  // Armazena os valores que jah foram utlziados para nao repetir.
+  selects_vals = []
+  selects = $(".pivot_options")
+      .map(function() {
+        selects_vals.push($(this).val())
+    })
+  selects_vals.splice(-1,1)
+
+  // Recupera o numero de selects para criar o proximo
+  var numItems = $('.pivot_options').length -1
+  numItems += 1
+  var pivotNivel = 'nivel_' + numItems
+
+  // Cria div antes do botao, para que os selects fiquem "ordenados"
+  var button = $(button)
+
+  // Cria o select
+  var sel =  '<select class="pivot_options" id="' + pivotNivel + '">'
+  var sel = $(sel)
+  $(sel).append($("<option>").attr('value','').text('Selecione uma dimensão'));
+  $(pivot_table_options['options']).each(function() {
+    if (! selects_vals.includes(this.value)){
+      $(sel).append($("<option>").attr('value',this.value).text( decodeURI(this.label)));
+    }
+  });
+
+  // Cria div "alert" que acondiciona o select, para poder excluir.
+  var dismiss_html = '<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>'
+  var div = $('<div class="alert alert-success alert-auto">').insertBefore(button);
+  $(div).append(dismiss_html);
+
+  // Adiciona o select a div.
+  $(div).append($(sel));
+
+}
+
 
 /**
 * Realiza busca vazia

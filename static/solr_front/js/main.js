@@ -94,6 +94,10 @@ $(document).ready(function(){
       recuperaSankeyChart()
     })  ;
 
+    // Pivot Table. Mudanca dos selects
+    $(document).on('change', '.pivot_options', function(){
+      recuperaPivotTable()
+    })  ;
 
     // Grafico Bubble. Mudanca dos selects
     $(document).on('change', '.bubble_options', function(){

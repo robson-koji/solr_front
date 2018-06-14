@@ -923,6 +923,152 @@ SANKEY_CHART = {
 }
 
 
+
+PIVOT_TABLE = {
+    'inep_docentes':{
+        'default_level_1': {'value':'DS_CATEGORIA_ADMINISTRATIVA', 'label':'IES - Categoria Administrativa'},
+        'default_level_2': {'value':'DS_ORGANIZACAO_ACADEMICA', 'label':'IES - Organização Acadêmica'},
+        'default_level_3': {'value':'NO_REGIAO_IES', 'label':'IES - Região'},
+        'options':[{'value':'DS_ORGANIZACAO_ACADEMICA', 'label':'IES - Organização Acadêmica'},
+                    {'value':'SGL_UF_IES', 'label':'IES - UF'},
+                    {'value':'DS_CATEGORIA_ADMINISTRATIVA', 'label':'IES - Categoria Administrativa'},
+                    {'value':'NO_REGIAO_IES', 'label':'IES - Região'},
+                    {'value':'DS_REGIME_TRABALHO', 'label':'IES - Regime de trabalho'},
+                    {'value':'IN_BOLSA_PESQUISA', 'label':'IES - Bolsa pesquisa'},
+                    {'value':'IN_ATU_POS_PRESENCIAL', 'label':'IES - Pós presencial'},
+                    {'value':'IN_ATU_POS_EAD', 'label':'IES - Pós EAD'},
+                    {'value':'CO_UF_NASCIMENTO', 'label':'Docente - UF (código)'},
+                    {'value':'DS_SEXO_DOCENTE', 'label':'Docente - Sexo'},
+                    {'value':'DS_COR_RACA_DOCENTE', 'label':'Docente - Cor/Raça'},
+                ],
+    },
+    'inep_alunos':{
+        'default_level_1': {'value':'NO_OCDE_AREA_GERAL', 'label':'OCDE - Geral'},
+        'default_level_2': {'value':'DS_CATEGORIA_ADMINISTRATIVA', 'label':'IES - Categoria Administrativa'},
+        'options':[
+            {'value':'ANO_INGRESSO', 'label':'Ano de ingresso'},
+            {'value':'DS_TURNO_ALUNO', 'label':'Turno do aluno'},
+            {'value':'DS_ALUNO_SITUACAO', 'label':'Situação do aluno'},
+
+            {'value':'DS_MODALIDADE_ENSINO', 'label':'Modalidade de ensino'},
+            {'value':'DS_GRAU_ACADEMICO', 'label':'Grau acadêmico'},
+            {'value':'DS_NIVEL_ACADEMICO', 'label':'Nível acadêmico'},
+
+            {'value':'SGL_UF_IES', 'label':'IES - UF'},
+            {'value':'NO_REGIAO_IES', 'label':'IES - Região'},
+            {'value':'DS_ORGANIZACAO_ACADEMICA', 'label':'IES - Organização Acadêmica'},
+            {'value':'DS_CATEGORIA_ADMINISTRATIVA', 'label':'IES - Categoria Administrativa'},
+            {'value':'IN_BOLSA_PESQUISA', 'label':'IES - Bolsa pesquisa'},
+
+            {'value':'NO_OCDE_AREA_GERAL', 'label':'OCDE - Geral'},
+
+        ],
+    },
+
+    'pesquisa_pipe':{
+        'default_level_1': {'value':'aval_doc_base', 'label':'Avaliação - Documentos base'},
+        'default_level_2': {'value':'resu_chegou_a_resultados', 'label':'Resultados alcançados'},
+        'options':[
+            {'value':'aval_doc_base', 'label':'Avaliação - Documentos base'},
+            {'value':'gove_modelos_gestao', 'label':'Governança - Modelos de gestão'},
+            {'value':'gove_pdi_explicito', 'label':'Governança - PDI Explícito'},
+            {'value':'pess_escolaridade', 'label':'Pessoal - Escolaridade'},
+            {'value':'pess_cargo', 'label':'Pessoal - Cargo'},
+            {'value':'parc_parcerias_institutos_universidades', 'label':'Parcerias - Institutos/Universidades'},
+            {'value':'parc_parcerias_outros_atores', 'label':'Parcerias - Outros atores'},
+            {'value':'resu_chegou_a_resultados', 'label':'Resultados alcançados'},
+        ],
+    },
+
+
+    'lattes':{
+        'default_level_1': {'value':'MESTRADO_GRANDE-AREA-DO-CONHECIMENTO'},
+        'default_level_2': {'value':'DOUTORADO_GRANDE-AREA-DO-CONHECIMENTO'},
+        'options':[
+            # {'value':'GRADUACAO_NOME-CURSO', 'label':'Graduação - Curso'},
+            {'value':'GRADUACAO_ANO-DE-INICIO', 'label':'Graduação - Ano início'},
+            {'value':'GRADUACAO_ANO-DE-CONCLUSAO', 'label':'Graduação - Ano conclusão'},
+            # {'value':'GRADUACAO_NOME-INSTITUICAO', 'label':'Graduação - Instituição'},
+            # {'value':'GRADUACAO_NOME-AGENCIA', 'label':'Graduação - Agência'},
+            {'value':'GRADUACAO_FLAG-BOLSA', 'label':'Graduação - Bolsa'},
+            # {'value':'MESTRADO_NOME-CURSO', 'label':'Mestrado - Curso'},
+            {'value':'MESTRAD_ANO-DE-INICIO', 'label':'Mestrado - Ano início'},
+            {'value':'MESTRAD_ANO-DE-CONCLUSAO', 'label':'Mestrado - Ano conclusão'},
+            # {'value':'MESTRADO_NOME-INSTITUICAO', 'label':'Mestrado - Instituição'},
+            # {'value':'MESTRADO_NOME-AGENCIA', 'label':'Mestrado - Agência'},
+            {'value':'MESTRADO_GRANDE-AREA-DO-CONHECIMENTO', 'label':'Mestrado - Área do conhecimento'},
+            {'value':'MESTRADO_FLAG-BOLSA', 'label':'Mestrado - Bolsa'},
+            # {'value':'DOUTORADO_NOME-CURSO', 'label':'Doutorado - Curso'},
+            {'value':'DOUTORADO_ANO-DE-INICIO', 'label':'Doutorado - Ano Início'},
+            {'value':'DOUTORADO_ANO-DE-CONCLUSAO', 'label':'Doutorado - Ano conclusão'},
+                # {'value':'DOUTORADO_NOME-INSTITUICAO', 'label':'Doutorado - Instituição'},
+                # {'value':'DOUTORADO_NOME-AGENCIA', 'label':'Doutorado - Agência'},
+            {'value':'DOUTORADO_FLAG-BOLSA', 'label':'Doutorado - Bolsa'},
+            {'value':'DOUTORADO_GRANDE-AREA-DO-CONHECIMENTO', 'label':'Doutorado - Área do conhecimento'},
+        ],
+    },
+
+
+
+
+
+
+
+    'fazenda_sp':{
+        'default_level_1': {'value':'Fonte_de_Recursos', 'label': 'Fonte de recursos'},
+        'default_level_2': {'value':'Fun__o', 'label': 'Função'},
+        'options':[
+            {'value':'Fonte_de_Recursos', 'label': 'Fonte de recursos'},
+            {'value':'UO', 'label':'UO'},
+            {'value':'_rg_o', 'label': 'Orgão'},
+            {'value':'Unidade_Gestora', 'label': 'Unidade Gestora'},
+            {'value':'Fun__o', 'label': 'Função'},
+            {'value':'Sub_Fun__o', 'label': 'Sub Função'},
+            {'value':'Programa', 'label': 'Programa'},
+            {'value':'A__o', 'label': 'Ação'},
+            {'value':'Funcional_Program_tica', 'label': 'Funcional Programática'},
+            {'value':'Elemento', 'label': 'Elemento'},        ],
+    },
+
+    'rais':{
+        'default_level_1': {'value':'Escolaridade_ap_s_2005', 'label': 'Escolaridade_ap_s_2005'},
+        'default_level_2': {'value':'Sexo_Trabalhador', 'label': 'Sexo'},
+        'options':[
+                {'value':'Sexo_Trabalhador', 'label': 'Sexo'},
+                {'value':'Idade', 'label': 'Idade'},
+                {'value':'Munic_pio', 'label': 'Município'},
+                {'value':'Mun_Trab', 'label': 'Município de Trabalho'},
+                {'value':'Nacionalidade', 'label': 'Nacionalidade'},
+                {'value':'Distritos_SP', 'label': 'Distrito SP'},
+                {'value':'Idade', 'label': 'Idade'},
+                {'value':'Ind_Portador_Defic', 'label': 'Ind_Portador_Defic'},
+                {'value':'Ra_a_Cor', 'label': 'Raça / Cor'},
+                {'value':'Faixa_Et_ria', 'label': 'Faixa Etária'},
+                {'value':'Escolaridade_ap_s_2005', 'label': 'Escolaridade após 2005'},
+                {'value':'Tipo_Defic', 'label': 'Tipo_Defic'},
+                {'value':'Ano_Chegada_Brasil', 'label': 'Ano de chegada ao Brasil'}
+            ],
+    },
+
+
+    'graph_auxilios':{
+        'default_level_1': {'value':'data_inicio_ano_exact', 'label':'Ano de início'},
+        'default_level_2': {'value':'situacao', 'label':'Situação'},
+        'options':[
+            {'value':'situacao', 'label':'Situação'},
+            {'value':'data_inicio_ano_exact', 'label':'Ano de início'},
+            {'value':'bolsas_pt', 'label':'Bolsa'},
+            {'value':'auxilio_pesquisa_pt', 'label':'Auxílio a Pesquisa'},
+            # {'value':'area_pt', 'label':'Área do conhecimento'},
+            # {'value':'convenio_exact', 'label':'Convênio'},
+            {'value':'tipo_convenio_exact', 'label':'Tipo de convênio'},
+            {'value':'pais_convenio_exact', 'label':'País de convênio'},
+        ]
+    }
+
+}
+
+
 BUBBLE_CHART = {
     'inep_docentes':{
         'default_level_1': {'value':'DS_CATEGORIA_ADMINISTRATIVA', 'label':'IES - Categoria Administrativa'},
@@ -1106,7 +1252,7 @@ MULTILEVEL_BARCHART_1 = {
             {'value':'times-cited', 'label':'Número de citações'},
             {'value':'number-of-cited-references', 'label':'Número de referências citadas'},
             {'value':'publisher_journal_volume', 'label':'publisher_journal_volume'},
-            {'value':'research-areas', 'label':'research-areas'},            
+            {'value':'research-areas', 'label':'research-areas'},
 
         ],
         'y_stratification':[

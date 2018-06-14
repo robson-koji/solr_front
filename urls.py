@@ -28,6 +28,7 @@ urls = patterns('',
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/relacionadas/$',  never_cache(RelatedCollection.as_view()), name='colecoes_relacionadas'),
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/totalizadores/$',  TotalizadorView.as_view(), name='totalizadores'),
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/multidimensional_chart/(?P<chart_type>\w+)/$',  MultidimensionalChartView.as_view(), name='multidimensional_chart'),
+    url(r'^(?P<collection>\w+)/(?P<id>\d+)/multidimensional_table/(?P<table_type>\w+)/$',  MultidimensionalTableView.as_view(), name='multidimensional_table'),
     url(r'^(?P<collection>\w+)/start_research/$', never_cache(AddVerticeView.as_view()), name='start_research'),
 
     # Report

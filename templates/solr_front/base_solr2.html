@@ -27,7 +27,7 @@
 
 
     <script type="text/javascript" src='{% static "solr_front/js/external_lib/jquery.js" %}'></script>
-
+		
 		<script type="text/javascript" src='{% static "solr_front/js/external_lib/QueryBuilder/i18n/pt_BR.js" %}'></script>
 
 
@@ -352,6 +352,11 @@
 						<div id="facet_multiplo"></div>
 						{% endif %}
 
+						{% if not 'sankey' in omite_secoes %}
+						<div class="svg_divs" id="pivot_table_div">
+							{% include "solr_front/graficos/pivot_table.html" %}
+						</div>
+						{% endif %}
 
 						{% if not 'sankey' in omite_secoes %}
 							<div class="svg_divs" id="svg_sankeychart_div">

@@ -1,17 +1,34 @@
 # -*- coding: utf-8 -*-
 
-import csv
 import requests
-import os
 import pandas
-from solrfront.celery import app
-
-from solrfront import settings
+import uuid
+import csv
+import os
 
 from django.core.mail import send_mail
 from django.utils.translation import ugettext as _
 
-import uuid
+"""
+Para importar os arquivos relativos ao projeto.
+settings.py e arquivos de configuracao do celery.
+"""
+PROJECT_PATH = os.path.normpath(os.path.dirname(os.path.dirname(__file__)))
+PROJECT_NAME = os.path.basename(PROJECT_PATH)
+
+def custom_import(name):
+    components = name.split('.')
+    mod = __import__(components[0])
+    for comp in components[1:]:
+        mod = getattr(mod, comp)
+    return mod
+
+settings = custom_import(PROJECT_NAME + '.settings')
+app = custom_import(PROJECT_NAME + '.celery.app')
+
+
+
+
 
 
 @app.task
