@@ -1,5 +1,3 @@
-solr_front 
-
 # solr_front
 Sistema multipropósito para análise de bases de dados. 
 
