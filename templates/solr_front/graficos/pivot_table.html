@@ -1,0 +1,252 @@
+{% load staticfiles %}
+
+
+
+<link href='{% static "solr_front/css/sankey_chart.css" %}' rel="stylesheet">
+<!-- optional: mobile support with jqueryui-touch-punch -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+
+ <script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static "third_part/pivot_table/pivot.css" %}">
+<script type="text/javascript" src="{% static "third_part/pivot_table/pivot.js"%}"></script>
+<script type="text/javascript" src="{% static "third_part/pivot_table/pivot.pt.js"%}"></script>
+<script type="text/javascript" src="{% static "third_part/pivot_table/export_renderers.js"%}"></script>
+<script type="text/javascript" src="{% static "third_part/pivot_table/plotly_renderers.js"%}"></script>
+{% comment %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+{% endcomment %}
+
+<script type="text/javascript">
+  var pivot_chart_options = ""
+  {% if pivot_chart_json %}
+    var pivot_chart_options = {{ pivot_chart_json|safe }}
+  {% endif %}
+  // console.log(pivot_chart_options)
+</script>
+
+
+<div class="graficos_interativos" class="grid">
+<h2 class="title_primary">Pivot Table</h2>
+<p>Selecione as dimensões que deseja visualizar.</p>
+
+
+<div class="alert alert-warning" role="alert">
+  Gráfico em desenvolvimento. Será possível adiconar mais de duas dimensões para análise.
+</div>
+
+  <div class="content_section__actions row">
+
+  <select class="pivot_options" id="nivel_1">
+    {% for sc in pivot_table.options  %}
+      {% if sc.value == pivot_table.default_level_1.value %}
+        <option value={{ sc.value }} selected>{{ sc.label }}</option>
+      {% else %}
+        <option value={{ sc.value }}>{{ sc.label }}</option>
+      {% endif %}
+    {% endfor %}
+  </select>
+
+  <select class="pivot_options" id="nivel_2">
+    {% for sc in pivot_table.options  %}
+      {% if sc.value == pivot_table.default_level_2.value %}
+        <option value={{ sc.value }} selected>{{ sc.label }}</option>
+      {% else %}
+        <option value={{ sc.value }}>{{ sc.label }}</option>
+      {% endif %}
+    {% endfor %}
+  </select>
+
+  <button style="display:None" type="button" class="pivot_options"  name="" onclick="criaSelectPivotTable(this)">Adicionar nova dimensão para análise</button>
+  {% comment %}
+  Adicao de novos selects para incluir novas dimensoes.
+  Estah tudo funcionando, soh precisa acertar o algoritmo na view para incluir recursivamente.
+  {% endcomment %}
+  <div id="pivotSelects"></div>
+
+</div>
+<div class="">
+   <div id="output" style="margin: 30px;overflow:  scroll;"></div>
+</div>
+
+</div>
+
+
+
+<style>
+
+.node rect {
+  cursor: move;
+  fill-opacity: .9;
+  shape-rendering: crispEdges;
+}
+
+.node text {
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff;
+}
+
+.link {
+  fill: none;
+  stroke: #000 !important;
+  stroke-opacity: .2;
+}
+
+.link:hover {
+  stroke-opacity: .5;
+}
+
+</style>
+
+
+
+<script>
+// This example loads the "Canadian Parliament 2012"
+// dataset from a CSV instead of from JSON.
+ function drawPivotTable(data){
+   var sum = $.pivotUtilities.aggregatorTemplates.sum;
+   var numberFormat = $.pivotUtilities.numberFormat;
+   var intFormat = numberFormat({digitsAfterDecimal: 0, decimalSep:".",thousandsSep:" "});
+
+   var rawData = JSON.parse(data.links);
+     var renderers = $.extend($.pivotUtilities.renderers,
+           $.pivotUtilities.export_renderers, $.pivotUtilities.plotly_renderers);
+
+      debugger;
+     $("#output").pivotUI(rawData,
+        {
+         rows: JSON.parse(data.conf).rows,
+         cols: JSON.parse(data.conf).cols,
+         renderers: renderers,
+         aggregators: {
+            "Numero de projetos": function() { return sum(intFormat)(["value"])}
+         },
+         aggregatorName: "Numero de projetos",
+       },
+       false,
+       "pt"
+   );
+
+ }
+// var parentDiv = $( ".content_section" )[0]
+//
+// var margin = {
+//     top: 12,
+//     left: 50,
+//     right: 50,
+//     bottom: 10
+// },
+// legendPanel = {
+//     width: 180
+// },
+// width = parentDiv.clientWidth - margin.left - margin.right;
+// height = 800 - margin.top - margin.bottom;
+//
+// var svg = d3.select("#svg_pivotchart").append("svg")
+//     .attr("width", width + margin.left + margin.right)
+//     .attr("height", height + margin.top + margin.bottom)
+//   .append("g")
+//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+//     .attr('display', 'block')
+//     .attr('margin', 'auto');
+//
+//
+// function drawpivotChart(data){
+//   var formatNumber = d3.format(",.0f"),
+//       format = function(d) { return formatNumber(d); },
+//       color = d3.scale.category20();
+//
+//   var pivot = d3.pivot()
+//       .nodeWidth(15)
+//       .nodePadding(10)
+//       .size([width, height]);
+//
+//   var path = pivot.link();
+//
+//
+//   graph = {"nodes" : JSON.parse(data['nodes']), "links" : JSON.parse(data['links'])};
+//     // pivot.update(graph)
+//
+//     // return only the distinct / unique nodes
+//     // graph.nodes = d3.keys(d3.nest()
+//     //   .key(function (d) { return d.name; })
+//     //   .map(graph.nodes));
+//
+//     // loop through each link replacing the text with its index from node
+//     graph.links.forEach(function (d, i) {
+//       // graph.links[i].source = graph.nodes.indexOf(graph.links[i].source);
+//       // graph.links[i].target = graph.nodes.indexOf(graph.links[i].target);
+//
+//       graph.links[i].source = graph.links[i].source;
+//       graph.links[i].target =graph.links[i].target;
+//     });
+//
+//     //now loop through each nodes to make nodes an array of objects
+//     // rather than an array of strings
+//     graph.nodes.forEach(function (d, i) {
+//       graph.nodes[i] = { "name": d.toString().slice(0,-2) };
+//     });
+//
+//
+//     console.log("\n")
+//     console.log(graph.nodes)
+//     console.log(graph.links)
+//
+//     pivot
+//         .nodes(graph.nodes)
+//         .links(graph.links)
+//         .layout(32);
+//
+//     // Limpa
+//     svg.selectAll("*").remove();
+//
+//     var link = svg.append("g").selectAll(".link")
+//         .data(graph.links)
+//       .enter().append("path")
+//         .attr("class", "link")
+//         .attr("d", path)
+//         .style("stroke-width", function(d) { return Math.max(1, d.dy); })
+//         .sort(function(a, b) { return b.dy - a.dy; });
+//
+//     link.append("title")
+//         .text(function(d) { return d.source.name + " → " + d.target.name + "\n" + format(d.value); });
+//
+//     var node = svg.append("g").selectAll(".node")
+//         .data(graph.nodes)
+//       .enter().append("g")
+//         .attr("class", "node")
+//         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+//       .call(d3.behavior.drag()
+//         .origin(function(d) { return d; })
+//         .on("dragstart", function() { this.parentNode.appendChild(this); })
+//         .on("drag", dragmove));
+//
+//     node.append("rect")
+//         .attr("height", function(d) { return d.dy; })
+//         .attr("width", pivot.nodeWidth())
+//         .style("fill", function(d) {d.color = color(d.name.replace(/ .*/, ""));  return d.color })
+//         .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
+//       .append("title")
+//         .text(function(d) { return d.name + "\n" + format(d.value); });
+//
+//     node.append("text")
+//         .attr("x", -6)
+//         .attr("y", function(d) { return d.dy / 2; })
+//         .attr("dy", ".35em")
+//         .attr("text-anchor", "end")
+//         .attr("transform", null)
+//         .text(function(d) { return d.name; })
+//       .filter(function(d) { return d.x < width / 2; })
+//         .attr("x", 6 + pivot.nodeWidth())
+//         .attr("text-anchor", "start");
+//
+//     function dragmove(d) {
+//       d3.select(this).attr("transform", "translate(" + d.x + "," + (d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))) + ")");
+//       pivot.relayout();
+//       link.attr("d", path);
+//     }
+//
+//   }
+
+
+</script>

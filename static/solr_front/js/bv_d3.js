@@ -1,4 +1,4 @@
-/**
+data/**
 * @file Funções para geração de graficos usando D3.js
 * @module solr_front::bv_d3
 */
@@ -97,11 +97,52 @@ function recuperaSankeyChart(busca_realizada_str){
      success: function(data){
        // console.log(data)
        drawSankeyChart(data)
+  
      }
    });
 
 }
 
+function recuperaPivotTable(busca_realizada_str){
+  // Recupera os valores da busca.
+  if (typeof busca_realizada_str != 'string'){
+    var result_cp_gd = getBuscaRealizada({});
+  }
+  else{
+    var result_cp_gd = JSON.parse(busca_realizada_str)
+  }
+
+  //
+  var json_levels_list = []
+  selects = $(".pivot_options")
+    .map(function() {
+      obj = {}
+      obj[this.id] = $(this).val()
+      json_levels_list.push(obj)
+
+  })
+  json_levels_list.splice(-1,1) // O ultimo eh o botao. Exclui.
+  result_cp_gd[bv_collection]['json_levels_list'] = json_levels_list;
+
+  $.ajax({
+    url: '/pt/buscador/bv/' + bv_collection + '/' + id_collection + '/multidimensional_table/pivot_table/',
+    type: 'post',
+    dataType: 'json',
+    headers: {
+       "cache-control": "no-cache",
+       'X-Requested-With': 'XMLHttpRequest',
+       "Content-Type" : "application/json; charset=utf-8",
+       "Accept" : "application/json",
+       'X-CSRFToken': csrf //a varivel csrf provem da pagina html
+     },
+     data: JSON.stringify(result_cp_gd),
+     success: function(data){
+       //usando temporariamente os dados na tabela
+       drawPivotTable(data)
+     }
+   });
+
+}
 
 /**
 * Recebe a string da busca do queryBuilder

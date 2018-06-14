@@ -1008,8 +1008,8 @@ class SolrQueries(LoginRequiredMixin, View):
                 if not f_dict['val'] in nodes:
                     nodes[f_dict['val']] = len(nodes)
                 if source:
-                    if nodes[source] == nodes[f_dict['val']]:
-                        continue
+                    # if nodes[source] == nodes[f_dict['val']]:
+                    #     continue
                     links.append({'source':nodes[source], 'target':nodes[f_dict['val']], 'value':f_dict['count']})
                 rec_nivel = nivel + 1
                 rec_niveis(f_dict['val'], f_dict, rec_nivel)
@@ -1025,7 +1025,75 @@ class SolrQueries(LoginRequiredMixin, View):
         except:
             return None
 
+    def get_content_pivot_table_json_facet(self, content_type, fq, levels_list, selected_facets):
+        """
+        Recupera dados facetados no Solr e retorna dois objetos para o front end
+        para geracao da tabela OLAP.
+        """
+        json_facet = ''
 
+        for idx, val in enumerate(levels_list):
+            nivel = 'nivel_' + str(idx + 1)
+            if idx == 0 :
+                json_facet = '{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": -1'
+            else:
+                json_facet += ', "facet":{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": -1}}'
+
+        json_facet += '}}'
+
+        json_facet = json_facet.replace('\n', '').replace(' ', '')
+
+        solr_url = 'http://leydenh/solr/' + content_type + '/query'
+        data = [('q','*:*'), ('rows','0'), ('fl','*'), ('fq',fq), ('json.facet', str(json_facet))] + selected_facets
+
+
+        resposta = requests.post(solr_url, data=data)
+        links = []
+        nodes = collections.OrderedDict() # Utiliza dict para facilitar a busca do elemento
+        conf = {'rows':['Ano'], 'cols': ['Situação']}
+
+        def rec_niveis(source, facets, nivel):
+            """
+            recupera recursivamente os niveis do facet.
+            """
+
+
+            nivel_str = 'nivel_' + str(nivel)
+
+            if not nivel_str in facets:
+                """
+                Se nao tem o nivel_str no facet, quer dizer que estah no ultimo nivel e finaliza a recursao.
+                """
+                return
+
+            for f_dict in facets[nivel_str]['buckets']:
+                """
+                Itera o objeto e remonta para a estrutura do grafico d3js.
+                """
+                # Altera o nome da chave para nao haver colisao.
+                f_dict['val'] = unicode(f_dict['val']) + '_' + str(nivel)
+
+                if not f_dict['val'] in nodes:
+                    nodes[f_dict['val']] = len(nodes)
+                if source:
+                    if nodes[source] == nodes[f_dict['val']]:
+                        continue
+                    # import pdb; pdb.set_trace()
+
+                    links.append({'source':source, 'target':f_dict['val'], 'value':f_dict['count']})
+                rec_nivel = nivel + 1
+                rec_niveis(f_dict['val'], f_dict, rec_nivel)
+
+        try:
+            """
+            Caso o Solr tenha retornado um json, chama funcao recursiva para
+            montar a estrutura de dados do grafico sankey.
+            """
+            resposta_json = resposta.json()
+            rec_niveis(0, resposta_json['facets'], 1)
+            return (links, conf)
+        except:
+            return None
 
 
 ######################
@@ -1220,6 +1288,25 @@ class EntryPointView(LoginRequiredMixin, View):
 
 
 
+
+class MultidimensionalTableView(EntryPointView):
+    """
+    Multidimensional charts endpoint
+    """
+
+    def json_response(self):
+        # Sankey Chart
+        # import pdb; pdb.set_trace()
+        if self.kwargs['table_type'] == 'pivot_table' and not 'pivot_table' in COLLECTIONS[self.collection]['omite_secoes']:
+            levels_list = self.data['json_levels_list']
+            retorno = self.solr_queries.get_content_pivot_table_json_facet(self.collection, self.fq, levels_list , self.json_selected_facets)
+
+
+            # import pdb; pdb.set_trace()
+            if retorno:
+                solr_json = {'links': json.dumps(retorno[0]), 'conf': json.dumps(retorno[1])}
+                # import pdb; pdb.set_trace()
+                return solr_json
 
 
 
@@ -1755,6 +1842,11 @@ class ParamsView(LoginRequiredMixin, TemplateView):
         if self.collection in SANKEY_CHART:
             context['sankey_chart_json'] = json.dumps(SANKEY_CHART[self.collection])
             context['sankey_chart'] = SANKEY_CHART[self.collection]
+
+        context['pivot_table'] =  ''
+        if self.collection in PIVOT_TABLE:
+            context['pivot_table_json'] = json.dumps(PIVOT_TABLE[self.collection])
+            context['pivot_table'] = PIVOT_TABLE[self.collection]
 
         context['bubble_chart'] =  ''
         if self.collection in BUBBLE_CHART:
