@@ -1109,7 +1109,23 @@ class EntryPointView(LoginRequiredMixin, View):
 
     model = Pesquisa
     form_class = PesquisaForm
-    template_name = 'solr_front/base_spa.html'
+
+
+    def get_project_template():
+        """
+        Verifica se existe template especifico para o projeto, senao usa o default.
+        """
+        from solr_front import PROJECT_NAME
+        return 'base_%s.html' % (PROJECT_NAME)
+
+    template_name = 'solr_front/custom/%s' % (get_project_template())
+
+    try:
+        get_template(template_name)
+    except TemplateDoesNotExist as e:
+        template_name = 'solr_front/default/base_default.html'
+
+    # template_name = 'solr_front/base_spa.html'
 
     def dispatch(self, request, *args, **kwargs):
         #self.collection =  body_json.keys()[0]
@@ -1658,7 +1674,22 @@ class AddVerticeView(CreateView):
     """
     model = Pesquisa
     form_class = PesquisaForm
-    template_name = 'solr_front/base_spa.html'
+
+    def get_project_template():
+        """
+        Verifica se existe template especifico para o projeto, senao usa o default.
+        """
+        from solr_front import PROJECT_NAME
+        return 'base_%s.html' % (PROJECT_NAME)
+
+    template_name = 'solr_front/custom/%s' % (get_project_template())
+
+    try:
+        get_template(template_name)
+    except TemplateDoesNotExist as e:
+        template_name = 'solr_front/default/base_default.html'
+
+    # template_name = 'solr_front/base_spa.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.collection =  kwargs['collection']
@@ -1805,7 +1836,22 @@ class AutoComplete(View):
 class ParamsView(LoginRequiredMixin, TemplateView):
     """ Carrega a pagina inicial do buscador """
 
-    template_name = 'solr_front/base_spa.html'
+
+    def get_project_template():
+        """
+        Verifica se existe template especifico para o projeto, senao usa o default.
+        """
+        from solr_front import PROJECT_NAME
+        return 'base_%s.html' % (PROJECT_NAME)
+
+    template_name = 'solr_front/custom/%s' % (get_project_template())
+
+    try:
+        get_template(template_name)
+    except TemplateDoesNotExist as e:
+        template_name = 'solr_front/default/base_default.html'
+
+
 
     def dispatch(self, request, *args, **kwargs):
         self.collection = kwargs['collection']
@@ -1827,6 +1873,7 @@ class ParamsView(LoginRequiredMixin, TemplateView):
 
         self.get_context_data()
         return super(ParamsView, self).dispatch(request, *args, **kwargs)
+
 
     def get_context_data(self, **kwargs):
         context = super(ParamsView, self).get_context_data(**kwargs)
@@ -2089,10 +2136,3 @@ class ExportDataView(View):
                 dict[key] = value
 
         return dict
-
-
-class Params2View(ParamsView):
-    """
-    Carrega a pagina inicial do buscador.
-    """
-    template_name = 'solr_front/base_spa.html'
