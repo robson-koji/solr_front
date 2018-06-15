@@ -19,12 +19,12 @@ urls = patterns('',
     # Colecao principal
 
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/$',  never_cache(SearchView.as_view()), name='search'),
-    url(r'^(?P<collection>\w+)/(?P<id>\d+)/params/$',  never_cache(Params2View.as_view()), name='params_id' ),
+    url(r'^(?P<collection>\w+)/(?P<id>\d+)/params/$',  never_cache(ParamsView.as_view()), name='params_id' ),
 
     # Colecoes relacionadas
     url(r'^(?P<collection>\w+)/$',  never_cache(HomeCollection.as_view()), name='home_collection'),
     url(r'^(?P<collection>\w+)/autocomplete/',  never_cache(AutoComplete.as_view()), name='autocomplete'),
-    url(r'^(?P<collection>\w+)/(?P<id>\d+)/funil/(?P<collection_destino>\w+)/(?P<hash_querybuilder>\d+)/$', never_cache(AddVerticeView.as_view()), name='funil'),
+        url(r'^(?P<collection>\w+)/(?P<id>\d+)/funil/(?P<collection_destino>\w+)/(?P<hash_querybuilder>\d+)/$', never_cache(AddVerticeView.as_view()), name='funil'),
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/relacionadas/$',  never_cache(RelatedCollection.as_view()), name='colecoes_relacionadas'),
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/totalizadores/$',  TotalizadorView.as_view(), name='totalizadores'),
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/multidimensional_chart/(?P<chart_type>\w+)/$',  MultidimensionalChartView.as_view(), name='multidimensional_chart'),

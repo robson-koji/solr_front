@@ -1271,6 +1271,42 @@ var wos_opt = {
 
 
 
+
+var enade_opt = {
+        roots: [{
+            'value':'enade',
+            'text': 'ENADE'
+          }],
+            filters: [
+              {
+                 id: 'ATIVIDADES-DE-ENSINO_DISCIPLINAS',
+                 label: 'ATIVIDADES-DE-ENSINO_DISCIPLINAS',
+                 type: 'string',
+                 operators: ["equal","not_equal"],
+                 input: function(rule, name){
+                   /*
+                     Função usada no atributo input dos filtros
+                     para criar um campo input com autocomplete.
+                   */
+                   var $container = rule.$el.find('.rule-value-container');
+
+                   id =  name;
+                   q = 'django_ct:bv_memoria';
+                   fl = "*";
+                   rows = 20;
+                   fields = ["ATIVIDADES-DE-ENSINO_DISCIPLINAS_busca","ATIVIDADES-DE-ENSINO_DISCIPLINAS_busca"];
+                   ac_facet_field = "ATIVIDADES-DE-ENSINO_DISCIPLINAS";
+                   return injectAutocompleteTag(id, q, rows, fl, fields, ac_facet_field);
+                 },
+             },
+
+
+           ]
+};
+
+
+
+
 var bv_empresas_opt = {
         roots: [
           {
