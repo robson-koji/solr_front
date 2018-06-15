@@ -22,6 +22,7 @@ BV_GRAPH = {"graph_auxilios": ["bv_memoria", "graph_auxilios", "bv_empresas", "b
             "rais": [],
             "lattes": [],
             "wos": [],
+            "enade": [],
             }
 
 # Vertices
@@ -1003,7 +1004,6 @@ COLLECTIONS = {
             {'groupBy': {'id': 'estudante', 'label': 'Dados do estudante', 'order': 1},
              'facetGroup': [
                  {'label': '', 'render': 'barChart_1', 'facets': [{'chave': 'NU_IDADE', 'label': 'Idade'}]},
-                 {'label': '', 'render': 'barChart_1', 'facets': [{'chave': 'DS_COR_RACA_ALUNO', 'label': 'Cor/Raça'}]},
                  {'label': '', 'render': 'halfPieChart', 'facets': [{'chave': 'TP_SEXO', 'label': 'Sexo'}]},
                  {'label': '', 'render': 'barChart_1',
                   'facets': [{'chave': 'ANO_FIM_2G', 'label': 'Ano de termino do Ensino Médio'}]},
@@ -1777,6 +1777,13 @@ EDGES = {
         'vertices': {
         },
     },
+    'enade': {
+        'collection': 'enade',
+        # 'sort':'numero_processo asc',
+        'vertices': {
+        },
+    },
+
     'rais': {
         'collection': 'rais',
         # 'sort':'numero_processo asc',
