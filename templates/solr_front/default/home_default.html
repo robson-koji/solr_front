@@ -4,11 +4,14 @@
 <script type="text/javascript" src={% static "solr_front/js/external_lib/jquery.js" %}></script>
 </head>
 
-<h1>Buscador BV</h1>
+<h1>Buscador Analítico</h1>
 
 <p>
-Bem vindo ao buscador da Biblioteca Virtual da FAPESP.<br>
-Blablabla
+Esta é a página padrão do Buscador Analítico que se encontra em <i>solr_front/templates/solr_front/custom/home_default.html</i>.
+</p>
+
+<p>
+Para criar a página do seu buscador copie este arquivo com o 'home_&lt;nome da seu projeto Django&gt;.html' e personalize-o como quiser.
 </p>
 
 
@@ -49,20 +52,7 @@ Blablabla
   <p>Selecione a base de dados que você quer analisar</p>
 
   <ul>
-    {% if user.username == 'buscador_aval' %}
-    <li><a href="{% url 'params_id' collection='pesquisa_pipe' idioma=idioma  id=0 %}">Pesquisa PIPE 2017</a></li>
-    {% endif %}
-    <li><a href="{% url 'params_id' collection='graph_auxilios' idioma=idioma id=0 %}">Projetos (Auxílios e Bolsas)</a></li>
-    <li><a href="{% url 'params_id' collection='bv_memoria' idioma=idioma  id=0 %}">Publicações Científicas</a></li>
-    <li><a href="{% url 'params_id' collection='memoria_autoria' idioma=idioma  id=0 %}">Autorias das Publicações Científicas</a></li>
-    <li><a href="{% url 'params_id' collection='bv_empresas' idioma=idioma  id=0 %}">Empresas do PIPE</a></li>
-    {# <li><a href="{% url 'params_id' collection='bv_pesquisadores' idioma=idioma  id=0 %}">Pesquisadores FAPESP</a></li> #}
-    <li><a href="{% url 'params_id' collection='inep_docentes' idioma=idioma  id=0 %}">INEP - Docentes</a></li>
-    <li><a href="{% url 'params_id' collection='inep_alunos' idioma=idioma  id=0 %}">INEP - Alunos</a></li>
-    <li><a href="{% url 'params_id' collection='fazenda_sp' idioma=idioma  id=0 %}">Fazenda SP - Execução orçamentária</a></li>
-    <li><a href="{% url 'params_id' collection='rais' idioma=idioma  id=0 %}">Ministério do Trabalho - RAIS</a></li>
-    <li><a href="{% url 'params_id' collection='lattes' idioma=idioma  id=0 %}">CNPQ - CV Lattes</a></li>
-    <li><a href="{% url 'params_id' collection='wos' idioma=idioma  id=0 %}">Web of Science</a></li>
+    <li><a href="{% url 'params_id' collection='inep_alunos' idioma=idioma  id=0 %}">Collection de teste (INEP Alunos)</a></li>
   </ul>
 
 
@@ -73,11 +63,7 @@ Blablabla
   <h3>Selecione abaixo para obter mais informações sobre as bases de dados</h3>
 
   <ul>
-    <li><a href="{% url 'home_collection' collection='graph_auxilios' idioma=idioma %}">Projetos (Auxílios e Bolsas)</a></li>
-    <li><a href="{% url 'home_collection' collection='bv_memoria' idioma=idioma %}">Publicações Científicas</a></li>
-    <li><a href="{% url 'home_collection' collection='bv_empresas' idioma=idioma %}">Empresas do PIPE</a></li>
-    {# <li><a href="{% url 'home_collection' collection='bv_pesquisadores' idioma=idioma  id=0 %}">Pesquisadores FAPESP</a></li> #}
-
+    <li><a href="{% url 'home_collection' collection='inep_alunos' idioma=idioma %}">Collection de teste (INEP Alunos)</a></li>
   </ul>
 
 {% endif %}
