@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
+from django.views.generic.edit import FormView, CreateView, UpdateView
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, TemplateView
 from django.views.generic.base import RedirectView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView, CreateView, UpdateView
-
+from django.template.loader import get_template
+from django.template import TemplateDoesNotExist
 
 from django.core.urlresolvers import reverse
-
 from django.shortcuts import redirect
 
 from conf import *
@@ -1109,7 +1109,7 @@ class EntryPointView(LoginRequiredMixin, View):
 
     model = Pesquisa
     form_class = PesquisaForm
-    template_name = 'solr_front/base_solr2.html'
+    template_name = 'solr_front/base_spa.html'
 
     def dispatch(self, request, *args, **kwargs):
         #self.collection =  body_json.keys()[0]
@@ -1658,7 +1658,7 @@ class AddVerticeView(CreateView):
     """
     model = Pesquisa
     form_class = PesquisaForm
-    template_name = 'solr_front/base_solr2.html'
+    template_name = 'solr_front/base_spa.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.collection =  kwargs['collection']
@@ -1712,6 +1712,7 @@ class AddVerticeView(CreateView):
             @param: campo_dinamico_busca Nao estah usando
             """
 
+            import pdb; pdb.set_trace()
             pedido = self.solr_queries.do_reindex(se, kwargs['collection_destino'])
 
             self.id = self.navigate.add_vertice( kwargs['collection_destino'], int(kwargs['id']), {'qs_selected_facets':{self.solr_queries.campo_dinamico_busca:[self.solr_queries.hash_querybuilder]}}, self.solr_queries.hash_querybuilder, '', pedido.id)
@@ -1760,7 +1761,24 @@ class HomeBuscador(LoginRequiredMixin, TemplateView):
             erro = {'titulo':'Já existe uma pesquisa em andamento',
                 'descricao': ''}
 
-        return render_to_response('solr_front/home_bv.html', {'erro': erro, 'idioma':kwargs['idioma'] }, context_instance=RequestContext(self.request))
+        # Get project´s template for the homepage or return default template
+        template_name = 'solr_front/custom/%s' % (self.get_project_template())
+        try:
+            get_template(template_name)
+        except TemplateDoesNotExist as e:
+            template_name = 'solr_front/default/home_default.html'
+
+        # import pdb; pdb.set_trace()
+
+
+        return render_to_response(template_name, {'erro': erro, 'idioma':kwargs['idioma'] }, context_instance=RequestContext(self.request))
+
+
+    def get_project_template(self):
+        from solr_front import PROJECT_NAME
+        return 'home_%s.html' % (PROJECT_NAME)
+
+
 
 
 
@@ -1787,7 +1805,7 @@ class AutoComplete(View):
 class ParamsView(LoginRequiredMixin, TemplateView):
     """ Carrega a pagina inicial do buscador """
 
-    template_name = 'solr_front/base_solr2.html'
+    template_name = 'solr_front/base_spa.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.collection = kwargs['collection']
@@ -2077,4 +2095,4 @@ class Params2View(ParamsView):
     """
     Carrega a pagina inicial do buscador.
     """
-    template_name = 'solr_front/base_solr2.html'
+    template_name = 'solr_front/base_spa.html'
