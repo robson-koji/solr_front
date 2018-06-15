@@ -1008,7 +1008,7 @@ COLLECTIONS = {
                  {'label': '', 'render': 'barChart_1',
                   'facets': [{'chave': 'ANO_FIM_2G', 'label': 'Ano de termino do Ensino Médio'}]},
                  {'label': '', 'render': 'barChart_1',
-                  'facets': [{'chave': 'ANO_IN_GRAD', 'label': 'Ano início da graduação'}]},
+                  'facets': [{'chave': 'ANO_IN_GRAD', 'label': 'Ano início da graduaçao'}]},
 
              ]},
 
