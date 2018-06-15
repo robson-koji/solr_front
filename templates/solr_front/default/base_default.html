@@ -27,7 +27,7 @@
 
 
     <script type="text/javascript" src='{% static "solr_front/js/external_lib/jquery.js" %}'></script>
-		
+
 		<script type="text/javascript" src='{% static "solr_front/js/external_lib/QueryBuilder/i18n/pt_BR.js" %}'></script>
 
 
@@ -160,7 +160,7 @@
 					<select id="select_home" class="form-control">
 					 <option value="inicial">Opções:</option>
 					 <option value="modal_navigation_tree">Mapa de navegação da pesquisa em andamento</option>
-					 <option value="/pt/buscador/bv/">Iniciar nova busca</option>
+					 <option value="/">Iniciar nova busca</option>
 					 <option value="inicial">Salvar pesquisa</option>
 					 <option value="exp_csv">Exportar a pesquisa para Excel</option>
 					</select>
@@ -411,9 +411,6 @@
 			<div style="display: inline-block; text-align:left; width:80%">
 				Produto desenvolvido com o apoio técnico da Biblioteca Virtual da FAPESP - <a href="http://www.bv.fapesp.br">BV FAPESP</a>
 			</div>
-			<div style="display: inline-block;">
-				<img src='{% static "solr_front/template/img/logo-bv.jpg" %}' title="Logo bv-cdi fapesp" />
-			</div>
 		</div>
 
 		<footer>
@@ -474,7 +471,7 @@
 				 </div>
 				 <div class="modal-footer" style="text-align:center">
 					 <input type="button" class="btn btn-info" value="Recarregar a página" onClick="window.location.href=window.location.href">
-					 <a href="/pt/buscador/bv/" class="btn btn-warning" role="button">Iniciar nova pesquisa</a>
+					 <a href="/" class="btn btn-warning" role="button">Iniciar nova pesquisa</a>
 				 </div></div></div></div>
 
 
@@ -506,11 +503,10 @@
 				         </div>
 				         <div class="modal-footer">
 									 <!-- link para fazer a solicitação -->
-				            	<!-- /pt/buscador/bv/{{ collection }}/{{ id_collection }}/export_data/ -->
 											<script type="text/javascript">
 											$("#form_csv").submit(function(e) {
 
-													var url = '/pt/buscador/bv/{{ collection }}/{{ id_collection }}/export_data/'; // the script where you handle the form input.
+													var url = '/{{ collection }}/{{ id_collection }}/export_data/'; // the script where you handle the form input.
 
 													$.ajax({
 																 type: "GET",

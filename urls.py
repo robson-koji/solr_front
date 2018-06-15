@@ -11,13 +11,13 @@ urls = patterns('',
     (r'^foo/$', TemplateView.as_view(template_name='solr_front/graficos/parallel_coord.html')),
 
     # Pesquisa
-    url(r'^$', never_cache(HomeBuscador.as_view()), name='home_bv' ),
+    url(r'^$', never_cache(HomeBuscador.as_view()), name='home' ),
     url(r'^clean_session/(?P<id>\d+)/$',  never_cache(CleanSession.as_view()), name='clean_session'),
+
     # consulta celery tasks
     url(r'^consulta_pedido/$', AjaxCeleryStatusView.as_view(), name='consulta_pedido'),
 
     # Colecao principal
-
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/$',  never_cache(SearchView.as_view()), name='search'),
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/params/$',  never_cache(ParamsView.as_view()), name='params_id' ),
 
@@ -36,5 +36,4 @@ urls = patterns('',
 
     # ajax editable
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/params/node_edit$', AjaxVerticeEditFieldView.as_view(), name='node_edit'),
-
 )

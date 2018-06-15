@@ -1,0 +1,1 @@
+Este sistema faz uso de bibliotecas e softwares open source, cujas respectivas licensas se encontram nesta pasta.
