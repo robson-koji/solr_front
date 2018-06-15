@@ -415,8 +415,6 @@ class StreamingExpressions(View):
 
             hash_join = hash_join.replace('%', '%25')
 
-            # if v == 'bv_empresas' :
-            #     import pdb; pdb.set_trace()
             self.hash_join[v] = hash_join # Streaming expression de hashJoin
 
 
@@ -1867,7 +1865,7 @@ class ParamsView(LoginRequiredMixin, TemplateView):
 
         elif self.vertice['id'] != self.id:
             # import pdb; pdb.set_trace()
-            return redirect(reverse('home_bv',kwargs={'idioma':kwargs['idioma']}), permanent=False )
+            return redirect(reverse('home',kwargs={'idioma':kwargs['idioma']}), permanent=False )
 
 
 
@@ -1944,7 +1942,7 @@ class CleanSession(TemplateView):
         self.navigate = NavigateCollection(self.request, '')
         self.navigate.remove_vertice(int(kwargs['id']))
         erro = {}
-        return redirect(reverse('home_bv',kwargs={'idioma':kwargs['idioma']}), permanent=False )
+        return redirect(reverse('home',kwargs={'idioma':kwargs['idioma']}), permanent=False )
 
 
 
