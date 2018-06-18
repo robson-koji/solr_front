@@ -1043,6 +1043,7 @@ SANKEY_CHART = {
                     {'value': 'DS_COR_RACA_DOCENTE', 'label': 'Docente - Cor/Raça'},
                     ],
     },
+
     'inep_alunos': {
         'default_level_1': {'value': 'NO_OCDE_AREA_GERAL', 'label': 'OCDE - Geral'},
         'default_level_2': {'value': 'DS_CATEGORIA_ADMINISTRATIVA', 'label': 'IES - Categoria Administrativa'},
@@ -1157,8 +1158,24 @@ SANKEY_CHART = {
             {'value': 'tipo_convenio_exact', 'label': 'Tipo de convênio'},
             {'value': 'pais_convenio_exact', 'label': 'País de convênio'},
         ]
-    }
+    },
 
+    'enade': {
+        'default_level_1': {'value': 'CO_CATEGAD', 'label': 'IES - Categoria Administrativa'},
+        'default_level_2': {'value': 'CO_ORGACAD', 'label': 'IES - Organização Acadêmica'},
+        'default_level_3': {'value': 'GEOGRAFICO_facet', 'label': 'ENADE - Região'},
+        'options': [{'value': 'CO_ORGACAD', 'label': 'IES - Organização Acadêmica'},
+                    {'value': 'UF_CURSO', 'label': 'Curso - UF'},
+                    {'value': 'CO_CATEGAD', 'label': 'IES - Categoria Administrativa'},
+                    {'value': 'GEOGRAFICO_facet', 'label': 'ENADE - Região'},
+                    {'value': 'Ano_facet', 'label': 'Ano Pesquisa - ENADE'},
+                    {'value': 'TP_SEXO', 'label': 'Sexo'},
+                    {'value': 'Cor_Raca', 'label': 'Cor/Raça'},
+                    {'value': 'Estado_Civil', 'label': 'Estado Civil'},
+                    {'value': 'Renda_familiar', 'label': 'Renda familiar'},
+                    ],
+
+    },
 }
 
 PIVOT_TABLE = {
@@ -1293,7 +1310,24 @@ PIVOT_TABLE = {
             {'value': 'tipo_convenio_exact', 'label': 'Tipo de convênio'},
             {'value': 'pais_convenio_exact', 'label': 'País de convênio'},
         ]
-    }
+    },
+
+    'enade': {
+        'default_level_1': {'value': 'CO_CATEGAD', 'label': 'IES - Categoria Administrativa'},
+        'default_level_2': {'value': 'CO_ORGACAD', 'label': 'IES - Organização Acadêmica'},
+        'default_level_3': {'value': 'GEOGRAFICO_facet', 'label': 'ENADE - Região'},
+        'options': [{'value': 'CO_ORGACAD', 'label': 'IES - Organização Acadêmica'},
+                    {'value': 'UF_CURSO', 'label': 'Curso - UF'},
+                    {'value': 'CO_CATEGAD', 'label': 'IES - Categoria Administrativa'},
+                    {'value': 'GEOGRAFICO_facet', 'label': 'ENADE - Região'},
+                    {'value': 'Ano_facet', 'label': 'Ano Pesquisa - ENADE'},
+                    {'value': 'TP_SEXO', 'label': 'Sexo'},
+                    {'value': 'Cor_Raca', 'label': 'Cor/Raça'},
+                    {'value': 'Estado_Civil', 'label': 'Estado Civil'},
+                    {'value': 'Renda_familiar', 'label': 'Renda familiar'},
+                    ],
+
+    },
 
 }
 
@@ -1403,7 +1437,24 @@ BUBBLE_CHART = {
             {'value': 'DOUTORADO_FLAG-BOLSA', 'label': 'Doutorado - Bolsa'},
             {'value': 'DOUTORADO_GRANDE-AREA-DO-CONHECIMENTO', 'label': 'Doutorado - Área do conhecimento'},
         ],
-    }
+    },
+
+    'enade': {
+        'default_level_1': {'value': 'CO_CATEGAD', 'label': 'IES - Categoria Administrativa'},
+        'default_level_2': {'value': 'CO_ORGACAD', 'label': 'IES - Organização Acadêmica'},
+        'default_level_3': {'value': 'GEOGRAFICO_facet', 'label': 'ENADE - Região'},
+        'options': [{'value': 'CO_ORGACAD', 'label': 'IES - Organização Acadêmica'},
+                    {'value': 'UF_CURSO', 'label': 'Curso - UF'},
+                    {'value': 'CO_CATEGAD', 'label': 'IES - Categoria Administrativa'},
+                    {'value': 'GEOGRAFICO_facet', 'label': 'ENADE - Região'},
+                    {'value': 'Ano_facet', 'label': 'Ano Pesquisa - ENADE'},
+                    {'value': 'TP_SEXO', 'label': 'Sexo'},
+                    {'value': 'Cor_Raca', 'label': 'Cor/Raça'},
+                    {'value': 'Estado_Civil', 'label': 'Estado Civil'},
+                    {'value': 'Renda_familiar', 'label': 'Renda familiar'},
+                    ],
+
+    },
 }
 
 """
@@ -1710,6 +1761,7 @@ MULTILEVEL_BARCHART_1 = {
             {'value': 'GEOGRAFICO_facet', 'label': 'Região da pesquisa'},
             {'value': 'ANO_FIM_2G_facet', 'label': 'Ano fim do 2° grau'},
             {'value': 'ANO_IN_GRAD_facet', 'label': 'Ano fim da graduação'},
+            {'value': 'Renda_familiar', 'label': 'Renda Familiar'},
 
         ],
         'y_stratification': [
