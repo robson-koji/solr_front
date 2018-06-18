@@ -144,8 +144,8 @@ function getData(busca_realizada_str){
             recuperaSankeyChart(busca_realizada)
           }
 
-          recuperaPivotTable(busca_realizada)
-        
+          // recuperaPivotTable(busca_realizada)
+
 
           if (omite_secoes.indexOf('bubblechart') === -1){
             recuperaBubbleChart(busca_realizada)

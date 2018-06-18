@@ -58,7 +58,7 @@ Collection definition template.
 COLLECTIONS = {
 
     'graph_auxilios': {
-        'omite_secoes': ['refine'],
+        'omite_secoes': ['refine', 'sankey', 'bubblechart'],
         'django_ct': 'projetos.projeto OR bolsas.bolsa',
         'label': u'Projetos (Auxílios e Bolsas)',
         'campo_dinamico_busca': 'cross_collection_auxilios',
