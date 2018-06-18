@@ -1015,6 +1015,8 @@ COLLECTIONS = {
 
         ],
         'totalizadores': [
+            {'label': 'Total de estudantes', 'facet': {'ID': ["*"]}, 'docs': {}, 'type': ['main'], 'order': 1},
+
         ],
     },
 
