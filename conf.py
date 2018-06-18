@@ -1702,6 +1702,26 @@ MULTILEVEL_BARCHART_1 = {
         ],
     },
 
+    'enade': {
+        'default_level_1': 'CO_CATEGAD',
+        'default_level_2': 'Ano_facet',
+        'y_axis': [
+            {'value': 'Ano_facet', 'label': 'Ano da pesquisa'},
+            {'value': 'GEOGRAFICO_facet', 'label': 'Região da pesquisa'},
+            {'value': 'ANO_FIM_2G_facet', 'label': 'Ano fim do 2° grau'},
+            {'value': 'ANO_IN_GRAD_facet', 'label': 'Ano fim da graduação'},
+
+        ],
+        'y_stratification': [
+            {'value': 'CO_ORGACAD', 'label': 'Categoria da organização acadêmica'},
+            {'value': 'CO_GRUPO', 'label': 'Área de enquadramento do curso no Enade'},
+            {'value': 'TP_SEXO', 'label': 'Sexo'},
+            {'value': 'Estado_Civil', 'label': 'Estado Civil'},
+            {'value': 'Cor_Raca', 'label': 'Cor/Raça'},
+            {'value': 'Renda_familiar', 'label': 'Renda Familiar'},
+
+        ],
+    },
 }
 
 """
