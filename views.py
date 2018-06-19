@@ -62,12 +62,7 @@ class LoginRequiredMixin(object):
 
 
 
-# def currency(valor):
-#     locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-#     valor = locale.currency(valor, grouping=True, symbol='R$')
-#     return valor
-#     # resultado: Valor: 1.768,00
-
+# class LoadCollection(object)
 
 
 
@@ -184,6 +179,10 @@ class NavigateCollection(View):
         Se nao, cria vertice.
         """
 
+        # print '\n\n add_vertice 1'
+        # import pdb; pdb.set_trace()
+
+
         def set_vertice(collection, hash_id, pai_id, pedido):
 
             return {'label':COLLECTIONS[collection]['label'],
@@ -212,7 +211,12 @@ class NavigateCollection(View):
             hash_id = self.count_vertices(self.vertice_inicial['tree'])
             vertice_filho = set_vertice(collection, hash_id, pai_id, pedido)
             vertice['tree'].append(vertice_filho)
+
+            # print '\n\n add_vertice 2'
+            # import pdb; pdb.set_trace()
+
             return hash_id
+
         else:
             # If master parent, create a "random" id
             random_id =  int(hashlib.sha1(str(datetime.now())).hexdigest(), 16) % (10 ** 8)
@@ -258,6 +262,9 @@ class NavigateCollection(View):
             # Se parar aqui eh pq tem erro de navegacao.
             alerta = "Erro de navegação!"
             return render_to_response('solr_front/muda_collection.html', {'alerta': alerta, 'collection':self.collection, 'idioma':'pt'})
+
+        # print '\n\n update_vertice'
+        # import pdb; pdb.set_trace()
 
         vertice['body_json'] = body_json
         vertice['hash_querybuilder'] = hash_querybuilder
@@ -501,7 +508,6 @@ class SolrQueries(LoginRequiredMixin, View):
         self.server_qt = '/select'
         self.hash_querybuilder = 0
         self.campo_dinamico_busca = COLLECTIONS[self.collection]['campo_dinamico_busca']
-        self.related_indexing = RelatedIndexing()
 
 
     def executaStreamingExpression(self, se):
@@ -512,19 +518,15 @@ class SolrQueries(LoginRequiredMixin, View):
         response =  requests.get(url).json()
         return response
 
-
     def sorlGenericConnection(self, select):
         """ Executa url do Solr a partir do raiz """
         url = self.solr_connection + select
         response =  requests.get(url).json()
         return response
 
-
     def sorlJsonQuery(self, data):
         """
         Executa url json do Solr
-
-        !!! Passar tudo para json api e remover acima.
         """
         solr_url = self.solr_connection + self.collection + '/query'
 
@@ -719,18 +721,6 @@ class SolrQueries(LoginRequiredMixin, View):
         return data
 
 
-        """
-        # Precisa acertar os facets e fq....
-        if not selected_facets and not fq:
-            fq2 = ''
-        if fq:
-            fq = ',fq=' + fq
-        if selected_facets:
-            fq2 = fq + ', ' + selected_facets
-
-        return self.collection + '/query/?q=*:*&fl=,&json.facet={avg:"avg(' + avg_field + ')"}&%s' % (fq2)
-        """
-
     def get_facets_json_api_unique(self, unique_field, fq, selected_facets):
         """ Recupera a qt de valores unicos para um determinado facet """
         se = 'null(unique(search(%s, qt="/export", q=*:*, fl="%s", sort="%s asc", %s),over="%s"),)'
@@ -806,59 +796,47 @@ class SolrQueries(LoginRequiredMixin, View):
         requests.post(update_url, json=json_ids)
 
 
-    def already_indexed(self, collection, streaming_expression):
+    def get_or_create_related_collection_db(self, collection, streaming_expression):
         """
-        Verifica no banco de dados as buscas das collections relacionadas indexadas.
-        Retorna objeto to banco, que tem a qt indexada.
+        Verifica se contagem (count e top) das collections relacionadas
+        estao armazenadas no DB.
+            1. Sim - retorna para o template mostrar
+            2. Nao - contabiliza novamente, armazena e retorna para o template.
+        Se nao estiver no banco:
+            Contabiliza, armazena e retorna para o template.
         """
+
+        def get_count_get_top(streaming_expression, collection):
+            streaming_expression.get_count_joined(collection)
+            streaming_expression.get_top_joined(collection)
+
+            count = streaming_expression.count[collection]
+            top = streaming_expression.top[collection]
+            return (count, top)
+
+        # Se registro jah existe no banco
         try:
-            related_indexing = RelatedIndexing.objects.get(hash_querybuilder = self.hash_querybuilder )
-            valid = related_indexing.date_valid()
-            return related_indexing
-        except:
-            return None
-
-    def update_indexed(self, hash_querybuilder):
-        """
-        Atualiza somente data de modificacao, apos uma indexacao de fato.
-        Qdo o usuario realmente clicou em uma collection relacionada.
-        """
-        try:
-            related_indexing = RelatedIndexing.objects.get(hash_querybuilder = hash_querybuilder )
-            if isinstance(related_indexing, RelatedIndexing):
-                    related_indexing.modified_date = datetime.now()
-        except:
-            raise Exception('RelatedIndexing object nao existe')
-
-
-
-    def record_indexed(self, collection, streaming_expression):
-        """
-        Recupera os valores das collections relacionadas e armazena no banco.
-        """
-        streaming_expression.get_count_joined(collection)
-        streaming_expression.get_top_joined(collection)
-
-        count = streaming_expression.count[collection]
-        top = streaming_expression.top[collection]
-
-        # Se registro jah existe no banco, atualiza.
-        related_indexing = self.already_indexed(collection, streaming_expression)
-        if isinstance(related_indexing, RelatedIndexing):
-            # Sempre que uma collection apresenta os seus relacionados, contabiliza.
-            # Se estiver onerando, verificar a data de validade para contabilizar
-            # os relacionados.
-            related_indexing.join=streaming_expression.hash_join[collection]
-            related_indexing.qt_col1 = count['col1']['value']
-            related_indexing.qt_col2 = count['col2']['value']
-        else: # Senao, cria registro no banco.
-            related_indexing = RelatedIndexing(hash_querybuilder=self.hash_querybuilder,
+            related_collection_chk = RelatedCollectionsCheck.objects.get(hash_querybuilder = self.hash_querybuilder )
+            # Se nao precisar recontar, retorna objeto recuperado.
+            if not related_collection_chk.recount():
+                return related_collection_chk
+            # Senao, reconta, grava e retorna objeto atualizado.
+            else:
+                (count, top) = get_count_get_top(streaming_expression, collection)
+                related_collection_chk.join=streaming_expression.hash_join[collection]
+                related_collection_chk.qt_col1 = count['col1']['value']
+                related_collection_chk.qt_col2 = count['col2']['value']
+        # Senao, cria registro no banco.
+        except RelatedCollectionsCheck.DoesNotExist:
+            print "\n\n\n Does not exist"
+            (count, top) = get_count_get_top(streaming_expression, collection)
+            related_collection_chk = RelatedCollectionsCheck(hash_querybuilder=self.hash_querybuilder,
                 join=streaming_expression.hash_join[collection],
                 qt_col1 = count['col1']['value'],
                 qt_col2 = count['col2']['value'],
                 )
-        related_indexing.save()
-        return related_indexing
+        related_collection_chk.save()
+        return related_collection_chk
 
 
 
@@ -1543,15 +1521,15 @@ class SearchView(EntryPointView):
         else:
             return label
 
+
     def celery_check(self, vertice):
         task_id = vertice['pedido']
-        # hash_querybuilder = vertice['hash_querybuilder']
-        # hash querybuilder do pai
 
-        # for dict in self.navigate.get_navigation_tree():
-        #     if dict['id'] == vertice['id']:
-        #         hash_querybuilder = dict['hash_querybuilder']
-        # import pdb; pdb.set_trace()
+        if not self.vertice['hash_querybuilder'] == 0:
+            """ Atualiza a data de indexacao da sub-collection """
+            sub_collection = RelatedCollectionsCheck.objects.get(hash_querybuilder = self.vertice['hash_querybuilder'])
+            sub_collection.indexed_date = datetime.now()
+            sub_collection.save()
 
         async_result = AsyncResult(task_id)
         if async_result.failed():
@@ -1563,6 +1541,7 @@ class SearchView(EntryPointView):
                 return {'status': 1, 'msg':async_result.state}
             else:
                 return {'status': 0, 'msg':async_result.state}
+
 
 class RelatedCollection(EntryPointView):
     """
@@ -1589,15 +1568,18 @@ class RelatedCollection(EntryPointView):
             self.solr_queries.hash_querybuilder = self.solr_queries.create_hash_querybuilder()
 
             # Executa SE para recuperar as qtds de cada collection relacionada (vertice)
-            # Passando o parametro save=False, nao salva o resultado no banco, somente recupera.
-            related_indexing = self.solr_queries.record_indexed(vertice, self.se)
+            # Se nao houver registro no banco cria.
+            # Se houver, verifica a data segunda uma regra no model e atualiza ou nao.
+            # ! Isso eh soh para apresentar a quantidade de relacionados.
+            # A verificacao da indexacao e indexacao da sub-collection eh feito
+            # no AddVerticeView e na SearchView respectivamente.
+            related_collection_chk = self.solr_queries.get_or_create_related_collection_db(vertice, self.se)
 
-            count[vertice]={'col2':{'value':related_indexing.qt_col2,
+            count[vertice]={'col2':{'value':related_collection_chk.qt_col2,
                              'label':EDGES[self.collection]['vertices'][vertice]['label'],
-                             'parent_hash_querybuilder':related_indexing.hash_querybuilder},
-                      'col1':{'value':related_indexing.qt_col1}}
+                             'parent_hash_querybuilder':related_collection_chk.hash_querybuilder},
+                      'col1':{'value':related_collection_chk.qt_col1}}
             totalizadores = COLLECTIONS[vertice]['totalizadores']
-
 
             solr_json = {'facet':{}, 'sum':{}, 'unique':{}, 'avg':{}}
             for totalizador in totalizadores:
@@ -1606,7 +1588,7 @@ class RelatedCollection(EntryPointView):
                     sum_facets = selected_facets_col2['qs_selected_facets']  + self.selected_facets['qs_selected_facets']
                     docs = totalizador['docs']
 
-                    fq = self.solr_queries.campo_dinamico_busca + ':' + str(related_indexing.hash_querybuilder)
+                    fq = self.solr_queries.campo_dinamico_busca + ':' + str(related_collection_chk.hash_querybuilder)
 
                     totalizador_dict = self.solr_queries.get_totalizador(vertice, fq, selected_facets_col2['qs_selected_facets'], docs)
                     solr_json['facet'] = self.consolida_totalizador(solr_json['facet'], totalizador_dict, totalizador)
@@ -1615,6 +1597,11 @@ class RelatedCollection(EntryPointView):
 
         self.update_vertice()
 
+            # print "\n\n\n - RelatedCollection"
+            # print json.dumps(self.navigate.get_navigation_tree(), sort_keys=True, indent=4)
+            # import pdb; pdb.set_trace()
+
+        #   import pdb; pdb.set_trace()
         return {'count':count, 'top':top, 'related_content':related_content}
 
 
@@ -1738,49 +1725,32 @@ class AddVerticeView(CreateView):
             Como a base muda, os documentos que nao foram indexados precisam ser. E nao indexa tudo sempre pq eh
             muito custoso.
             """
-            # Primeiro recupera a Streaming Expression
+            # 1 - Primeiro recupera a Streaming Expression
+            # def get_join(self, fq, selected_facets, facets_col2):
+
             self.se.get_join(parent_fq,parent_vertice['selected_facets_col1'], '')
             se = self.se.hash_join[kwargs['collection_destino']]
 
-            # Configura instancia do solr_queries para pegar o hash_querybuilder
+            # 2 - Configura instancia do solr_queries para pegar o hash_querybuilder
             self.solr_queries.streaming_expression = se
             self.solr_queries.hash_querybuilder = self.solr_queries.create_hash_querybuilder()
 
-            # Depios gera a Streaming Expression excluindo os documentos que jah estao num_indexados
+            # 3 - Depios gera a Streaming Expression excluindo os documentos que jah estao num_indexados
             # com o respectivo campo.
             exclui_campo_dinamico_busca = 'fq=-' + self.solr_queries.campo_dinamico_busca + ':' + self.solr_queries.hash_querybuilder
 
             self.se.get_join(parent_fq,parent_vertice['selected_facets_col1'], exclui_campo_dinamico_busca)
             se = self.se.hash_join[kwargs['collection_destino']]
 
-            # Reindexa a colecao de destino com o identificador da busca da collection de origem.
-
             """
-            def do_reindex(self, se, collection_destino):
-            @params: se StreamingExpressions que gera url para recuperar o id dos documentos
-            que serao reindexados (funil)
-            @params: collection_destino Collection que serah reindexada (funil)
-
-            def update_atomico(self, url, collection2, campo_dinamico_busca):
-            @param: url Chamada para o Solr via StreamingExpressions para recuperar o id dos objetos que
-            serao indexados (funil).
-            @param: collection2 Collection que serah reindexada (funil)
-            @param: campo_dinamico_busca Nao estah usando
+            Sempre (re)indexa a sub-collection. Se na primeira indexacao da sub-collection
+            nao indexou tudo, por algum problema no Celery, na proxima indexa somente o que faltou.
+            Essa eh uma caracteristica da funcao de indexacao. Ver o do_reindex.
+            Se necessario, eh possivel indexar somente uma vez, mas corre-se o risco de
+            nao indexar tudo e faltarem registros na sub-collection
             """
-
-            # import pdb; pdb.set_trace()
-            pedido = self.solr_queries.do_reindex(se, kwargs['collection_destino'])
-
-            self.id = self.navigate.add_vertice( kwargs['collection_destino'], int(kwargs['id']), {'qs_selected_facets':{self.solr_queries.campo_dinamico_busca:[self.solr_queries.hash_querybuilder]}}, self.solr_queries.hash_querybuilder, '', pedido.id)
-
-
-            """
-            No Http redirect, qdo chama a ParamsView, precisa incluir uma maneira de avisar sobre atualizacao dos dados
-            - Qdo for zero, nao rendereizar a pg e informar que estah indexando e autalizar a pg automaticamente
-            - Qdo for maio que zero, verificar se bate com o numero anterior (relacionados na collection principal e pg do funil)
-                e se nao bater, dizer que estah sendo atualizado e nao  renderizar a pg para o usuario nao comecar as filtragens
-            - Qdo for maior que zero e os resultados baterem, apresentar junto com a data da ultima atualizacao e da proxima.
-            """
+            pedido = self.solr_queries.do_reindex(se, kwargs['collection_destino']).id
+            self.id = self.navigate.add_vertice( kwargs['collection_destino'], int(kwargs['id']), {'qs_selected_facets':{self.solr_queries.campo_dinamico_busca:[self.solr_queries.hash_querybuilder]}}, self.solr_queries.hash_querybuilder, '', pedido)
             return HttpResponseRedirect(self.get_success_url(self.kwargs['collection_destino']))
         else:
             """ Se for uma nova navegacao, inicializa objeto navigation na sessao """
@@ -1859,8 +1829,7 @@ class AutoComplete(View):
 
 
 class ParamsView(LoginRequiredMixin, TemplateView):
-    """ Carrega a pagina inicial do buscador """
-
+    """ Carrega a pagina inicial da pesquisa de uma determinada collection """
 
     def get_project_template():
         """
@@ -1877,19 +1846,22 @@ class ParamsView(LoginRequiredMixin, TemplateView):
         template_name = 'solr_front/default/base_default.html'
 
 
-
     def dispatch(self, request, *args, **kwargs):
+        """
+        Recebe uma collectino e respectivo id.
+        Caso não exista este vertice na pesquisa (objeto navigation da sessao), cria.
+        Se existir, retorna pagina desse vertice.
+        """
         self.collection = kwargs['collection']
         self.id = int(kwargs['id'])
         self.idioma = kwargs['idioma']
         self.navigate = NavigateCollection(self.request, self.collection)
         self.vertice = self.navigate.get_vertice(int(kwargs['id']))
 
+        # import pdb; pdb.set_trace()
 
-        # Verifica se hah uma pesquisa em andamento, caso contrario inicia uma.
         if not self.vertice:
             return redirect(reverse('start_research',kwargs={'collection':self.collection, 'idioma':self.kwargs['idioma']}), permanent=False )
-
         elif self.vertice['id'] != self.id:
             # import pdb; pdb.set_trace()
             return redirect(reverse('home',kwargs={'idioma':kwargs['idioma']}), permanent=False )
@@ -1998,7 +1970,7 @@ class ExportDataView(View):
             # Recupera o id do hash_join para pegar no db o hash_join
             # Com essa streaming expression eh possivel recuperar os dados no Solr.
             hash_querybuilder = navigation[0]["hash_querybuilder"]
-            se = RelatedIndexing.objects.get(hash_querybuilder = hash_querybuilder).join
+            se = RelatedCollectionsCheck.objects.get(hash_querybuilder = hash_querybuilder).join
 
 
         #recria form apartir do request

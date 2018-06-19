@@ -10,10 +10,12 @@ def generate_edges(graph):
     return edges
 
 
-BV_GRAPH = {"graph_auxilios": ["bv_memoria", "graph_auxilios", "bv_empresas", "bv_pesquisadores"],
+BV_GRAPH = {
+            "graph_auxilios": ["bv_memoria", "graph_auxilios", "bv_empresas", "bv_pesquisadores"],
+            #"graph_auxilios": ["bv_pesquisadores"],
             "bv_memoria": ["memoria_autoria"],
             "bv_empresas": ["graph_auxilios"],
-            "bv_pesquisadores": ["graph_auxilios"],
+            "bv_pesquisadores": ["graph_auxilios", "lattes"],
             "memoria_autoria": [],
             "pesquisa_pipe": ["graph_auxilios"],
             "inep_docentes": [],
@@ -785,7 +787,7 @@ COLLECTIONS = {
         'omite_secoes': ['refine', 'documentos', 'related_collections'],
         # Caso nao queira uma determinada secao no buscador.
 
-        'campo_dinamico_busca': 'cross_collection_cv_lattes',
+        'campo_dinamico_busca': 'cross_collection_lattes',
         'id_index_from': '',
         'id_index_to': '',
         'facets_categorias': [
@@ -1757,9 +1759,10 @@ MULTILEVEL_BARCHART_1 = {
 
     'enade': {
         'default_level_1': 'CO_CATEGAD',
-        'default_level_2': 'Ano_facet',
+        'default_level_2': 'NU_ANO',
         'y_axis': [
-            {'value': 'Ano_facet', 'label': 'Ano da pesquisa'},
+            {'value': 'CO_CATEGAD', 'label': 'Categoria Administrativa IES'},
+            {'value': 'NU_ANO', 'label': 'Ano da pesquisa'},
             {'value': 'GEOGRAFICO_facet', 'label': 'Região da pesquisa'},
             {'value': 'ANO_FIM_2G_facet', 'label': 'Ano fim do 2° grau'},
             {'value': 'ANO_IN_GRAD_facet', 'label': 'Ano fim da graduação'},
@@ -1882,13 +1885,6 @@ EDGES = {
                 'many': 'numero_processo',
                 'label': 'Processos (Auxilios e Bolsas)'
             },
-            # 'bv_pesquisadores':{
-            #     'collection':'bv_pesquisadores',
-            #     'relationship_type':'one_to_one',
-            #     'to_one':'django_id',
-            #     'from_one':'id_pesquisador',
-            #     'label':'Pesquisadores'
-            # },
         },
 
     },
@@ -1917,15 +1913,14 @@ EDGES = {
                 'relationship_type': 'one_to_many',
                 'one': 'django_id',
                 'many': 'id_pesquisador',
-                #
-                # 'fl':'id_pesquisador, id ',
-                # 'sort':'id asc',
-                # 'cartesianProduct':'id_pesquisador',
-                # 'fq':'id_pesquisador:*',
-                # 'join':{
-                #     'hashJoin':'django_id=id_pesquisador',
-                # },
                 'label': 'Projetos (Auxílios e Bolsas)'
+            },
+            'lattes': {
+                'collection': 'lattes',
+                'relationship_type': 'one_to_many',
+                'one': 'django_id',
+                'many': 'ID',
+                'label': 'Lattes'
             },
         },
     },
