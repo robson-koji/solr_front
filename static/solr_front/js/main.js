@@ -25,6 +25,24 @@ $(document).ready(function(){
     $('#loader_screen').show()
 
 
+    /*
+    * Nao estah funcionado.
+    * Verificar a diferenca entre funil (subcollection) e uma
+    * collection principal para apresentar diferentes msgs.
+    */
+    var url = $(location).attr('href');
+    var parts = url.split("/");
+    var last_part = parts[parts.length-2];
+
+    if (last_part === 'params'){
+      $('#status_message').append('Os dados estão sendo indexados pelo sistema a uma taxa de aproximadamente 15.000 registros por minuto. Por favor aguarde...')
+    }
+    else{
+      $('#status_message').append('Carregando...')
+    }
+
+
+
 
     $('#select_home').change(function() { //jQuery Change Function
 

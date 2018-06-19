@@ -117,19 +117,12 @@ function getData(busca_realizada_str){
           return;
         }
         else {
-
-
-
-          $('#status_message')
-          .text('O conteúdo está sendo indexado. Por favor aguarde até alguns minutos.')
-
           var loader = document.getElementById('loader_screen')
 
           hiden_exec(loader,function (){
             // variavel global usada para reconstruir facets fora do getData
             from_ajax['hierarquia'] = data['facet_counts']['hierarquico']
             constroiComponentFacetsButtons(from_ajax['hierarquia'])
-
           })
           montaTotal(data)
 
