@@ -1,4 +1,4 @@
-data/**
+/**
 * @file Funções para geração de graficos usando D3.js
 * @module solr_front::bv_d3
 */
@@ -97,7 +97,7 @@ function recuperaSankeyChart(busca_realizada_str){
      success: function(data){
        // console.log(data)
        drawSankeyChart(data)
-  
+
      }
    });
 
@@ -964,7 +964,8 @@ function pegaLabel(referencia, id){
         var label;
         $.each(item.facets, function(u,facet){
           if(facet['chave'] === id ){
-            result = decodeURIComponent(escape(facet['label']));
+            // debugger;
+            // result = decodeURIComponent(escape(facet['label']));
           }
         });
       });
