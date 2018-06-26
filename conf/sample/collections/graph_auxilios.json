@@ -1,0 +1,166 @@
+/*
+* This wont pass on a standard JSON Lint.
+* The JSON parser of this system will ignore everything between javascript comments,
+* in order to make things easier to write and test a configuration file.
+*/
+
+// TODO: Dividir a COLLECTION em FACETS, TOTALIZADORES.
+
+{
+  "COLLECTION":{
+    "label": "Projetos (Auxílios e Bolsas)",
+    "omite_secoes": ["refine"],
+    "campo_dinamico_busca": "cross_collection_auxilios"
+  },
+
+  "FACETS":[
+      {"groupBy": {"id": "projetos", "label": "Projetos", "order": 0},
+       "facetGroup": [
+           {"label": "Situação", "render": "halfPieChart",
+            "facets": [{"chave": "situacao", "label": "Situação"}]},
+
+           {"label": "Bolsas", "render": "halfPieChart", "facets": [{"chave": "bolsas_pt", "label": "Bolsas"}]},
+
+           {"label": "Auxilios", "render": "barChart_1",
+            "facets": [{"chave": "auxilio_pesquisa_pt", "label": "Auxílios a Pesquisa"}]}
+
+       ]},
+      {"groupBy": {"id": "area", "label": "Área", "order": 1},
+       "facetGroup": [
+           {"label": "Área do conhecimento", "render": "barChart_1",
+            "facets": [{"chave": "area_pt", "label": "Área do conhecimento"}]},
+
+           {"label": "Instituição-Sede", "render": "barChart_1",
+            "facets": [{"chave": "entidade_exact", "label": "Entidade"}]}
+
+       ]},
+      {"groupBy": {"id": "acordos", "label": "Acordos e Convênios", "order": 2},
+       "facetGroup": [
+           {"label": "Convênios e Acordos", "render": "barChart_1",
+            "facets": [{"chave": "tipo_convenio_exact", "label": "Tipo de convenio"},
+                       {"chave": "convenio_exact", "label": "Convenio"},
+                       {"chave": "pais_convenio_exact", "label": "País de convenio"}]}
+       ]},
+      {"groupBy": {"id": "geolocalizacao", "label": "Geolocalização", "order": 4},
+       "facetGroup": [
+           {"label": "Geolocalização Exterior", "render": "barChart_1", "facets": [
+               {"chave": "pais_colaboracao_exact", "label": "Colaboração no país"},
+               {"chave": "cidade_colaboracao_exact", "label": "Colaboração na cidade"},
+               {"chave": "instituicao_colaboracao_exact", "label": "Colaboração em instituição"},
+               {"chave": "cidade_exact", "label": "Cidade de origem"}]}
+       ]},
+      {"groupBy": {"id": "temporal", "label": "Série Temporal", "order": 5},
+       "facetGroup": [
+           {"label": "Série Temporal", "render": "",
+            "facets": [{"chave": "ano_inicio", "label": "Ano de início"}]}
+       ]},
+      {"groupBy": {"id": "prog", "label": "Programas", "order": 3},
+       "facetGroup": [
+           {"label": "Programas", "facets": [{"chave": "programa_tema_pt", "label": "Por tema"},
+                                             {"chave": "programa_aplicacao_pt", "label": "Aplicação"},
+                                             {"chave": "programa_percepcao_pt", "label": "Percepção"},
+                                             {"chave": "programa_infra_pt", "label": "Infra"}]}
+       ]}
+    ],
+
+    "OUTCOMES": [
+        {"label": "Total de Projetos",
+         "facet": {"auxilio": ["*"]}, "docs": {}, "type": ["main"], "order": 1},
+        {"label": "Bolsas no Brasil - Em andamento",
+         "facet": {"fomento": ["Bolsas*no*Brasil*"], "situacao": ["Em andamento"]},
+         "docs": {"url": "absolute_url_pt_t", "text": "titulo_pt_t"}, "type": ["doc", "main"], "order": 13},
+        {"label": "Bolsas no Brasil - Concluídas",
+         "facet": {"fomento": ["Bolsas*no*Brasil*"], "situacao": ["Concluídos"]},
+         "docs": {"url": "absolute_url_pt_t", "text": "titulo_pt_t"}, "type": ["doc", "main"], "order": 14},
+        {"label": "Bolsas no Exterior - Em andamento",
+         "facet": {"fomento": ["Bolsas*no*Exterior*"], "situacao": ["Em andamento"]},
+         "docs": {"url": "absolute_url_pt_t", "text": "titulo_pt_t"}, "type": ["doc", "main"], "order": 15},
+        {"label": "Bolsas no Exterior - Concluídas",
+         "facet": {"fomento": ["Bolsas*no*Exterior*"], "situacao": ["Concluídos"]},
+         "docs": {"url": "absolute_url_pt_t", "text": "titulo_pt_t"}, "type": ["doc", "main"], "order": 16},
+        {"label": "Auxílios - Em andamento", "facet": {"auxilio": ["*"], "situacao": ["Em andamento"]},
+         "docs": {"url": "absolute_url_pt_t", "text": "titulo_pt_t"}, "type": ["doc", "main"], "order": 11},
+        {"label": "Auxílios - Concluídos", "facet": {"auxilio": ["*"], "situacao": ["Concluídos"]},
+         "docs": {"url": "absolute_url_pt_t", "text": "titulo_pt_t"}, "type": ["doc", "main"], "order": 12},
+        {"label": "Com Publicações Científicas", "facet": {"publicacoes_cientificas_exact": ["Sim"]}, "docs": {},
+         "type": ["secondary"], "order": 2},
+        {"label": "Com Publicações Acadêmicas", "facet": {"publicacoes_academicas_exact": ["Sim"]}, "docs": {},
+         "type": ["secondary"], "order": 3},
+        {"label": "Com Matéria na Revista FAPESP", "facet": {"materias_revista_exact": ["Sim"]}, "docs": {},
+         "type": ["secondary"], "order": 4},
+        {"label": "Com Matéria na Agência FAPESP", "facet": {"materias_agencia_exact": ["Sim"]}, "docs": {},
+         "type": ["secondary"], "order": 5}
+    ],
+
+
+  "SANKEY_CHART":{
+      "default_level_1": {"value": "data_inicio_ano_exact", "label": "Ano de início"},
+      "default_level_2": {"value": "situacao", "label": "Situação"},
+      "options": [
+          {"value": "situacao", "label": "Situação"},
+          {"value": "data_inicio_ano_exact", "label": "Ano de início"},
+          {"value": "bolsas_pt", "label": "Bolsa"},
+          {"value": "auxilio_pesquisa_pt", "label": "Auxílio a Pesquisa"},
+          // {"value":"area_pt", "label":"Área do conhecimento"},
+          // {"value":"convenio_exact", "label":"Convênio"},
+          {"value": "tipo_convenio_exact", "label": "Tipo de convênio"},
+          {"value": "pais_convenio_exact", "label": "País de convênio"}
+      ]
+  },
+
+  "BUBBLE_CHART": {
+        "default_level_1": {"value": "data_inicio_ano_exact", "label": "Ano de início"},
+        "default_level_2": {"value": "area_pt", "label": "Área do conhecimento"},
+        "options": [
+            {"value": "situacao", "label": "Situação"},
+            {"value": "data_inicio_ano_exact", "label": "Ano de início"},
+            {"value": "bolsas_pt", "label": "Bolsa"},
+            {"value": "auxilio_pesquisa_pt", "label": "Auxílio a Pesquisa"},
+            {"value": "area_pt", "label": "Área do conhecimento"},
+            {"value": "convenio_exact", "label": "Convênio"},
+            {"value": "tipo_convenio_exact", "label": "Tipo de convênio"},
+            {"value": "pais_convenio_exact", "label": "País de convênio"}
+        ]
+    },
+
+    "MULTILEVEL_BARCHART_1":{
+        "default_level_1": "area_pt",
+        "default_level_2": "ano_exact",
+        "y_axis": [
+            {"value": "situacao", "label": "Situação"},
+            {"value": "bolsas_pt", "label": "Bolsas"},
+            {"value": "auxilio_pesquisa_pt", "label": "Auxílios"},
+            {"value": "area_pt", "label": "Área do conhecimento"},
+            {"value": "entidade_exact", "label": "Instituição"},
+            {"value": "programa_tema_pt", "label": "Programa Tema"},
+            {"value": "programa_aplicacao_pt", "label": "Programa Aplicação"},
+            {"value": "programa_percepcao_pt", "label": "Programa Percepção"},
+            {"value": "programa_infra_pt", "label": "Programa Infra"},
+            {"value": "tipo_convenio_exact", "label": "Tipo Convênio"},
+            {"value": "convenio_exact", "label": "Convênio/Acordo"},
+            {"value": "pais_convenio_exact", "label": "País convênio"},
+            {"value": "pais_colaboracao_exact", "label": "Colaboração no país"},
+            {"value": "cidade_colaboracao_exact", "label": "Colaboração na cidade"},
+            {"value": "cidade_exact", "label": "Cidade"},
+            {"value": "ano_exact", "label": "Ano"}
+        ],
+        "y_stratification": [
+            {"value": "situacao", "label": "Situação"},
+            {"value": "bolsas_pt", "label": "Bolsas"},
+            {"value": "auxilio_pesquisa_pt", "label": "Auxílios"},
+            {"value": "area_pt", "label": "Área do conhecimento"},
+            {"value": "entidade_exact", "label": "Instituição"},
+            {"value": "programa_tema_pt", "label": "Programa Tema"},
+            {"value": "programa_aplicacao_pt", "label": "Programa Aplicação"},
+            {"value": "programa_percepcao_pt", "label": "Programa Percepção"},
+            {"value": "programa_infra_pt", "label": "Programa Infra"},
+            {"value": "tipo_convenio_exact", "label": "Tipo Convênio"},
+            {"value": "convenio_exact", "label": "Convênio/Acordo"},
+            {"value": "pais_convenio_exact", "label": "País convênio"},
+            {"value": "pais_colaboracao_exact", "label": "Colaboração no país"},
+            {"value": "cidade_colaboracao_exact", "label": "Colaboração na cidade"},
+            {"value": "cidade_exact", "label": "Cidade"},
+            {"value": "ano_exact", "label": "Ano"}
+        ]
+    }
+}
