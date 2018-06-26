@@ -119,9 +119,9 @@
          cols: JSON.parse(data.conf).cols,
          renderers: renderers,
          aggregators: {
-            "Numero de projetos": function() { return sum(intFormat)(["value"])}
+            "Soma": function() { return sum(intFormat)(["value"])}
          },
-         aggregatorName: "Numero de projetos",
+         aggregatorName: "Soma",
        },
        false,
        "pt"

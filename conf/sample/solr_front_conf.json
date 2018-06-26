@@ -1,0 +1,133 @@
+/*
+* This won't pass on a standard JSON Lint.
+* The JSON parser of this system will ignore everything between javascript comments,
+* in order to make things easier to write and test a configuration file.
+*/
+
+{
+  "GRAPH": {
+    "graph_auxilios": []
+/*
+    "graph_auxilios": ["bv_memoria", "graph_auxilios", "bv_empresas", "bv_pesquisadores"],
+    "bv_memoria": ["memoria_autoria"],
+    "bv_empresas": ["graph_auxilios"],
+    "bv_pesquisadores": ["graph_auxilios", "lattes"],
+    "memoria_autoria": [],
+    "pesquisa_pipe": ["graph_auxilios"],
+    "inep_docentes": [],
+    "inep_alunos": [],
+    "fazenda_sp": [],
+    "rais": [],
+    "lattes": [],
+    "wos": [],
+    "enade": [] */
+  },
+  "EDGES":{
+    "graph_auxilios": {
+        "vertices": {
+            "graph_auxilios": {
+                "relationship_type": "one_to_many",
+                "one": "numero_processo",
+                "many": "projetos_pai_np",
+                "label": "Projetos Vinculados (Auxílios e Bolsas)"
+            },
+            "bv_memoria": {
+                "relationship_type": "one_to_many",
+                "one": "numero_processo",
+                "many": "numero_processos",
+                "label": "Publicações Científicas"
+            },
+            "bv_empresas": {
+                "relationship_type": "one_to_many",
+                "one": "numero_processo",
+                "many": "numero_processos",
+                "label": "Empresas do PIPE"
+            },
+            "bv_pesquisadores": {
+                "relationship_type": "many_to_one",
+                "one": "django_id",
+                "many": "id_pesquisador",
+                "label": "Pesquisadores (responsável e beneficiário)"
+            }
+        }
+    },
+    "bv_memoria": {
+        "vertices": {
+            "memoria_autoria": {
+                "relationship_type": "many_to_one",
+                "one": "django_id",
+                "many": "id_autorias",
+                "label": "Autorias de Publicações Científicas"
+            }
+         }
+    },
+    "memoria_autoria": {
+        "vertices": {
+        }
+    },
+    "enade": {
+        "vertices": {
+        }
+    },
+    "rais": {
+        "vertices": {
+        }
+    },
+    "fazenda_sp": {
+        "vertices": {
+        }
+    },
+    "pesquisa_pipe": {
+        "vertices": {
+            "graph_auxilios": {
+                "relationship_type": "many_to_one",
+                "one": "numero_processo",
+                "many": "numero_processo",
+                "label": "Processos (Auxilios e Bolsas)"
+            }
+        }
+    },
+    "bv_empresas": {
+        "vertices": {
+            "graph_auxilios": {
+                "relationship_type": "many_to_one",
+                "one": "numero_processo",
+                "many": "numero_processos",
+                "label": "Processos (Auxilios e Bolsas)"
+            }
+        }
+    },
+    "bv_pesquisadores": {
+        "vertices": {
+            "graph_auxilios": {
+                "relationship_type": "one_to_many",
+                "one": "django_id",
+                "many": "id_pesquisador",
+                "label": "Projetos (Auxílios e Bolsas)"
+            },
+            "lattes": {
+                "relationship_type": "one_to_many",
+                "one": "django_id",
+                "many": "ID",
+                "label": "Lattes"
+            }
+        }
+    },
+    "inep_docentes": {
+        "vertices": {
+        }
+    },
+    "inep_alunos": {
+        "vertices": {
+        }
+    },
+    "lattes": {
+        "vertices": {
+        }
+    },
+    "wos": {
+        "vertices": {
+        }
+    }
+  }
+}
