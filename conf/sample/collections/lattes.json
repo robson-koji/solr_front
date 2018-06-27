@@ -1,0 +1,230 @@
+/*
+* This wont pass on a standard JSON Lint.
+* The JSON parser of this system will ignore everything between javascript comments,
+* in order to make things easier to write and test a configuration file.
+*/
+
+// TODO: Dividir a COLLECTION em FACETS, TOTALIZADORES.
+
+{
+  "COLLECTION":{
+        "label": "CNPQ - CV Lattes",
+        "omite_secoes": ["refine", "documentos", "related_collections"],
+        "campo_dinamico_busca": "cross_collection_lattes",
+        "id_index_from": "",
+        "id_index_to": ""
+  },
+
+  "FACETS":[
+      {"groupBy": {"id": "pessoais", "label": "Pessoais", "order": 1},
+             "facetGroup": [
+                 {"label": "", "render": "barChart_1", "facets": [
+                     {"chave": "AREAS-DO-CONHECIMENTO-DE-ATUACAO_FACET", "label": "Área do conhecimento (atuação)"}]}
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"ATIVIDADES-DE-ENSINO_DISCIPLINAS", "label": "Ensino disciplinas"}]},
+             ]},
+
+            {"groupBy": {"id": "graduacao", "label": "Graduação", "order": 2},
+             "facetGroup": [
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "NUM_GRADUACOES", "label": "Qt. de Graduações"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"GRADUACAO_NOME-AGENCIA", "label": "Agência"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"GRADUACAO_NOME-INSTITUICAO", "label": "Instituição"}]},
+                 {"label": "", "render": "halfPieChart",
+                  "facets": [{"chave": "GRADUACAO_STATUS-DO-CURSO", "label": "Graduação status"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"GRADUACAO_NOME-CURSO", "label": "Curso"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "GRADUACAO_ANO-DE-INICIO", "label": "Ano Início"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "GRADUACAO_ANO-DE-CONCLUSAO", "label": "Ano Conclusão"}]},
+                 {"label": "", "render": "halfPieChart",
+                  "facets": [{"chave": "GRADUACAO_FLAG-BOLSA", "label": "Graduação com bolsa"}]}
+             ]},
+
+            {"groupBy": {"id": "especializacao", "label": "Especialização", "order": 3},
+             "facetGroup": [
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "NUM_ESPECIALIZACOES", "label": "Qt. de Especializações"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"ESPECIALIZACAO_NOME-AGENCIA", "label": "Agência"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"ESPECIALIZACAO_NOME-INSTITUICAO", "label": "Instituição"}]},
+                 {"label": "", "render": "halfPieChart",
+                  "facets": [{"chave": "ESPECIALIZACAO_STATUS-DO-CURSO", "label": "Especialização status"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"GRADUACAO_NOME-CURSO", "label": "Curso"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "ESPECIALIZACAO_ANO-DE-INICIO", "label": "Ano Início"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "ESPECIALIZACAO_ANO-DE-CONCLUSAO", "label": "Ano Conclusão"}]},
+                 {"label": "", "render": "halfPieChart",
+                  "facets": [{"chave": "ESPECIALIZACAO_FLAG-BOLSA", "label": "Especialização com bolsa"}]}
+             ]},
+
+            {"groupBy": {"id": "mestrado", "label": "Mestrado", "order": 4},
+             "facetGroup": [
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "NUM_MESTRADOS", "label": "Qt. de Mestrados"}]},
+                 {"label": "", "render": "halfPieChart",
+                  "facets": [{"chave": "MESTRADO_STATUS-DO-CURSO", "label": "Mestrado status"}]},
+                 {"label": "", "render": "halfPieChart",
+                  "facets": [{"chave": "MESTRADO_FLAG-BOLSA", "label": "Mestrado com Bolsa"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"MESTRADO_NOME-AGENCIA", "label": "Agência"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"MESTRADO_NOME-INSTITUICAO", "label": "Instituição"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"MESTRADO_CODIGO-INSTITUICAO", "label": "Instituição (código)"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "MESTRADO_ANO-DE-INICIO", "label": "Ano Início"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "MESTRADO_ANO-DE-CONCLUSAO", "label": "Ano Conclusão"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"MESTRADO_ESPECIALIDADE", "label": "Áreas especialidade"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "MESTRADO_AREAS-DO-CONHECIMENTO_FACET", "label": "Áreas do conhecimento"}]}
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"MESTRADO_NOME-CURSO", "label": "Curso"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"MESTRADO_PALAVRAS-CHAVE", "label": "Palavras-chave"}]},
+             ]},
+            {"groupBy": {"id": "doutorado", "label": "Doutorado", "order": 5},
+             "facetGroup": [
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "NUM_DOUTORADOS", "label": "Qt. de Doutorados"}]},
+                 {"label": "", "render": "halfPieChart",
+                  "facets": [{"chave": "DOUTORADO_STATUS-DO-CURSO", "label": "Doutorado status"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"DOUTORADO_NIVEL", "label": "Nível"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "DOUTORADO_ANO-DE-INICIO", "label": "Ano início"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "DOUTORADO_ANO-DE-CONCLUSAO", "label": "Ano conclusão"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"DOUTORADO_NOME-INSTITUICAO", "label": "Instituição"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"DOUTORADO_NOME-AGENCIA", "label": "Agência"}]},
+                 {"label": "", "render": "halfPieChart",
+                  "facets": [{"chave": "DOUTORADO_FLAG-BOLSA", "label": "Doutorado com bolsa"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"DOUTORADO_PALAVRAS-CHAVE", "label": "Palavras chave"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"DOUTORADO_ESPECIALIDADE", "label": "Área especialiadde"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "DOUTORADO_AREAS-DO-CONHECIMENTO_FACET", "label": "Área do conhecimento"}]}
+             ]},
+            {"groupBy": {"id": "pos_doutorado", "label": "Pós-doutorado", "order": 6},
+             "facetGroup": [
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "NUM_POS-DOUTORADOS", "label": "Qt. de Pós-doutorado"}]},
+                 {"label": "", "render": "halfPieChart",
+                  "facets": [{"chave": "POS-DOUTORADO_STATUS-DO-CURSO", "label": "Pós-doutorado Status"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"POS-DOUTORADO_NIVEL", "label": "Nível"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "POS-DOUTORADO_ANO-DE-INICIO", "label": "Ano início"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "POS-DOUTORADO_ANO-DE-CONCLUSAO", "label": "Ano conclusão"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"POS-DOUTORADO_NOME-INSTITUICAO", "label": "Instituição"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"POS-DOUTORADO_NOME-AGENCIA", "label": "Agência"}]},
+                 {"label": "", "render": "halfPieChart",
+                  "facets": [{"chave": "POS-DOUTORADO_FLAG-BOLSA", "label": "Pós-doutorado com Bolsa"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"DOUTORADO_PALAVRAS-CHAVE", "label": "Palavras chave"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"POS-DOUTORADO_ESPECIALIDADE", "label": "Área especialiadde"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "POS-DOUTORADO_AREAS-DO-CONHECIMENTO_FACET", "label": "Área do conhecimento"}]}
+             ]},
+            {"groupBy": {"id": "livre_docencia", "label": "Livre-docência", "order": 7},
+             "facetGroup": [
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "NUM_LIVRE-DOCENCIAS", "label": "Qt. de Livre-docência"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"LIVRE-DOCENCIA_NIVEL", "label": "Nível"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"LIVRE-DOCENCIA_CODIGO-INSTITUICAO", "label": "Código instituição"}]},
+                 {"label": "", "render": "barChart_1", "facets": [
+                     {"chave": "LIVRE-DOCENCIA_ANO-DE-OBTENCAO-DO-TITULO", "label": "Ano de obtenção do título"}]}
+             ]},
+            {"groupBy": {"id": "atuacao_profissional", "label": "Atuação Profissional", "order": 8},
+             "facetGroup": [
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "NUM_ATUACOES-PROFISSIONAIS", "label": "Qt. de atuações profissionais"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "ATUACAO-PROFISISONAL_ENQUADRAMENTOS", "label": "Enquadramentos"}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "ATUACAO-PROFISISONAL_TIPOS-DE-VINCULOS", "label": "Tipos de vínculo"}]}
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"ATUACAO-PROFISISONAL_INSTITUICOES", "label": "Instituições"}]},
+             ]},
+            {"groupBy": {"id": "p_e_c_c", "label": "Projetos, eventos, conselho, consultoria", "order": 9},
+             "facetGroup": [
+                 {"label": "", "render": "barChart_1", "facets": [
+                     {"chave": "NUM_CONSELHO-COMISSAO-E-CONSULTORIA", "label": "Cons., comiss., consult. (Qt)"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"CONSELHO-COMISSAO-E-CONSULTORIA_ESPECIFICACAO", "label": "Cons., comiss., consult."}]},
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "NUM_PARTICIPACAO-EM-PROJETO", "label": "Projetos (Qt)"}]}
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"TRABALHO-EM-EVENTOS_AREAS-DO-CONHECIMENTO_FACET", "label": "Áreas do conhecimento relacionadas aos eventos"}]},
+                 // {"label":"" , "render":"barChart_1", "facets":[{"chave":"PREMIOS-TITULOS_FACET", "label": "Prêmios"}]},
+             ]}
+    ],
+
+    "OUTCOMES": [
+        
+    ],
+
+
+  "SANKEY_CHART":{
+        "default_level_1": {"value": "MESTRADO_GRANDE-AREA-DO-CONHECIMENTO"},
+        "default_level_2": {"value": "DOUTORADO_GRANDE-AREA-DO-CONHECIMENTO"},
+        "options": [
+            // {"value":"GRADUACAO_NOME-CURSO", "label":"Graduação - Curso"},
+            {"value": "GRADUACAO_ANO-DE-INICIO", "label": "Graduação - Ano início"},
+            {"value": "GRADUACAO_ANO-DE-CONCLUSAO", "label": "Graduação - Ano conclusão"},
+            // {"value":"GRADUACAO_NOME-INSTITUICAO", "label":"Graduação - Instituição"},
+            // {"value":"GRADUACAO_NOME-AGENCIA", "label":"Graduação - Agência"},
+            {"value": "GRADUACAO_FLAG-BOLSA", "label": "Graduação - Bolsa"},
+            // {"value":"MESTRADO_NOME-CURSO", "label":"Mestrado - Curso"},
+            {"value": "MESTRAD_ANO-DE-INICIO", "label": "Mestrado - Ano início"},
+            {"value": "MESTRAD_ANO-DE-CONCLUSAO", "label": "Mestrado - Ano conclusão"},
+            // {"value":"MESTRADO_NOME-INSTITUICAO", "label":"Mestrado - Instituição"},
+            // {"value":"MESTRADO_NOME-AGENCIA", "label":"Mestrado - Agência"},
+            {"value": "MESTRADO_GRANDE-AREA-DO-CONHECIMENTO", "label": "Mestrado - Área do conhecimento"},
+            {"value": "MESTRADO_FLAG-BOLSA", "label": "Mestrado - Bolsa"},
+            // {"value":"DOUTORADO_NOME-CURSO", "label":"Doutorado - Curso"},
+            {"value": "DOUTORADO_ANO-DE-INICIO", "label": "Doutorado - Ano Início"},
+            {"value": "DOUTORADO_ANO-DE-CONCLUSAO", "label": "Doutorado - Ano conclusão"},
+            // {"value":"DOUTORADO_NOME-INSTITUICAO", "label":"Doutorado - Instituição"},
+            // {"value":"DOUTORADO_NOME-AGENCIA", "label":"Doutorado - Agência"},
+            {"value": "DOUTORADO_FLAG-BOLSA", "label": "Doutorado - Bolsa"},
+            {"value": "DOUTORADO_GRANDE-AREA-DO-CONHECIMENTO", "label": "Doutorado - Área do conhecimento"}
+        ]
+  },
+
+  "BUBBLE_CHART": {
+        "default_level_1": {"value": "DOUTORADO_GRANDE-AREA-DO-CONHECIMENTO", "label": ""},
+        "default_level_2": {"value": "DOUTORADO_FLAG-BOLSA", "label": ""},
+        "options": [
+            {"value": "GRADUACAO_ANO-DE-INICIO", "label": "Graduação - Ano início"},
+            {"value": "GRADUACAO_ANO-DE-CONCLUSAO", "label": "Graduação - Ano conclusão"},
+            // {"value":"GRADUACAO_NOME-AGENCIA", "label":"Graduação - Instituição"},
+            {"value": "GRADUACAO_FLAG-BOLSA", "label": "Graduação - Bolsa"},
+            {"value": "MESTRADO_ANO-DE-INICIO", "label": "Mestrado - Ano início"},
+            {"value": "MESTRADO_ANO-DE-CONCLUSAO", "label": "Mestrado - Ano conclusão"},
+            // {"value":"MESTRADO_NOME-AGENCIA", "label":"Mestrado - Instituição"},
+            {"value": "MESTRADO_FLAG-BOLSA", "label": "Mestrado - Bolsa"},
+            {"value": "MESTRADO_GRANDE-AREA-DO-CONHECIMENTO", "label": "Mestrado - Área do conhecimento"},
+            {"value": "DOUTORADO_ANO-DE-INICIO", "label": "Doutorado - Ano Início"},
+            {"value": "DOUTORADO_ANO-DE-CONCLUSAO", "label": "Doutorado - Ano conclusão"},
+            // {"value":"DOUTORADO_NOME-AGENCIA", "label":"Doutorado - Instituição"},
+            {"value": "DOUTORADO_FLAG-BOLSA", "label": "Doutorado - Bolsa"},
+            {"value": "DOUTORADO_GRANDE-AREA-DO-CONHECIMENTO", "label": "Doutorado - Área do conhecimento"}
+        ]
+    },
+
+    "MULTILEVEL_BARCHART_1":{
+        "default_level_1": "GRADUACAO_FLAG-BOLSA",
+        "default_level_2": "GRADUACAO_ANO-DE-INICIO",
+        "y_axis": [
+            {"value": "GRADUACAO_ANO-DE-INICIO", "label": "Graduação - Ano início"},
+            {"value": "GRADUACAO_ANO-DE-CONCLUSAO", "label": "Graduação - Ano conclusão"},
+            // {"value":"GRADUACAO_NOME-AGENCIA", "label":"Graduação - Instituição"},
+            {"value": "MESTRADO_ANO-DE-INICIO", "label": "Mestrado - Ano início"},
+            {"value": "MESTRADO_ANO-DE-CONCLUSAO", "label": "Mestrado - Ano conclusão"},
+            // {"value":"MESTRADO_NOME-AGENCIA", "label":"Mestrado - Instituição"},
+            {"value": "MESTRADO_GRANDE-AREA-DO-CONHECIMENTO", "label": "Mestrado - Área do conhecimento"},
+            {"value": "DOUTORADO_ANO-DE-INICIO", "label": "Doutorado - Ano Início"},
+            {"value": "DOUTORADO_ANO-DE-CONCLUSAO", "label": "Doutorado - Ano conclusão"},
+            // {"value":"DOUTORADO_NOME-AGENCIA", "label":"Doutorado - Instituição"},
+            {"value": "DOUTORADO_GRANDE-AREA-DO-CONHECIMENTO", "label": "Doutorado - Área do conhecimento"}
+        ],
+        "y_stratification": [
+            // {"value":"GRADUACAO_NOME-AGENCIA", "label":"Graduação - Agência"},
+            {"value": "GRADUACAO_FLAG-BOLSA", "label": "Graduação - Bolsa"},
+            // {"value":"MESTRADO_NOME-AGENCIA", "label":"Mestrado - Agência"},
+            {"value": "MESTRADO_FLAG-BOLSA", "label": "Mestrado - Bolsa"},
+            // {"value":"DOUTORADO_NOME-AGENCIA", "label":"Doutorado - Agência"},
+            {"value": "DOUTORADO_FLAG-BOLSA", "label": "Doutorado - Bolsa"}
+        ]
+    }
+}
