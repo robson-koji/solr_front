@@ -966,6 +966,8 @@ function pegaLabel(referencia, id){
           if(facet['chave'] === id ){
             // debugger;
             // result = decodeURIComponent(escape(facet['label']));
+
+            result = facet['label']
           }
         });
       });
