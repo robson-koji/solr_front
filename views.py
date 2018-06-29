@@ -63,6 +63,27 @@ class LoginRequiredMixin(object):
 
 
 
+def find_template(template):
+    """
+    @params: template - template name. May include a folder with the name,
+    if the template is not at the root folder.
+    """
+    # if hasattr(settings, 'SORL_FRONT_TEMPLATE_PATH'):
+    #     try:
+    #         template_name = settings.SORL_FRONT_TEMPLATE_PATH + template
+    #         get_template(template_name)
+    #     except TemplateDoesNotExist as err:
+    #         logger.error('TemplateDoesNotExist: %s' %(err))
+    # else:
+    try:
+        template_name = 'solr_front/custom/' + template
+        get_template(template_name)
+    except TemplateDoesNotExist as e:
+        template_name = 'solr_front/sample/' + template
+
+    return template_name
+
+
 
 class AjaxCeleryStatusView(View):
     def dispatch(self, request, *args, **kwargs):
@@ -262,7 +283,7 @@ class NavigateCollection(View):
         if isinstance(vertice['body_json'], dict) and not vertice['body_json'].keys()[0] == self.collection:
             # Se parar aqui eh pq tem erro de navegacao.
             alerta = "Erro de navegação!"
-            return render_to_response('solr_front/muda_collection.html', {'alerta': alerta, 'collection':self.collection, 'idioma':'pt'})
+            return render(request, 'solr_front/muda_collection.html', {'alerta': alerta, 'collection':self.collection, 'idioma':'pt'})
 
         # print '\n\n update_vertice'
         # import pdb; pdb.set_trace()
@@ -380,7 +401,6 @@ class StreamingExpressions(View):
 
         for v in self.vertices:
             vertice = edge['vertices'][v]
-
             if vertice['relationship_type'] == 'one_to_many':
                 hash_join = """\
                     hashJoin(
@@ -391,7 +411,8 @@ class StreamingExpressions(View):
                     on=%s=%s
                     )
                 """
-                hash_join  = hash_join % (edge['collection'], vertice['one'], vertice['one'], fq2, vertice['collection'], vertice['many'], vertice['many'], facets_col2, vertice['many'], vertice['one'], vertice['many'])
+
+                hash_join  = hash_join % (self.collection, vertice['one'], vertice['one'], fq2, v, vertice['many'], vertice['many'], facets_col2, vertice['many'], vertice['one'], vertice['many'])
                 # hash_join = (textwrap.fill(textwrap.dedent(hash_join))).replace('\n', ' ')
             elif vertice['relationship_type'] == 'many_to_one':
                 hash_join = """\
@@ -405,7 +426,7 @@ class StreamingExpressions(View):
                     on=%s=%s
                     )
                 """
-                hash_join  = hash_join % (vertice['collection'], vertice['one'], vertice['one'], vertice['one'], facets_col2, edge['collection'], vertice['many'], fq2, vertice['many'], 'id as id_2', vertice['many'], vertice['one'],vertice['many'])
+                hash_join  = hash_join % (v, vertice['one'], vertice['one'], vertice['one'], facets_col2, self.collection, vertice['many'], fq2, vertice['many'], 'id as id_2', vertice['many'], vertice['one'],vertice['many'])
                 # hash_join = (textwrap.fill(textwrap.dedent(hash_join))).replace('\n', ' ')
             elif vertice['relationship_type'] == 'one_to_one':
                 hash_join = """\
@@ -415,7 +436,7 @@ class StreamingExpressions(View):
                       on="%s=%s"
                     )
                 """
-                hash_join  = hash_join % (edge['collection'], vertice['from_one'], vertice['from_one'], vertice['from_one'], facets_col2, vertice['collection'], vertice['to_one'],  vertice['to_one'], fq2,  vertice['from_one'],  vertice['to_one']  )
+                hash_join  = hash_join % (self.collection, vertice['from_one'], vertice['from_one'], vertice['from_one'], facets_col2, v, vertice['to_one'],  vertice['to_one'], fq2,  vertice['from_one'],  vertice['to_one']  )
                 # hash_join = (textwrap.fill(textwrap.dedent(hash_join))).replace('\n', ' ')
 
             pat = re.compile(r'\n\s+')
@@ -1151,22 +1172,9 @@ class EntryPointView(LoginRequiredMixin, View):
     converte para o formato do Solr.
     """
     model = Pesquisa
+    base_name = 'base_sf.html'
+    template_name = find_template(base_name)
 
-    def get_project_template():
-        """
-        Verifica se existe template especifico para o projeto, senao usa o default.
-        """
-        from solr_front import PROJECT_NAME
-        return 'base_%s.html' % (PROJECT_NAME)
-
-    template_name = 'solr_front/custom/%s' % (get_project_template())
-
-    try:
-        get_template(template_name)
-    except TemplateDoesNotExist as e:
-        template_name = 'solr_front/sample/base_default.html'
-
-    # template_name = 'solr_front/base_spa.html'
 
     def dispatch(self, request, *args, **kwargs):
         # Trying access to a not known collection.
@@ -1487,7 +1495,11 @@ class SearchView(EntryPointView):
 
         hierarquia = {}
 
+
         for f in solr_json['facets']:
+            # if f != 'iden_Emp_incubada':
+            #     continue
+
             hierarquia[f] = []
             if f == 'count': continue # ignora item caso chave for count
 
@@ -1530,14 +1542,13 @@ class SearchView(EntryPointView):
                                         'facets': {},
                                         'groupBy': group['groupBy'],
                                         'order': counter_facets,
-                                        'count': 10
+                                        'count': 0
                                         }
                                     }
 
                     for idx_facet, value in enumerate(facet):
                         # if not 'CIENCIAS_BIOLOGICAS|Química' in value['value']:
                         #     continue
-                        # print value
 
                         dict_ref = dict_inicial[ item['chave'] ]['facets']
                         if '|' in unicode(value['value']):
@@ -1550,11 +1561,14 @@ class SearchView(EntryPointView):
                                     chave += '|' + val
                                 dict_ref = monta_dict(dict_ref, chave, unicode(val), value['count'], group['groupBy'])
                         else:
+                            dict_inicial[item['chave']]['count'] += value['count']
                             chave = value['value']
                             monta_dict(dict_ref, chave, unicode(value['value']), value['count'], group['groupBy'])
                     pivot_solr.update(dict_inicial)
                     counter_facets += 1
         solr_json['facet_counts'] = {'hierarquico':pivot_solr}
+
+        # import pdb; pdb.set_trace()
         return solr_json
 
 
@@ -1752,21 +1766,8 @@ class AddVerticeView(View):
     de destino com os dados do hash_querybuilder.
     Ao final, redireciona o usuario para busca na collection de destino.
     """
-    # model = Pesquisa
-
-    def get_project_template():
-        """
-        Verifica se existe template especifico para o projeto, senao usa o default.
-        """
-        from solr_front import PROJECT_NAME
-        return 'base_%s.html' % (PROJECT_NAME)
-
-    template_name = 'solr_front/custom/%s' % (get_project_template())
-
-    try:
-        get_template(template_name)
-    except TemplateDoesNotExist as e:
-        template_name = 'solr_front/sample/base_default.html'
+    base_name = 'base_sf.html'
+    template_name = find_template(base_name)
 
 
     def dispatch(self, request, *args, **kwargs):
@@ -1849,25 +1850,10 @@ class HomeBuscador(LoginRequiredMixin, TemplateView):
         if 'navigation' in self.request.session.keys():
             erro = {'titulo':'Já existe uma pesquisa em andamento',
                 'descricao': ''}
+        base_name = 'home_sf.html'
+        template_name = find_template(base_name)
 
-        # Get project´s template for the homepage or return default template
-        template_name = 'solr_front/custom/%s' % (self.get_project_template())
-        try:
-            get_template(template_name)
-        except TemplateDoesNotExist as e:
-            template_name = 'solr_front/sample/home_default.html'
-
-        # import pdb; pdb.set_trace()
-
-
-        return render_to_response(template_name, {'erro': erro, 'idioma':kwargs['idioma'] })#, context_instance=RequestContext(self.request))
-
-
-    def get_project_template(self):
-        from solr_front import PROJECT_NAME
-        return 'home_%s.html' % (PROJECT_NAME)
-
-
+        return render(request, template_name, {'erro': erro, 'idioma':kwargs['idioma'] })#, context_instance=RequestContext(self.request))
 
 
 
@@ -1880,7 +1866,7 @@ class HomeCollection(LoginRequiredMixin, TemplateView):
     collectios etc.
     """
     def get(self, request, *args, **kwargs):
-            return render_to_response('solr_front/home_collection.html', {'collection':kwargs['collection'], 'idioma':kwargs['idioma']})#, context_instance=RequestContext(request))
+            return render(request, 'solr_front/home_collection.html', {'collection':kwargs['collection'], 'idioma':kwargs['idioma']})#, context_instance=RequestContext(request))
 
 
 
@@ -1896,21 +1882,8 @@ class AutoComplete(View):
 
 class ParamsView(LoginRequiredMixin, TemplateView):
     """ Carrega a pagina inicial da pesquisa de uma determinada collection """
-
-    def get_project_template():
-        """
-        Verifica se existe template especifico para o projeto, senao usa o default.
-        """
-        from solr_front import PROJECT_NAME
-        return 'base_%s.html' % (PROJECT_NAME)
-
-    template_name = 'solr_front/custom/%s' % (get_project_template())
-
-    try:
-        get_template(template_name)
-    except TemplateDoesNotExist as e:
-        template_name = 'solr_front/sample/base_default.html'
-
+    base_name = 'base_sf.html'
+    template_name = find_template(base_name)
 
     def dispatch(self, request, *args, **kwargs):
         """
