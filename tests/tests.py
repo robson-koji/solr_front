@@ -19,7 +19,7 @@ class HomePageTestCase(unittest.TestCase):
         # Check that the rendered context contains 5 customers.
         # self.assertEqual(len(response.context['customers']), 5)
 
-"""
+#"""
 
 class SearchTestCase(unittest.TestCase):
 
@@ -43,7 +43,7 @@ class SearchTestCase(unittest.TestCase):
 
         # Check that the rendered context contains 5 customers.
         # self.assertEqual(len(response.context['customers']), 5)
-"""
+#"""
 
 
 

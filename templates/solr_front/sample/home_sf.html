@@ -1,0 +1,110 @@
+{% load staticfiles %}
+
+<head>
+<script type="text/javascript" src={% static "solr_front/js/external_lib/jquery.js" %}></script>
+</head>
+
+<h1>Buscador Analítico</h1>
+
+<p>
+Esta é a página padrão do Buscador Analítico que se encontra em <i>solr_front/templates/solr_front/custom/home_default.html</i>.
+</p>
+
+<p>
+Para criar a página do seu buscador copie este arquivo com o 'home_&lt;nome da seu projeto Django&gt;.html' e personalize-o como quiser.
+</p>
+
+
+<h2>{{ erro.titulo }}</h2>
+<p>{{ erro.descricao }}</p>
+
+{% if navigate_fieds %}
+
+  <h3>Nova pesquisa</h3>
+  <p>Ao se iniciar uma nova pesquisa, todos os parâmetros da pesquisa atual serão perdidos.</p>
+  <p>Clique <a href="{% url 'clean_session' idioma='pt' id=0 %}">aqui</a> para iniciar uma nova pesquisa.</p>
+
+
+  <hr>
+  <h3>Continuar pesquisa existente</h3>
+  <p>Você pode continuar a pesquisa que já existe escolhendo uma etapa abaixo para continuar</p>
+  <ul>
+    {% for nf  in navigate_fieds  %}
+    		      <li><b>{{ nf.id }} - </b><a href="{% url 'params_id' collection=nf.collection  idioma='pt' id=nf.id %}">{{ nf.title }}</a> - <a href="{% url 'clean_session' idioma='pt' id=nf.id %}">Excluir essa etapa da pesquisa!</a></li>
+    {% endfor %}
+  </ul>
+
+
+  {% ifnotequal navigate_fieds|length 0 %}
+    <hr>
+    <h3>Mapa de navegação da pesquisa em andamento</h3>
+
+      {% include "solr_front/graficos/navigation_tree.html" %}
+    </div>
+  {% endifnotequal %}
+
+
+
+{% else %}
+
+
+  <h2>Começar uma nova busca</h2>
+  <p>Selecione a base de dados que você quer analisar</p>
+
+  <ul>
+    <li><a href="{% url 'params_id' collection='inep_alunos' idioma=idioma  id=0 %}">Collection de teste (INEP Alunos)</a></li>
+  </ul>
+
+
+  <h2>Ajuda</h2>
+  <p>Inserir texto de ajuda</p>
+
+
+  <h3>Selecione abaixo para obter mais informações sobre as bases de dados</h3>
+
+  <ul>
+    <li><a href="{% url 'home_collection' collection='inep_alunos' idioma=idioma %}">Collection de teste (INEP Alunos)</a></li>
+  </ul>
+
+{% endif %}
+
+
+
+<script type="text/javascript">
+
+  $(document).ready(function(){
+    $('#navigate_fieds').append('<pre><code>'+jsonPrettyPrint.toHtml({{ navigate_fieds|safe}})+'</code></pre>');
+    $('#navigation_tree').append('<pre><code>'+jsonPrettyPrint.toHtml({{ navigation_tree|safe }})+'</code></pre>');
+  })
+
+
+  /**
+   *
+  * Inicializa visualizador JSON
+  * @var {Object}
+  */
+  var jsonPrettyPrint = {
+       replacer: function(match, pIndent, pKey, pVal, pEnd) {
+          var key = '<span class=json-key>';
+          var val = '<span class=json-value>';
+          var str = '<span class=json-string>';
+          var r = pIndent || '';
+          if (pKey)
+             r = r + key + pKey.replace(/[": ]/g, '') + '</span>: ';
+          if (pVal)
+             r = r + (pVal[0] == '"' ? str : val) + pVal + '</span>';
+          return r + (pEnd || '');
+          },
+       toHtml: function(obj) {
+          var jsonLine = /^( *)("[\w]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
+          return JSON.stringify(obj, null, 3)
+             .replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
+             .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+             .replace(jsonLine, jsonPrettyPrint.replacer);
+          }
+       };
+</script>
+
+
+<pre class="prettyprint" id="navigate_fieds"></pre>
+<pre class="prettyprint" id="navigation_tree"></pre>
