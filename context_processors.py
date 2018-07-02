@@ -2,9 +2,9 @@ import json
 from django.conf import settings
 
 
-def settings_vars(request):
-    # Include whatever settings value you want to the dictionnary.
-    return {'SOLR_FRONT_RELATIVE_URL': settings.SOLR_FRONT_RELATIVE_URL}
+# def settings_vars(request):
+#     # Include whatever settings value you want to the dictionnary.
+#     return {'SOLR_FRONT_RELATIVE_URL': settings.SOLR_FRONT_RELATIVE_URL}
 
 
 def get_navigate_fields(request):

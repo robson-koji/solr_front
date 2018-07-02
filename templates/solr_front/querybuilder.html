@@ -1,65 +1,77 @@
+<div class="col-md-4 has-col" id="querybuilder_content" hidden>
 
-  <style media="screen">
-    .content_section ul li:before{
-      background-color: #28488a00;
-    }
-    .query-builder .rules-list>::after, .query-builder .rules-list>::before{
+  <div class="content_section__header no-border">
+    <h2 class="title_secondary">Busca avançada</h2>
+  </div>
+  <div class="content_section__container" id='queryBuilder'>
+    <style media="screen">
+      .content_section ul li:before{
+        background-color: #28488a00;
+      }
+      .query-builder .rules-list>::after, .query-builder .rules-list>::before{
 
-        border-color: #ccc0
-    }
-    .rules-group-container{
-      background-color:rgba(69, 128, 146, 0)!important;
-      border: 1px solid #764a9200 !important;
-    }
-    .rule-filter-container select, .rule-operator-container select{
+          border-color: #ccc0
+      }
+      .rules-group-container{
+        background-color:rgba(69, 128, 146, 0)!important;
+        border: 1px solid #764a9200 !important;
+      }
+      .rule-filter-container select, .rule-operator-container select{
 
-      margin-bottom: 5px;
-    }
+        margin-bottom: 5px;
+      }
 
-    .query-builder .rule-container, .query-builder .rule-placeholder, .query-builder .rules-group-container{
+      .query-builder .rule-container, .query-builder .rule-placeholder, .query-builder .rules-group-container{
 
-      /* background-color: rgba(218, 218, 218, 0.3); */
-      background-color: rgba(218, 218, 218, 0.61);
-    }
+        /* background-color: rgba(218, 218, 218, 0.3); */
+        background-color: rgba(218, 218, 218, 0.61);
+      }
 
-    .query-builder .rules-list{
-      padding: 0;
-    }
-  </style>
-  {% csrf_token %}
+      .query-builder .rules-list{
+        padding: 0;
+      }
+    </style>
+    {% csrf_token %}
 
-    {% comment %}
-      Necessário para inclusão dos blocos Querybuilder
-    {% endcomment %}
-    <div id="querybody_btn">
-    <div id="querybody"></div>
-    <div id="div_btns_search">
-      <!--<button style="margin-right:40px;margin-top:20px;" id="btn-get-geo" class="btn btn-primary parse-json" >Geologia</button>-->
+      {% comment %}
+        Necessário para inclusão dos blocos Querybuilder
+      {% endcomment %}
+      <div id="querybody_btn">
+      <div id="querybody"></div>
+      <div id="div_btns_search">
+        <!--<button style="margin-right:40px;margin-top:20px;" id="btn-get-geo" class="btn btn-primary parse-json" >Geologia</button>-->
 
-      <button style="margin-right:40px;margin-top:20px;" id="btn-get" class="btn btn-primary parse-json" >Pesquisar</button>
-      <button style="margin-right:40px;margin-top:20px;" id="btn-clr" class="btn btn-danger parse-json" onclick="  $('#builder_dinamic').queryBuilder('reset');">Limpar</button>
-      <br><br><br>
-    </div>
+        <button style="margin-right:40px;margin-top:20px;" id="btn-get" class="btn btn-primary parse-json" >Pesquisar</button>
+        <button style="margin-right:40px;margin-top:20px;" id="btn-clr" class="btn btn-danger parse-json" onclick="  $('#builder_dinamic').queryBuilder('reset');">Limpar</button>
+        <br><br><br>
+      </div>
 
-    </div>
+      </div>
 
-    <script>
+      <script>
 
-      //passa para javascript token
-      var csrf = "{{csrf_token}}";
-      // inicializa dados do contexto
-      var facetsCategorias = {{ facets_categorias|safe }};
+        //passa para javascript token
+        var csrf = "{{csrf_token}}";
+        // inicializa dados do contexto
+        var facetsCategorias = {{ facets_categorias|safe }};
+        //configurações do querybuilder da collection
+        {% if querybuilder_config %}
+          var querybuilder_config = {{querybuilder_config|safe}};
+        {%else%}
+          var querybuilder_config = []
+        {%endif%}
+        // Inicializa a collection
+        var bv_collection = "{{ collection }}"
+        var idioma = "{{ idioma }}"
 
-      // Inicializa a collection
-      var bv_collection = "{{ collection }}"
-      var idioma = "{{ idioma }}"
+        var vertice = {{ vertice|safe }}
 
-      var vertice = {{ vertice|safe }}
+        var navigation_tree = {{ navigation_tree | safe }}
 
-      var navigation_tree = {{ navigation_tree | safe }}
+        var id_collection = "{{ id }}"
 
-      var id_collection = "{{ id }}"
+        var omite_secoes = {{ omite_secoes | safe }}
 
-      var omite_secoes = {{ omite_secoes | safe }}
-
-      </script>
+        </script>
+      </div>
+  </div>

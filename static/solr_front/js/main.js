@@ -222,7 +222,7 @@ $(document).ready(function(){
 *
 */
 $(window).load(function(){
-  var collection_opt = window[bv_collection + '_opt']
+  var collection_opt = generate_options(querybuilder_config)
   // debugger;
 
 
@@ -233,7 +233,16 @@ $(window).load(function(){
     selectedFacets = query[bv_collection]['selected_facets_col1']
   }
 
-  geraRoot('builder_dinamic', collection_opt, query);
+
+  //verifica se configuração da collections foi definida
+  if( Object.keys(collection_opt).length ){
+    //show querybuilder
+    $('#facet_block').addClass('col-md-8')
+    $('#querybuilder_content').show()
+
+    geraRoot('builder_dinamic', collection_opt, query);
+
+  }
 
   // stringify necessario, pois dentro da função ocorre um parser
   getData( JSON.stringify(query) )

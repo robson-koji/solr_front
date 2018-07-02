@@ -12,7 +12,7 @@ from django.utils.translation import ugettext as _
 """
 Para importar os arquivos relativos ao projeto.
 settings.py e arquivos de configuracao do celery.
-"""
+
 PROJECT_PATH = os.path.normpath(os.path.dirname(os.path.dirname(__file__)))
 PROJECT_NAME = os.path.basename(PROJECT_PATH)
 
@@ -25,7 +25,10 @@ def custom_import(name):
 
 settings = custom_import(PROJECT_NAME + '.settings')
 app = custom_import(PROJECT_NAME + '.celery.app')
+"""
 
+from django.conf import settings
+from bv.celery import app
 
 
 

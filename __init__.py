@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 PROJECT_PATH = os.path.normpath(os.path.dirname(os.path.dirname(__file__)))
 PROJECT_NAME = os.path.basename(PROJECT_PATH)
 
+from solr_front.settings_sf import SORL_FRONT_CONFIG_PATH
 
 class ConfigurationError(Exception):
     pass
@@ -24,9 +25,9 @@ class SolrFrontStructure(object):
             return mod
 
         # Try to locate a custom configuration folder on the settings.py of the project
-        settings = custom_import(PROJECT_NAME + '.settings')
+        #settings = custom_import(PROJECT_NAME + '.settings')
         try:
-            self.config_path = settings.SORL_FRONT_CONFIG_PATH
+            self.config_path = SORL_FRONT_CONFIG_PATH
         except AttributeError:
             self.config_path = os.path.dirname(__file__) + '/conf/sample/'
         self.collections_path = self.config_path + 'collections/'
@@ -58,6 +59,15 @@ class SolrFrontStructure(object):
         EDGES = self.solr_front_conf['EDGES']
         return (GRAPH, EDGES)
 
+    def get_collections_meta(self):
+        """Get collections object meta informations """
+        logger.info("Loading collections metainformation: %s",  self.collections_path)
+        collections = self.get_collections()
+        meta_collections = {}
+        for collection in collections.keys():
+            meta_collections[collection] = collections[collection]['COLLECTION']
+
+        return meta_collections
 
     def get_collections(self):
         """ Get all collections configuration files """
