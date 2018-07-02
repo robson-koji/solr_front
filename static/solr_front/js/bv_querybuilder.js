@@ -15,36 +15,19 @@
 */
 function geraRoot(id, opt, query){
 
-
     var div = document.createElement('div');
     div.className += 'bloco';
     div.id = id+'_block';
 
     var divQb = document.createElement('div');
-    var sel = document.createElement('select');
-    $(sel).change(function(){
-      if($(this).find(':selected')){
 
-      }
-      $(this).find('option[value="'+this.value+'"]').prop('select', true)
-    })
-
-    div.appendChild(sel);
-    $(sel).hide();
     divQb.id = id;
 
     $(id+'_block').trigger('change');
     div.appendChild(divQb);
 
     $('#querybody').append(div);
-    sel.id = id+'_seletor';
 
-
-
-    for(var i=0; i < opt.roots.length; i++){
-      var option = new Option(opt.roots[i].text,opt.roots[i].value);
-      $(sel).append($(option));
-    }
     $('#querybody').change();
 
     opt = reverse_filter( opt, query)
@@ -143,28 +126,33 @@ function reverse_filter( opt, query){
 * @return {JSON}
 */
 function getBuscaRealizada(facets_col2){
+
+  if($('#querybody').children().length > 0){
     var json = {}
-    var body = null;
-    var body = $('#querybody').find('.bloco');
 
-    $(document).change();
-    for(var i = 0; i < body.length; i++){
-      var id = '#'+body.eq(i).children().eq(1).attr('id')
-      var seletor = body.eq(i).children().eq(0).val();
+    json[bv_collection] =
+      {
+          'query': $('#builder_dinamic').queryBuilder('getRules'),
+          'ordem': 0,
+          'collection':bv_collection,
+          //Envia versão filtrada do selectedFacets
+          'selected_facets_col1': cleanSelectedFacets(),
+      };
 
-      json[seletor] =
-        {
-            'query': $(id).queryBuilder('getRules'),
-            'ordem': i,
-            'collection':'graph_auxilios',
+  }
+  else{
+    var json = {}
+    json[bv_collection] =
+      {
+          'query': null,
+          'ordem': 0,
+          'collection':'graph_auxilios',
+          //Envia versão filtrada do selectedFacets
+          'selected_facets_col1': cleanSelectedFacets(),
+      };
 
-            //Envia versão filtrada do selectedFacets
-            'selected_facets_col1': cleanSelectedFacets(),
-            //deixa de usar variavel de estado e usa apenas filtro de função que retorna selectedfacets
-            //limpa 'selected_facets_col1':selectedFacets,
-            // 'selected_facets_col2':facets_col2
-        };
-    };
+
+  }
     return json;
 }
 
@@ -183,6 +171,7 @@ function getBuscaRealizada(facets_col2){
 * @param {String} facet_field - parametro do Solr
 */
 function ajax_solr(id, q, rows, fl, labelAtribute, valueAtribute, fq, facet_field, ac_facet_field) {
+  var selecionados = []
   $('[name="'+id+'"]').next('div').find('[id$="_addTag"] input').autocomplete({
     minLength: 0,
     focus: function( event, ui ) {
@@ -190,7 +179,7 @@ function ajax_solr(id, q, rows, fl, labelAtribute, valueAtribute, fq, facet_fiel
       return false;
     },
     select: function( event, ui ) {
-        if (!$('[name="'+id+'"]').tagExist(ui.item.label)) {
+        if (!$('[name="'+id+'"]').tagExist(ui.item.query)) {
            var terms = split( this.value );
            var input_ids = $('[name="'+id+'"]').val();
 
@@ -203,18 +192,22 @@ function ajax_solr(id, q, rows, fl, labelAtribute, valueAtribute, fq, facet_fiel
            terms.pop();
            //ids.pop();
            // add the selected item
-           terms.push( ui.item.label );
-           ids.push(ui.item.value);
+           terms.push( ui.item.query );
+           ids.push(ui.item.query);
            // add placeholder to get the comma-and-space at the end
            terms.push( "" );
            this.value = terms.join( " " );
 
+           selecionados.push(ui.item.query)
            //$("#"+id).val(ids.join( ", "));
            //ids.push( "" );
-
-           $('[name="'+id+'"]').addTag(ui.item.label);
+           $('[name="'+id+'"]').addTag(ui.item.query);
            $('[name="'+id+'"]').change();
            return false;
+        }
+        else{
+          terms [ " "]
+          return false
         }
     },
     source: function( request, response ) {
@@ -233,15 +226,16 @@ function ajax_solr(id, q, rows, fl, labelAtribute, valueAtribute, fq, facet_fiel
 
         $.ajax({
           url: url,
+          type: 'POST',
           data: {
               q: q,
               fl: fl,
               wt: 'json',
-              fq: filtro_chave + ':' + request,
+              fq: filtro_chave + ':' + "\"" + request + "\"",
               rows: rows,
               facet:Boolean(facet_field),
               'facet.field': facet_field,
-              ac_facet_field:ac_facet_field
+              csrfmiddlewaretoken: csrf
            },
            // dataType: "jsonp",
            // jsonp: 'json.wrf',
@@ -251,6 +245,7 @@ function ajax_solr(id, q, rows, fl, labelAtribute, valueAtribute, fq, facet_fiel
              Caso tenha recebido o parametro facet, busca em uma collection os
              itens do facete para apresetnar para a filtragem de projetos
              */
+
               if ('facet_counts' in data){
                 var item = []
                 $.each(data.facet_counts.facet_fields[facet_field], function(idx, facet){
@@ -266,12 +261,16 @@ function ajax_solr(id, q, rows, fl, labelAtribute, valueAtribute, fq, facet_fiel
                 response(item);
               }
               else{
-                response($.map(data.buckets, function( item ) {
-                  return {
-                      label: item.val,
-                      value: item.count,
-                  };
-                }));
+                response( $.map(data.buckets, function( item ) {
+
+                  if( $.inArray(item.val, selecionados) == -1 ){
+                    return {
+                        label: item.val +' ('+ item.count +')',
+                        query: item.val,
+                        value: item.count,
+                    };
+                  }
+                }).slice(0, rows) );
               }
 
 
@@ -323,270 +322,13 @@ function ajax_solr(id, q, rows, fl, labelAtribute, valueAtribute, fq, facet_fiel
 
 
 
-function injectAutocompleteTag(id, q, rows, fl, fieldsArray, ac_facet_field){
-  if (typeof fq === 'undefined'){
-    fq = ''
-  }
-  if (typeof facet_field === 'undefined'){
-    facet_field = ''
-  }
-  if (typeof ac_facet_field === 'undefined'){
-    ac_facet_field = ''
-  }
+function injectAutocompleteTag(id, q, rows, fl, fieldsArray, fq, facet_field, ac_facet_field){
 
   // Use ("block_string":true) nas opções do tagsInput
   // para bloquear a inserção aleatoria de texto quando utilizar função de autocomplete que não é passada nestas opções
   return   ' <input  type="hidden" id="'+ id +'" name="'+id+'"\/>'+
  '<script> $(function(){ $("[name=\''+id +'\']").tagsInput({"width": "auto","block_string":true,"onRemoveTag": function(){$(this).change();},"defaultText":"Digite um(a) %s para buscar",} ); ajax_solr( "'+id+'" ,"'+q+'",'+rows+',"'+fl+'","'+ fieldsArray[0]+'", "'+fieldsArray[1]+'", "'+fq+'", "'+facet_field+'", "'+ac_facet_field+'"); });<\/script> '
 }
-
-
-
-/**
-* Configurações do plugin queryBuilder para auxilios
-* @var {Object}
-*/
-var graph_auxilios_opt = {
-  plugins: ['bt-tooltip-errors'],
-
-  roots: [
-    {
-      'value':'graph_auxilios',
-      'text': 'Auxílio'
-    },
-    {
-      'value': 'graph_auxilios',
-      'text': 'Bolsa'
-    }
-  ],
-  filters: [
-          {
-             id: 'text', // indica o campo a ser buscado  no Solr.
-             label: 'Busca textual',
-             type: 'string',
-             operators: ["contains", "not_contains"],
-             input: 'text'
-           },
-           {
-              id: 'numero_processo', // indica o campo a ser buscado  no Solr.
-              label: 'Número de processo',
-              type: 'string',
-              operators: ["equal", "not_equal"],
-              input: 'text'
-            },
-          {
-             id: 'area',
-             label: 'Area',
-             type: 'string',
-             operators: ["equal", "not_equal"],
-             input: function(rule, name){
-               /*
-                 Função usada no atributo input dos filtros
-                 para criar um campo input com autocomplete.
-               */
-               var $container = rule.$el.find('.rule-value-container');
-
-               id =  name;
-               q = 'django_ct:geral.area_conhecimento';
-               fl = "*";
-               rows = 20;
-               fields = ["areas","areas"];
-               return injectAutocompleteTag(id, q, rows, fl, fields, '' );
-
-             },
-         },
-         {
-            id: 'instituicao',
-            label: 'Instituição',
-            multiple: true,
-            input: 'string',
-            operators: ["equal", "not_equal"],
-            input: function(rule, name){
-              /*
-                Função usada no atributo input dos filtros
-                para criar um campo input com autocomplete.
-              */
-              var $container = rule.$el.find('.rule-value-container');
-
-              id =  name;
-              q = 'django_ct:geral.instituicao_sede';
-              fl = "*";
-              rows = 20;
-              fields = ["instituicao","instituicao"];
-              ac_facet_field = "instituicao_exact";
-              return injectAutocompleteTag(id, q, rows, fl, fields, ac_facet_field);
-            },
-        },
-      {
-         id: 'pesquisadores',
-         label: 'Pesquisador',
-         multiple: true,
-         input: 'string',
-         operators: ["equal", "not_equal"],
-         input: function(rule, name){
-           /*
-             Função usada no atributo input dos filtros
-             para criar um campo input com autocomplete.
-           */
-           var $container = rule.$el.find('.rule-value-container');
-
-           id =  name;
-           q = 'django_ct:geral.pesquisador';
-           fl = "*";
-           rows = 20;
-           fields = ["nome","nome"];
-           return injectAutocompleteTag(id, q, rows, fl, fields, ''  );
-         },
-     },
-     {
-       /*
-       * Ter um problema de indexacao.
-       * O campo a ser buscado nao pode ser string.
-       * Utilizando o campo nao string titulo_pt_tooltip, ele nao bate com
-       * o que estah indexado no documento de auxilios e/ou bolsas, entao
-       * nao acha por convenio.
-       */
-
-        id: 'convenio',
-        label: 'Convênio',
-        operators:["equal", "not_equal", "is_empty", "is_not_empty"],
-        input: function(rule, name){
-          /*
-            Função usada no atributo input dos filtros
-            para criar um campo input com autocomplete.
-          */
-          var $container = rule.$el.find('.rule-value-container');
-
-          id =  name;
-          q = 'django_ct:geral.acordo_convenio';
-          fl = "*";
-          rows = 20;
-          fields = ["titulo_pt_tooltip","titulo_pt_tooltip"];
-          return injectAutocompleteTag(id, q, rows, fl, fields, '' );
-        },
-    },
-    {
-       id: 'pais_convenio',
-       label: 'País do convênio',
-       operators:["equal", "not_equal", "is_empty", "is_not_empty"],
-       input: function(rule, name){
-         /*
-           Função usada no atributo input dos filtros
-           para criar um campo input com autocomplete.
-         */
-         var $container = rule.$el.find('.rule-value-container');
-
-         id =  name;
-         q = 'django_ct:geral.acordo_convenio';
-         fl = ","; // Nao precisa dos fields, pq irah utilizar o facet com parametros para o do filtro.
-         facet_field = 'pais_exact';
-         fq = 'pais'
-         rows = 20;
-         fields = ["pais_convenio","pais"];
-         return injectAutocompleteTag(id, q, rows, fl, fields, fq, facet_field, ''  );
-       },
-   },
-   /*
-    {
-      id: 'programa',
-      label: 'Programa',
-      multiple: true,
-      input: 'string',
-      operators: ["equal", "not_equal", "is_empty", "is_not_empty"],
-      input: function(rule, name){
-        var $container = rule.$el.find('.rule-value-container');
-
-        id =  name;
-        q = 'django_ct:projetos.projeto';
-        fl = "*";
-        rows = 20;
-        fields = ["fomento","fomento"];
-        return injectAutocompleteTag(id, q, rows, fl, fields, '' );
-        }
-      },
-
-      */
-
-      {
-        id: 'instituicao_colaboracao',
-        label: 'Instituição no exterior/ Outras',
-        multiple: true,
-        input: 'string',
-        operators: ["equal", "not_equal", "is_empty", "is_not_empty"],
-        input: function(rule, name){
-          var $container = rule.$el.find('.rule-value-container');
-
-          id =  name;
-          q = 'django_ct:geral.instituicao_exterior';
-          fl = "*";
-          rows = 20;
-          fields = ["instituicao","instituicao"];
-          return injectAutocompleteTag(id, q, rows, fl, fields, ''  );
-          }
-        },
-      {
-        id: 'data_inicio_ano',
-        label: 'Ano de inicio',
-        type: 'integer',
-        operators: ["equal","not_equal", "less_or_equal", "greater_or_equal", ],
-
-        plugin: 'bootstrapSlider',
-        plugin_config: {
-          min: 1989,
-          max: 2020,
-          value: 2017
-        },
-
-        valueSetter: function(rule, value) {
-
-          if (rule.operator.nb_inputs == 1) value = [value];
-          rule.$el.find('.rule-value-container input').each(function(i) {
-            $(this).bootstrapSlider('setValue', value[i] || 0);
-
-          });
-        },
-        valueGetter: function(rule) {
-          var value = [];
-          rule.$el.find('.rule-value-container input').each(function() {
-            value.push($(this).bootstrapSlider('getValue'));
-
-          });
-          return rule.operator.nb_inputs == 1 ? value[0] : value;
-        }
-      },
-      {
-        id: 'data_termino_ano',
-        label: 'Ano de termino',
-        type: 'integer',
-        operators: ["equal", "not_equal", "less_or_equal", "greater_or_equal"],
-
-        plugin: 'bootstrapSlider',
-        plugin_config: {
-          min: 1989,
-          max: 2020,
-          value: 2017
-        },
-
-        valueSetter: function(rule, value) {
-
-          if (rule.operator.nb_inputs == 1) value = [value];
-          rule.$el.find('.rule-value-container input').each(function(i) {
-            $(this).bootstrapSlider('setValue', value[i] || 0);
-
-          });
-        },
-        valueGetter: function(rule) {
-          var value = [];
-          rule.$el.find('.rule-value-container input').each(function() {
-            value.push($(this).bootstrapSlider('getValue'));
-
-          });
-          return rule.operator.nb_inputs == 1 ? value[0] : value;
-        }
-      },
-  ]
-};
-
 
 
 
@@ -1506,3 +1248,78 @@ var instituicao_sede_opt = {
             },
         ]
 };
+
+
+FILTER_FUNCTIONS = {
+  "text": "text",
+  "autocomplete": function(rule, name){
+    /*
+      Função usada no atributo input dos filtros
+      para criar um campo input com autocomplete.
+    */
+    var solr_params = rule.__.filter.solr_params
+
+    id =  name;
+    q = solr_params.q || '';
+    fl = solr_params.fl || '*';
+    fq = solr_params.fq || '';
+    rows = solr_params.rows || 10;
+    fields = [solr_params.field,solr_params.field];
+    facet_field = solr_params.facet_field || '';
+    ac_facet_field = facet_field;
+    return injectAutocompleteTag(id, q, rows, fl, fields, fq, facet_field, ac_facet_field );
+
+  },
+
+}
+
+function generate_options(list_filters_config){
+
+  opt = {}
+  if(Object.keys(list_filters_config).length){
+    opt['filters'] = []
+
+    opt['plugins'] = list_filters_config['plugins']
+
+    for( var i =0, n = list_filters_config['filters'].length; i<n; i++ ){
+      obj = {}
+      $.each(list_filters_config['filters'][i], function(key, value){
+        if(key == 'input'){
+          obj[key] = FILTER_FUNCTIONS[value]
+        }
+        else if(key == 'get_from_solr_field'){
+          obj['id'] = value
+        }
+        else if(key == 'plugin' && value == 'slider'){
+
+          obj['plugin'] = 'bootstrapSlider'
+
+          obj['valueSetter'] = function(rule, value) {
+
+            if (rule.operator.nb_inputs == 1) value = [value];
+            rule.$el.find('.rule-value-container input').each(function(i) {
+              $(this).bootstrapSlider('setValue', value[i] || 0);
+
+            });
+          }
+          obj['valueGetter'] = function(rule) {
+              var value = [];
+              rule.$el.find('.rule-value-container input').each(function() {
+                value.push($(this).bootstrapSlider('getValue'));
+
+            });
+            return rule.operator.nb_inputs == 1 ? value[0] : value;
+          }
+        }
+        else{
+          obj[key] = value
+
+        }
+
+      });
+
+      opt['filters'].push(obj)
+    }
+  }
+  return opt
+}

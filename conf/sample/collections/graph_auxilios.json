@@ -162,5 +162,138 @@
             {"value": "cidade_exact", "label": "Cidade"},
             {"value": "ano_exact", "label": "Ano"}
         ]
+    },
+    "QUERY_BUILDER":{
+      "plugins" : ["bt-tooltip-errors"],
+      "filters" : [
+        {
+
+          "get_from_solr_field": "text",
+          "label": "Busca textual",
+          "operators": ["contains", "not_contains"],
+          "input": "text",
+          "type": "string"
+        },
+        {
+          // campo pesquisado no solr pelo getData(), manter mesmo valor de facet_field quando usado autocomplete
+          "get_from_solr_field": "area_exact",
+          // label do campo de seleção do filtro
+          "label": "Área",
+          // operadores logicos utilizados pelo querybuilder
+          "operators": ["equal", "not_equal"],
+          // função usada pelo querybuilder para construir o input, definido em bv_querybuilder.js
+          "input": "autocomplete",
+          // parametro extras do autocomplete
+          "solr_params": {
+            // parametro do solr
+            "q" : "*:*",
+            // parametro do solr
+            "fl" : "*",
+            // numero de itens que aparecem na listagem de autocomplete
+            "rows": "20",
+            // campo de busca da query
+            "field": "area",
+            // campo que é usado para gerar lista de intes facetados no auto_com
+            "facet_field" : "area_exact"
+           } ,
+          "type": "string"
+        },
+        {
+          "get_from_solr_field": "instituicao_exact",
+          "label": "Instituição",
+          "operators": ["equal", "not_equal"],
+          "input": "autocomplete",
+          "solr_params": {
+            "q" : "*:*",
+            "fl" : "*",
+            "rows": "5",
+            "field": "instituicao",
+            "facet_field": "instituicao_exact"
+           } ,
+          "type": "string"
+        },
+        {
+          "get_from_solr_field": "pesquisadores_exact",
+          "label": "Pesquisador",
+          "operators": ["equal", "not_equal"],
+          "multiple": true,
+          "input": "autocomplete",
+          "solr_params": {
+            "q" : "*:*",
+            "fl" : "pesquisadores_exact",
+            "rows": "20",
+            "field": "pesquisadores_exact",
+            "facet_field": "pesquisadores_exact"
+           },
+          "type": "string"
+        },
+        {
+          "get_from_solr_field": "convenio",
+          "label": "Convênio",
+          "operators": ["equal", "not_equal", "is_empty", "is_not_empty"],
+          "input": "autocomplete",
+          "solr_params": {
+            "q" : "django_ct:geral.acordo_convenio",
+            "fl" : "*",
+            "rows": "20",
+            "field": "titulo_pt_tooltip"
+           } ,
+          "type": "string"
+        },
+        {
+          "get_from_solr_field": "pais_convenio",
+          "label": "País do convênio",
+          "operators": ["equal", "not_equal", "is_empty", "is_not_empty"],
+          "input": "autocomplete",
+          "solr_params": {
+            "q" : "django_ct:geral.acordo_convenio",
+            "fl" : ",",
+            "fq": "pais",
+            "rows": "20",
+            "facet_field" : "pais_exact",
+            "field": "pais_convenio"
+           } ,
+          "type": "string"
+        },
+        {
+          "get_from_solr_field": "instituicao_colaboracao",
+          "label": "Instituição no exterior/ Outras",
+          "multiple": true,
+          "operators": ["equal", "not_equal", "is_empty", "is_not_empty"],
+          "input": "autocomplete",
+          "solr_params": {
+            "q" : "django_ct:geral.instituicao_eterior",
+            "fl" : "*",
+            "rows": "20",
+            "field": "instituicao"
+           } ,
+          "type": "string"
+        },
+        {
+          "get_from_solr_field": "data_inicio_ano",
+          "label": "Ano de inicio",
+          "operators": ["equal","not_equal", "less_or_equal", "greater_or_equal"],
+          "type": "integer",
+          "plugin" : "slider",
+          "plugin_config" : {
+            "min": 1989,
+            "max":2020,
+            "value":2017
+          }
+        },
+        {
+          "get_from_solr_field": "data_termino_ano",
+          "label": "Ano de termino",
+          "operators": ["equal","not_equal", "less_or_equal", "greater_or_equal"],
+          "type": "integer",
+          "plugin" : "slider",
+          "plugin_config" : {
+            "min": 1989,
+            "max":2020,
+            "value":2017
+          }
+        }
+      ]
     }
+
 }
