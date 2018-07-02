@@ -31,7 +31,7 @@ class SearchTestCase(unittest.TestCase):
     def test_params(self):
         response = self.client.get('/pt/buscador/bv/graph_auxilios/44480903/params/')
 
-        dando erro no teste aqui.
+        # dando erro no teste aqui.
 
         # print(response['location'])
 

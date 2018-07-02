@@ -28,6 +28,7 @@ import pandas
 # from conf import *
 
 from solr_front.exceptions import *
+from solr_front import settings_sf
 from solr_front.models import *
 from solr_front.forms import *
 
@@ -718,41 +719,67 @@ class SolrQueries(LoginRequiredMixin, View):
 
 
 
-    def get_facet_4_autocomplete(self, request_get, facet, selected_facets):
+    def get_facet_4_autocomplete(self, request_data, facet='', selected_facets=[]):
         """
         Recupera o facet de um elemento solicitado pelo autocomplete
 
         json.facet nao tem a opcao de facet.contains
         Voltando para o facet via metodo get.
 
-        json_facet = '{' + request_get['ac_facet_field'] +':{type:terms, prefix:' + fq_split[1] + ', field:'+ request_get['ac_facet_field'] + ',limit:50, domain:{excludeTags:'+ request_get['ac_facet_field'] + '_tag}}}'
+        json_facet = '{' + request_data['ac_facet_field'] +':{type:terms, prefix:' + fq_split[1] + ', field:'+ request_data['ac_facet_field'] + ',limit:50, domain:{excludeTags:'+ request_data['ac_facet_field'] + '_tag}}}'
         data = [('q','*:*'), ('wt', 'json'), ('rows', 0), ('fl',','), ('json.facet',json_facet)] + fqs + selected_facets
         """
 
         fqs = []
-        fq_split = request_get['fq'].split(':')
-        for term in fq_split[1].split():
-            fq = fq_split[0] + ':' + term
-            fqs.append(('fq', fq))
+        fq = request_data['fq']
+        if ":" in fq:
+            fq_split = request_data['fq'].split(':')
+            for term in fq_split[1].split():
+                fq = fq_split[0] + ':' + term
+                fqs.append(('fq', fq))
 
-        solr_url = 'http://leydenh/solr/' + self.collection + '/select?q=*:*&'
-        data = [('wt', 'json'), ('rows', 1), ('facet.field', request_get['ac_facet_field']),('facet', 'on'),('facet.contains', fq_split[1]), ('facet.contains.ignoreCase', 'true')] + fqs + selected_facets
-        solr_url += urllib.urlencode(data)
+
+
+        solr_url = 'http://leydenh/solr/' + self.collection + '/select'
+        # if request_data['ac_facet_field']:
+        #     data = [('wt', 'json'), ('rows', request_data['rows'] if 'rows' in request_data else 1), ('facet.field', request_data['ac_facet_field']),('facet', 'on'),('facet.contains', fq_split[1]), ('facet.contains.ignoreCase', 'true')] + fqs + selected_facets
+        # else:
+            # data = [('wt', 'json'), ('rows', request_data['rows'] if 'rows' in request_data else 1)] + fqs + selected_facets
+
+        data = request_data.copy()
+
+        #descomentar e inserir variaveis para lattes de alguma maneira ainda não definida
+        # if fq_split:
+        #     data['facet'] = 'on'
+        #     data['facet.contains'] = data['fq']
+        #     data['facet.contains.ignoreCase'] = 'true'
+
+
+        #deleta csrf para nao enviar para o solr
+        del data['csrfmiddlewaretoken']
+
+
+        #solr_url += urllib.urlencode(data)
 
         # Se necessario, fazer o escape de todos os caracterese que
-        solr_url = solr_url.replace('%', '%25')
-
+        #solr_url = solr_url.replace('%', '%25')
         response = requests.post(solr_url, data=data)
+        # import pdb; pdb.set_trace()
         if response.status_code != 200:
             self.solr_response_error('get_facet_4_autocomplete', response, solr_url)
 
-        resultado = response.json()['facet_counts']['facet_fields'][request_get['ac_facet_field']]
-
+        json = response.json()
         docs = []
-        for i,k in zip(resultado[0::2], resultado[1::2]):
-            docs.append({'count':k, 'val':i})
+        if 'facet_counts' in json:
+            resultado = json['facet_counts']['facet_fields'][data['facet.field']]
 
-        return ({'buckets':docs})
+            for i,k in zip(resultado[0::2], resultado[1::2]):
+                docs.append({'count':k, 'val':i})
+
+            return ({'buckets':docs})
+
+        #import pdb; pdb.set_trace()
+
 
 
 
@@ -917,10 +944,12 @@ class SolrQueries(LoginRequiredMixin, View):
 
 
         # Metodo deley eh do celery.
-        pedido = update_atomico_celery.delay(url, collection_destino, self.campo_dinamico_busca, self.hash_querybuilder)
+        if settings_sf.USE_CELERY:
+            pedido = update_atomico_celery.delay(url, collection_destino, self.campo_dinamico_busca, self.hash_querybuilder)
+        else:
+            pedido = update_atomico_celery(url, collection_destino, self.campo_dinamico_busca, self.hash_querybuilder)
 
         # Desta maneira, nao chama no Celery, chama diretamente no script da task.
-        #pedido = update_atomico_celery(url, collection_destino, self.campo_dinamico_busca, self.hash_querybuilder)
         # import pdb; pdb.set_trace()
         return pedido
 
@@ -1495,11 +1524,7 @@ class SearchView(EntryPointView):
 
         hierarquia = {}
 
-
         for f in solr_json['facets']:
-            # if f != 'iden_Emp_incubada':
-            #     continue
-
             hierarquia[f] = []
             if f == 'count': continue # ignora item caso chave for count
 
@@ -1542,13 +1567,14 @@ class SearchView(EntryPointView):
                                         'facets': {},
                                         'groupBy': group['groupBy'],
                                         'order': counter_facets,
-                                        'count': 0
+                                        'count': 10
                                         }
                                     }
 
                     for idx_facet, value in enumerate(facet):
                         # if not 'CIENCIAS_BIOLOGICAS|Química' in value['value']:
                         #     continue
+                        # print value
 
                         dict_ref = dict_inicial[ item['chave'] ]['facets']
                         if '|' in unicode(value['value']):
@@ -1561,14 +1587,11 @@ class SearchView(EntryPointView):
                                     chave += '|' + val
                                 dict_ref = monta_dict(dict_ref, chave, unicode(val), value['count'], group['groupBy'])
                         else:
-                            dict_inicial[item['chave']]['count'] += value['count']
                             chave = value['value']
                             monta_dict(dict_ref, chave, unicode(value['value']), value['count'], group['groupBy'])
                     pivot_solr.update(dict_inicial)
                     counter_facets += 1
         solr_json['facet_counts'] = {'hierarquico':pivot_solr}
-
-        # import pdb; pdb.set_trace()
         return solr_json
 
 
@@ -1813,8 +1836,15 @@ class AddVerticeView(View):
             Se necessario, eh possivel indexar somente uma vez, mas corre-se o risco de
             nao indexar tudo e faltarem registros na sub-collection
             """
-            pedido = self.solr_queries.do_reindex(se, kwargs['collection_destino']).id
+
+            id = self.solr_queries.do_reindex(se, kwargs['collection_destino'])
+            pedido = None
+            if id is not None:
+                pedido = id.id
+
             self.id = self.navigate.add_vertice( kwargs['collection_destino'], int(kwargs['id']), {'qs_selected_facets':{self.solr_queries.campo_dinamico_busca:[self.solr_queries.hash_querybuilder]}}, self.solr_queries.hash_querybuilder, '', pedido)
+
+            import pdb; pdb.set_trace()
             return HttpResponseRedirect(self.get_success_url(self.kwargs['collection_destino']))
         else:
             """ Se for uma nova navegacao, inicializa objeto navigation na sessao """
@@ -1851,9 +1881,12 @@ class HomeBuscador(LoginRequiredMixin, TemplateView):
             erro = {'titulo':'Já existe uma pesquisa em andamento',
                 'descricao': ''}
         base_name = 'home_sf.html'
+        #pega collections disponiveis
+        collections = sfs_object.get_collections_meta()
+
         template_name = find_template(base_name)
 
-        return render(request, template_name, {'erro': erro, 'idioma':kwargs['idioma'] })#, context_instance=RequestContext(self.request))
+        return render(request, template_name, {'erro': erro, 'idioma':kwargs['idioma'], 'collections':collections })#, context_instance=RequestContext(self.request))
 
 
 
@@ -1866,15 +1899,20 @@ class HomeCollection(LoginRequiredMixin, TemplateView):
     collectios etc.
     """
     def get(self, request, *args, **kwargs):
-            return render(request, 'solr_front/home_collection.html', {'collection':kwargs['collection'], 'idioma':kwargs['idioma']})#, context_instance=RequestContext(request))
+            base_name = 'home_collection.html'
+            template_name = find_template(base_name)
+            return render(request, template_name, {'collection':kwargs['collection'], 'idioma':kwargs['idioma']})#, context_instance=RequestContext(request))
 
 
 
 class AutoComplete(View):
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+
         self.solr_queries = SolrQueries(kwargs['collection'])
         try:
-            autocomplete = self.solr_queries.get_facet_4_autocomplete(request.GET, 'instituicao_exact', [])
+            #existe algum motivo para isso?
+            #autocomplete = self.solr_queries.get_facet_4_autocomplete(request.GET, 'instituicao_exact', [])
+            autocomplete = self.solr_queries.get_facet_4_autocomplete(request.POST)
             return JsonResponse(autocomplete)
         except GetSolarDataException:
             return HttpResponseServerError()
@@ -1922,7 +1960,8 @@ class ParamsView(LoginRequiredMixin, TemplateView):
         context['id_collection'] = self.id
         context['collection'] = self.collection
         context['vertice'] = json.dumps(self.vertice)#, ensure_ascii=False ).encode('utf8')
-
+        if 'QUERY_BUILDER' in COLLECTIONS[self.collection]:
+            context['querybuilder_config'] =  json.dumps(COLLECTIONS[self.collection]['QUERY_BUILDER'])
         context['facets_categorias'] = json.dumps(COLLECTIONS[self.collection]['FACETS'])
         context['collection_label'] = COLLECTIONS[self.collection]['COLLECTION']['label']
         context['totalizadores'] = json.dumps(COLLECTIONS[self.collection]['OUTCOMES'])#, ensure_ascii=False ).encode('utf8')
@@ -2113,7 +2152,10 @@ class ExportDataView(View):
             data_list = self.dict_values_to_string(data_list)
 
             #converte para dataframe
-            makeData_celery.delay(data_list, nome, email, para, msg, fields, formato)
+            if settings_sf.USE_CELERY:
+                makeData_celery.delay(data_list, nome, email, para, msg, fields, formato)
+            else:
+                makeData_celery(data_list, nome, email, para, msg, fields, formato)
 
             return data_list
 
@@ -2126,7 +2168,10 @@ class ExportDataView(View):
         except GetSolarDataException:
             return HttpResponseServerError()
 
-        makeCsv_celery.delay(data_list, nome, email, para, msg)
+        if settings_sf.USE_CELERY:
+            makeCsv_celery.delay(data_list, nome, email, para, msg)
+        else:
+            makeCsv_celery(data_list, nome, email, para, msg)
 
         if 'export_fields' in COLLECTIONS[self.vertice['collection']]:
             fields = COLLECTIONS[self.vertice['collection']]['export_fields']
