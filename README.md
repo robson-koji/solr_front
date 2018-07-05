@@ -1,9 +1,7 @@
 # solr_front
 Sistema multipropósito para análise de bases de dados. 
 
-Este sistema é desenvolvido com o apoio técnico do projeto Bibliteca Virtual da FAPESP.
-
-Copyright 2017 - 2018 Projeto Biblioteca Virtual da FAPESP :copyright: 
+Este sistema é resultado do projeto de pesquisa Bibliteca Virtual da FAPESP.
 
 
 
