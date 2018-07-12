@@ -7,6 +7,11 @@
 * @module solr_front::bv_querybuilder
 */
 
+/**
+* Variavel global que armazena as tags de autocomplete, utilizadas no querybuilder pelo usuário
+* @param {Array} selecionados
+*/
+var selecionados = []
 
 /**
 * Gera hmtl do bloco principal do querybuilder
@@ -61,7 +66,7 @@ function reverse_tag_input(id, tags){
       $("input[id^='"+id + '_rule_'+key+"']").importTags(value);
 
       // limpa campo de busca que é preenchido pelo jquery taginput com a ultima tag inclusa
-      $("input[id^='"+id + '_rule_'+key+"']").val('')
+      $("input[id^='"+id + '_rule_'+key+"']").removeTag('')
 
     })
 
@@ -95,26 +100,18 @@ function reverse_filter( opt, query){
       if (query.hasOwnProperty('rules')){
 
         $.each(query.rules, function(key, rule){
-
-
-
-
-         opt_rules.push(rule)
-
-
-         values_tag[key] = rule.value
-
-
-
+           opt_rules.push(rule)
+           values_tag[key] = rule.value
         })
-
         if(opt_rules){
-
+          for (var i = 0, n=opt_rules.length; i< n; i++){
+            valores = opt_rules[i].value.split(',')
+            for (var j=0, n2=valores.length; j< n2; j++){
+              selecionados.push(valores[j])
+            }
+          }
           opt['rules'] = opt_rules
         }
-
-
-
       }
     }
     return opt
@@ -146,7 +143,7 @@ function getBuscaRealizada(facets_col2){
       {
           'query': null,
           'ordem': 0,
-          'collection':'graph_auxilios',
+          'collection':bv_collection,
           //Envia versão filtrada do selectedFacets
           'selected_facets_col1': cleanSelectedFacets(),
       };
@@ -171,42 +168,22 @@ function getBuscaRealizada(facets_col2){
 * @param {String} facet_field - parametro do Solr
 */
 function ajax_solr(id, q, rows, fl, labelAtribute, valueAtribute, fq, facet_field, ac_facet_field) {
-  var selecionados = []
+
   $('[name="'+id+'"]').next('div').find('[id$="_addTag"] input').autocomplete({
     minLength: 0,
     focus: function( event, ui ) {
-      //$(this).val(ui.item.label);
       return false;
     },
     select: function( event, ui ) {
         if (!$('[name="'+id+'"]').tagExist(ui.item.query)) {
-           var terms = split( this.value );
-           var input_ids = $('[name="'+id+'"]').val();
-
-           if (input_ids.length > 0){
-             var ids = split( $('[name="'+id+'"]').val() );
-           }else{
-             var ids = [];
-           }
-           // remove the current input
-           terms.pop();
-           //ids.pop();
-           // add the selected item
-           terms.push( ui.item.query );
-           ids.push(ui.item.query);
-           // add placeholder to get the comma-and-space at the end
-           terms.push( "" );
-           this.value = terms.join( " " );
-
            selecionados.push(ui.item.query)
-           //$("#"+id).val(ids.join( ", "));
-           //ids.push( "" );
-           $('[name="'+id+'"]').addTag(ui.item.query);
+           $('[name="'+id+'"]').addTag( ui.item.query);
            $('[name="'+id+'"]').change();
            return false;
         }
         else{
-          terms [ " "]
+          //caso já existir a tag selecionada
+          terms [" "]
           return false
         }
     },
@@ -235,6 +212,7 @@ function ajax_solr(id, q, rows, fl, labelAtribute, valueAtribute, fq, facet_fiel
               rows: rows,
               facet:Boolean(facet_field),
               'facet.field': facet_field,
+              selected_facets : JSON.stringify(query[bv_collection]['selected_facets_col1']),
               csrfmiddlewaretoken: csrf
            },
            // dataType: "jsonp",
@@ -264,11 +242,16 @@ function ajax_solr(id, q, rows, fl, labelAtribute, valueAtribute, fq, facet_fiel
                 response( $.map(data.buckets, function( item ) {
 
                   if( $.inArray(item.val, selecionados) == -1 ){
-                    return {
+
+                    if(item.count > 0){
+
+                      return {
                         label: item.val +' ('+ item.count +')',
                         query: item.val,
                         value: item.count,
-                    };
+                      };
+
+                    }
                   }
                 }).slice(0, rows) );
               }
@@ -326,16 +309,14 @@ function injectAutocompleteTag(id, q, rows, fl, fieldsArray, fq, facet_field, ac
 
   // Use ("block_string":true) nas opções do tagsInput
   // para bloquear a inserção aleatoria de texto quando utilizar função de autocomplete que não é passada nestas opções
+
+
   return   ' <input  type="hidden" id="'+ id +'" name="'+id+'"\/>'+
- '<script> $(function(){ $("[name=\''+id +'\']").tagsInput({"width": "auto","block_string":true,"onRemoveTag": function(){$(this).change();},"defaultText":"Digite um(a) %s para buscar",} ); ajax_solr( "'+id+'" ,"'+q+'",'+rows+',"'+fl+'","'+ fieldsArray[0]+'", "'+fieldsArray[1]+'", "'+fq+'", "'+facet_field+'", "'+ac_facet_field+'"); });<\/script> '
+ '<script> $(function(){ $("[name=\''+id +'\']").tagsInput({"width": "auto","block_string":true,"delimiter":":::", "onRemoveTag": function(item){ var index = selecionados.indexOf(item);if (index !== -1) selecionados.splice(index, 1);  $(this).change();},"defaultText":"Digite um(a) %s para buscar",} ); ajax_solr( "'+id+'" ,"'+q+'",'+rows+',"'+fl+'","'+ fieldsArray[0]+'", "'+fieldsArray[1]+'", "'+fq+'", "'+facet_field+'", "'+ac_facet_field+'"); });<\/script> '
 }
 
 
 
-/**
-* Configurações do plugin queryBuilder para publicacaoes
-* @var {Object}
-*/
 var bv_memoria_opt = {
         roots: [
           {
@@ -422,9 +403,6 @@ var bv_memoria_opt = {
              }
           ]
 };
-
-
-
 
 
 var memoria_autoria_opt = {

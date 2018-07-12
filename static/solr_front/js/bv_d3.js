@@ -57,6 +57,50 @@ function recuperaBubbleChart(busca_realizada_str){
 
 
 
+var wordcloud_data = 0
+
+function recuperaWordCloudChart(busca_realizada_str){
+  // Recupera os valores da busca.
+  if (typeof busca_realizada_str != 'string'){
+    var result_cp_gd = getBuscaRealizada({});
+  }
+  else{
+    var result_cp_gd = JSON.parse(busca_realizada_str)
+  }
+
+  // json_levels_list.splice(-1,1) // O ultimo eh o botao. Exclui.
+  result_cp_gd[bv_collection]['single_facet'] = 'aval_sug_facet';
+
+
+  // debugger;
+
+  $.ajax({
+    url: '/pt/buscador/bv/' + bv_collection + '/' + id_collection + '/unidimensional_chart/wordcloud/',
+    type: 'post',
+    dataType: 'json',
+    headers: {
+       "cache-control": "no-cache",
+       'X-Requested-With': 'XMLHttpRequest',
+       "Content-Type" : "application/json; charset=utf-8",
+       "Accept" : "application/json",
+       'X-CSRFToken': csrf //a varivel csrf provem da pagina html
+     },
+     data: JSON.stringify(result_cp_gd),
+     success: function(data){
+       console.log(data)
+       // debugger;
+
+       d3.wordcloud()
+           .size([500, 300])
+           .fill(d3.scale.ordinal().range(["#884400", "#448800", "#888800", "#444400"]))
+           .words(data['buckets'])
+           // .words(words)
+           .start();
+     }
+   });
+}
+
+
 
 // var nodes = []
 // var link = []

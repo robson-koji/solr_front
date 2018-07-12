@@ -42,7 +42,7 @@
         <!--<button style="margin-right:40px;margin-top:20px;" id="btn-get-geo" class="btn btn-primary parse-json" >Geologia</button>-->
 
         <button style="margin-right:40px;margin-top:20px;" id="btn-get" class="btn btn-primary parse-json" >Pesquisar</button>
-        <button style="margin-right:40px;margin-top:20px;" id="btn-clr" class="btn btn-danger parse-json" onclick="  $('#builder_dinamic').queryBuilder('reset');">Limpar</button>
+        <button style="margin-right:40px;margin-top:20px;" id="btn-clr" class="btn btn-danger parse-json" onclick="  $('#builder_dinamic').queryBuilder('reset'); selecionados = []">Limpar</button>
         <br><br><br>
       </div>
 
@@ -50,25 +50,13 @@
 
       <script>
 
-        //passa para javascript token
-        var csrf = "{{csrf_token}}";
-        // inicializa dados do contexto
-        var facetsCategorias = {{ facets_categorias|safe }};
+
         //configurações do querybuilder da collection
         {% if querybuilder_config %}
           var querybuilder_config = {{querybuilder_config|safe}};
         {%else%}
           var querybuilder_config = []
         {%endif%}
-        // Inicializa a collection
-        var bv_collection = "{{ collection }}"
-        var idioma = "{{ idioma }}"
-
-        var vertice = {{ vertice|safe }}
-
-        var navigation_tree = {{ navigation_tree | safe }}
-
-        var id_collection = "{{ id }}"
 
         var omite_secoes = {{ omite_secoes | safe }}
 

@@ -111,11 +111,35 @@
 
 
 		<script src='{% static "third_part/sankey/sankey.js" %}'></script>
+		<script src='{% static "third_part/wordcloud/d3.layout.cloud.js" %}'></script>
+		<script src='{% static "third_part/wordcloud/d3.wordcloud.js" %}'></script>
+		<script src='{% static "third_part/wordcloud/example.words.js" %}'></script>
 
 
 	<link rel="stylesheet" href='{% static "solr_front/css/loadingOne.css" %}' type="text/css" media="all"/>
 	</head>
 	<body>
+		<script>
+			/* Variaveis de contexto global passadas para javascript  */
+
+			//passa para javascript token
+			var csrf = "{{csrf_token}}";
+			// inicializa dados do contexto
+			var facetsCategorias = {{ facets_categorias|safe }};
+
+			// Inicializa a collection
+			var bv_collection = "{{ collection }}"
+			var idioma = "{{ idioma }}"
+
+			var vertice = {{ vertice|safe }}
+
+			var navigation_tree = {{ navigation_tree | safe }}
+
+			var id_collection = "{{ id }}"
+
+			var omite_secoes = {{ omite_secoes | safe }}
+			</script>
+
 		<!-- Loader fullscreen -->
 		<div id="loader_screen" class="text-center backgroundLoader" >
 			<div class="loader-wrapper" id="loader-1">
@@ -312,6 +336,36 @@
 
 
 
+				{% if not 'wordcloud' in omite_secoes %}
+				<section>
+					<div class="container">
+						<div class="title-section">
+							<div class="title-section__icon" data-toggle="collapse" data-target=".graficos_interativos" aria-expanded="false">
+							</div>
+							<div class="title-section__text">
+								<h1>Nuvem de palavras citadas</h1>
+							</div>
+						</div>
+						<div class="content_section">
+							<div class="content_section__grafico">
+								<!--
+								Chama o HTML que tem o javascript e elementos HTML deste grafico.
+								O javascript deverah sair deste HTML e ir para um arquivo.
+							 	-->
+								<div class="svg_divs" id="svg_wordcloud_div">
+								  {% include "solr_front/graficos/wordcloud.html" %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+				{% endif %}
+
+
+
+
+
+
 		<section>
 			<div class="container">
 				<div class="title-section">
@@ -335,7 +389,7 @@
 						<div id="facet_multiplo"></div>
 						{% endif %}
 
-						{% if not 'sankey' in omite_secoes %}
+						{% if not 'pivot_table' in omite_secoes %}
 						<div class="svg_divs" id="pivot_table_div">
 							{% include "solr_front/graficos/pivot_table.html" %}
 						</div>

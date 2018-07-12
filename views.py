@@ -681,10 +681,12 @@ class SolrQueries(LoginRequiredMixin, View):
 
         !!!! Ver se dah para apgar o metodo acima
         """
+
         lot = [] # list of tuples
-        for key in selected_facets:
+        for key, value in selected_facets.iteritems():
+            # import pdb; pdb.set_trace()
             facets = '('
-            for item in selected_facets[key]:
+            for item in value:
                 # double quotes bumps Solr.
                 item = item.replace('"', '\\"')
                 facets += '"' + item + '" OR '
@@ -736,17 +738,26 @@ class SolrQueries(LoginRequiredMixin, View):
             fq_split = request_data['fq'].split(':')
             for term in fq_split[1].split():
                 fq = fq_split[0] + ':' + term
-                fqs.append(('fq', fq))
+                fqs.append(fq)
+        # acrescente facets de contexto na lista de parametros fq
+        if selected_facets:
+            fq = self.facets2fq_post(selected_facets)
 
+            for fq_tuple in fq:
+                #pega segundo valor da tupla retornada da função, como paramentro
+                fqs.append(fq_tuple[1])
 
 
         solr_url = 'http://leydenh/solr/' + self.collection + '/select'
         # if request_data['ac_facet_field']:
-        #     data = [('wt', 'json'), ('rows', request_data['rows'] if 'rows' in request_data else 1), ('facet.field', request_data['ac_facet_field']),('facet', 'on'),('facet.contains', fq_split[1]), ('facet.contains.ignoreCase', 'true')] + fqs + selected_facets
+        #data = [('wt', 'json'), ('rows', request_data['rows'] if 'rows' in request_data else 1), ('facet.field', request_data['ac_facet_field']),('facet', 'on'),('facet.contains', fq_split[1]), ('facet.contains.ignoreCase', 'true')] + fqs + selected_facets
         # else:
             # data = [('wt', 'json'), ('rows', request_data['rows'] if 'rows' in request_data else 1)] + fqs + selected_facets
 
         data = request_data.copy()
+
+        #inclui facets de contexto na query post do solr
+        data['fq'] = fqs
 
         #descomentar e inserir variaveis para lattes de alguma maneira ainda não definida
         # if fq_split:
@@ -1010,6 +1021,29 @@ class SolrQueries(LoginRequiredMixin, View):
 
 
 
+    def get_content_wordcloud_json_facet(self, content_type, fq, single_facet, selected_facets):
+        """
+        Recupera dados facetados no Solr de um unico campo, e retorna para geracao do grafico wordcloud.
+        """
+        solr_url = 'http://leydenh/solr/' + content_type + '/query'
+        facet_field = 'aval_sug_facet'
+        json_facet = '{single_facet:{type: terms, field:' +  facet_field + ', sort:{count:desc}, limit: 1000 }}'
+        data = [('q','*:*'), ('rows','0'), ('fl','*'), ('fq',fq), ('json.facet', str(json_facet))] + selected_facets
+
+        response = requests.get(solr_url, data=data)
+        if response.status_code != 200:
+            self.solr_response_error('get_content_json_facet', response, solr_url)
+
+
+        # Convertendo a chave dos objetos para ficar compativel com a lib d3wordcloud no front
+        obj = response.json()['facets']['single_facet']['buckets']
+        buckets = {'buckets':[]}
+        for o in obj:
+            if len(o['val']) <= 2:
+                continue
+            buckets['buckets'].append({'text':o['val'], 'size':o['count']})
+        return buckets
+
 
     def get_content_bubble_json_facet(self, content_type, fq, levels_list, selected_facets):
         """
@@ -1236,9 +1270,16 @@ class EntryPointView(LoginRequiredMixin, View):
 
         try:
             solr_json = self.json_response()
+            # import pdb; pdb.set_trace()
             return JsonResponse(solr_json)
         except GetSolarDataException:
             return HttpResponseServerError()
+        except Exception as e:
+            logger.error(e)
+            logger.error("Class Error: EntryPointView")
+            logger.error("Subclass Error: %s" %(self.__class__.__name__))
+            logger.error("URL Error: %s \n" %(request.build_absolute_uri()))
+
 
 
 
@@ -1258,12 +1299,13 @@ class EntryPointView(LoginRequiredMixin, View):
 
 
 
-
+    #split valores retornados do querybuilder
     def split_value(self, value):
         if isinstance(value, int):
             return value
-        if ',' in value:
-            lego = value.split(',')
+        #considerando ::: delimitador de valores, definido em bv_querybuilder.js
+        if ':::' in value:
+            lego = value.split(':::')
             result = ''
 
             # modifica mecanica de palavras chaves incluindo aspas em cada palavra
@@ -1298,7 +1340,9 @@ class EntryPointView(LoginRequiredMixin, View):
             return 'data_inicio_ano:[%s TO *] AND data_termino_ano:[%s TO *]' % (dict['value'][0], dict['value'][1])
         else:
 
-            #import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
+            if not isinstance(dict['value'],basestring):
+                dict['value'] = str(dict['value'] )
 
             dict['value'] = dict['value'].replace('\t', '')
 
@@ -1432,6 +1476,19 @@ class MultidimensionalChartView(EntryPointView):
                 raise
 
 
+class UnidimensionalChartView(EntryPointView):
+    """ For a unique facet field query """
+    def json_response(self):
+        if self.kwargs['chart_type'] == 'wordcloud' and not 'wordcloud' in COLLECTIONS[self.collection]['COLLECTION']['omite_secoes']:
+            single_facet = self.data['single_facet']
+            try:
+                retorno_list = self.solr_queries.get_content_wordcloud_json_facet(self.collection, self.fq, single_facet, self.json_selected_facets)
+                return retorno_list if retorno_list else None
+            except GetSolarDataException:
+                raise
+
+
+
 
 class SearchView(EntryPointView):
     """
@@ -1524,7 +1581,11 @@ class SearchView(EntryPointView):
 
         hierarquia = {}
 
+
         for f in solr_json['facets']:
+            # if f != 'iden_Emp_incubada':
+            #     continue
+
             hierarquia[f] = []
             if f == 'count': continue # ignora item caso chave for count
 
@@ -1567,14 +1628,13 @@ class SearchView(EntryPointView):
                                         'facets': {},
                                         'groupBy': group['groupBy'],
                                         'order': counter_facets,
-                                        'count': 10
+                                        'count': 0
                                         }
                                     }
 
                     for idx_facet, value in enumerate(facet):
                         # if not 'CIENCIAS_BIOLOGICAS|Química' in value['value']:
                         #     continue
-                        # print value
 
                         dict_ref = dict_inicial[ item['chave'] ]['facets']
                         if '|' in unicode(value['value']):
@@ -1587,11 +1647,14 @@ class SearchView(EntryPointView):
                                     chave += '|' + val
                                 dict_ref = monta_dict(dict_ref, chave, unicode(val), value['count'], group['groupBy'])
                         else:
+                            dict_inicial[item['chave']]['count'] += value['count']
                             chave = value['value']
                             monta_dict(dict_ref, chave, unicode(value['value']), value['count'], group['groupBy'])
                     pivot_solr.update(dict_inicial)
                     counter_facets += 1
         solr_json['facet_counts'] = {'hierarquico':pivot_solr}
+
+        # import pdb; pdb.set_trace()
         return solr_json
 
 
@@ -1844,7 +1907,7 @@ class AddVerticeView(View):
 
             self.id = self.navigate.add_vertice( kwargs['collection_destino'], int(kwargs['id']), {'qs_selected_facets':{self.solr_queries.campo_dinamico_busca:[self.solr_queries.hash_querybuilder]}}, self.solr_queries.hash_querybuilder, '', pedido)
 
-            import pdb; pdb.set_trace()
+            #import pdb; pdb.set_trace()
             return HttpResponseRedirect(self.get_success_url(self.kwargs['collection_destino']))
         else:
             """ Se for uma nova navegacao, inicializa objeto navigation na sessao """
@@ -1912,7 +1975,8 @@ class AutoComplete(View):
         try:
             #existe algum motivo para isso?
             #autocomplete = self.solr_queries.get_facet_4_autocomplete(request.GET, 'instituicao_exact', [])
-            autocomplete = self.solr_queries.get_facet_4_autocomplete(request.POST)
+            autocomplete = self.solr_queries.get_facet_4_autocomplete(request.POST, selected_facets = json.loads(request.POST['selected_facets']) )
+
             return JsonResponse(autocomplete)
         except GetSolarDataException:
             return HttpResponseServerError()
@@ -2000,6 +2064,10 @@ class ParamsView(LoginRequiredMixin, TemplateView):
             context['bubble_chart_json'] = json.dumps(COLLECTIONS[self.collection]['BUBBLE_CHART'])
             context['bubble_chart'] = COLLECTIONS[self.collection]['BUBBLE_CHART']
 
+        context['wordcloud'] =  ''
+        if 'WORDCLOUD_CHART' in COLLECTIONS[self.collection] and COLLECTIONS[self.collection]['WORDCLOUD_CHART']:
+            context['wordcloud_chart_json'] = json.dumps(COLLECTIONS[self.collection]['WORDCLOUD_CHART'])
+            context['wordcloud_chart'] = COLLECTIONS[self.collection]['WORDCLOUD_CHART']
 
         context['form_csv'] = ExportForm()
         context['graph'] = GRAPH[self.collection]
@@ -2125,21 +2193,22 @@ class ExportDataView(View):
             return final_dict
 
     def makeDataFrame(self, se, nome, email, para, msg, formato):
-        if 'export_fields' in COLLECTIONS[self.vertice['collection']]:
-            fields = COLLECTIONS[self.vertice['collection']]['export_fields']
+
+        if 'export_fields' in COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']:
+            fields = COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['export_fields']
 
 
-            if 'export_sort_by' in COLLECTIONS[self.vertice['collection']]:
-                sort = COLLECTIONS[self.vertice['collection']]['export_sort_by']
+            if 'export_sort_by' in COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']:
+                sort = COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['export_sort_by'] +' '+ COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['export_sort_op']
             else:
                 sort = fields[0] +' asc'
 
             se = se.replace(', sort="id asc"',', sort="'+sort+'"')
             se = se.replace('fl="id"','fl="'+ ', '.join(fields)+'"')
 
-            if self.limite_itens_export:
+            if 'max_rows' in COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']:
                 try:
-                    data_list = self.solr_queries.executaStreamingExpression(se)['result-set']['docs'][:self.limite_itens_export]
+                    data_list = self.solr_queries.executaStreamingExpression(se)['result-set']['docs'][ : COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['max_rows'] ]
                 except GetSolarDataException:
                     return HttpResponseServerError()
             else:
