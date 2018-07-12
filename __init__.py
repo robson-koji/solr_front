@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 PROJECT_PATH = os.path.normpath(os.path.dirname(os.path.dirname(__file__)))
 PROJECT_NAME = os.path.basename(PROJECT_PATH)
 
-from solr_front.settings_sf import SORL_FRONT_CONFIG_PATH
 
 class ConfigurationError(Exception):
     pass
@@ -27,10 +26,14 @@ class SolrFrontStructure(object):
         # Try to locate a custom configuration folder on the settings.py of the project
         #settings = custom_import(PROJECT_NAME + '.settings')
         try:
+            from solr_front.settings_sf import SORL_FRONT_CONFIG_PATH
+            if SORL_FRONT_CONFIG_PATH is None:
+                raise Exception()
             self.config_path = SORL_FRONT_CONFIG_PATH
-        except AttributeError:
+        except:
             self.config_path = os.path.dirname(__file__) + '/conf/sample/'
         self.collections_path = self.config_path + 'collections/'
+
 
 
     def remove_comments(self, string):

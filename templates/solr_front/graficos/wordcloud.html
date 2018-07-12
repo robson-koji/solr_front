@@ -1,0 +1,26 @@
+{% load staticfiles %}
+
+
+<div class="graficos_interativos" class="grid">
+  <h2 class="title_primary"> </h2>
+  Selecione o campo para formar a nuvem de palavras:
+      <select class="wordcloud_options" id="nivel_1">
+        {% for sc in wordcloud_chart.options  %}
+          {% if sc.value == wordcloud_chart.default_single_facet.value %}
+            <option value={{ sc.value }} selected>{{ sc.label }}</option>
+          {% else %}
+            <option value={{ sc.value }}>{{ sc.label }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+  <div class="content_section__actions row">
+    <div class="content_section__grafico">
+      <div id='wordcloud' style="height: 500px"></div>
+    </div>
+  </div>
+
+</div>
+
+
+</body>
+</html>
