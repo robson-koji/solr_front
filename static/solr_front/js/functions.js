@@ -136,13 +136,21 @@ function getData(busca_realizada_str){
           if (omite_secoes.indexOf('sankey') === -1){
             recuperaSankeyChart(busca_realizada)
           }
+          if (omite_secoes.indexOf('pivot_table') === -1){
+            recuperaPivotTable(busca_realizada)
+          }
 
-          recuperaPivotTable(busca_realizada)
+
 
 
           if (omite_secoes.indexOf('bubblechart') === -1){
             recuperaBubbleChart(busca_realizada)
           }
+
+          if (omite_secoes.indexOf('wordcloud') === -1){
+            recuperaWordCloudChart(busca_realizada)
+          }
+
 
           $(".group_half_pie_chart").empty()
           geraCharts(data.facet_counts.hierarquico)

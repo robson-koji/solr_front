@@ -117,11 +117,16 @@ $(document).ready(function(){
       recuperaPivotTable()
     })  ;
 
+    // Grafico Wordcloud. Mudanca dos selects
+    $(document).on('change', '.wordcloud_options', function(){
+      recuperaWordCloudChart()
+    })  ;
+
+
     // Grafico Bubble. Mudanca dos selects
     $(document).on('change', '.bubble_options', function(){
       recuperaBubbleChart()
     })  ;
-
 
     // Grafico Bubble. Mudanca dos selects
     $(document).on('change', '.bubble_range', function(){
@@ -138,7 +143,7 @@ $(document).ready(function(){
 
     // Limpa o Json de facets que envia para o servidor.
     $('#limpar_facets').click(function(){
-      // console.log('limpar_facets')
+      // console.log('limpar_facets')    
       selectedFacets = {}
       getData()
       $('#filtros_aplicados').hide()
@@ -222,6 +227,10 @@ $(document).ready(function(){
 *
 */
 $(window).load(function(){
+  if( typeof querybuilder_config == 'undefined'){
+
+    querybuilder_config = {}
+  }
   var collection_opt = generate_options(querybuilder_config)
   // debugger;
 

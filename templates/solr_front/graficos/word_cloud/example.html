@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Word Cloud</title>
+    <script src="d3.js"></script>
+    <script src="d3.layout.cloud.js"></script>
+    <script src="d3.wordcloud.js"></script>
+    <script src="example.words.js"></script>
+
+
+</head>
+<body style="text-align: center">
+<h1>Word Cloud</h1>
+<div id='wordcloud'></div>
+
+<script>
+    d3.wordcloud()
+        .size([500, 300])
+        .fill(d3.scale.ordinal().range(["#884400", "#448800", "#888800", "#444400"]))
+        .words(words)
+        .start();
+</script>
+</body>
+</html>

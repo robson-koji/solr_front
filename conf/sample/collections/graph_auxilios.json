@@ -9,10 +9,19 @@
 {
   "COLLECTION":{
     "label": "Projetos (Auxílios e Bolsas)",
-    "omite_secoes": ["refine"],
+    "omite_secoes": ["refine", "wordcloud"],
     "campo_dinamico_busca": "cross_collection_auxilios"
   },
-
+  "EXPORT_DATA":{
+    //"campos do solr que iram ser exportados em arquivo, fields devem ser docvalues"
+    "export_fields" : [],
+    //"campo usado para ordenar resultados"
+    "export_sort_by" : "" ,
+    //"campo usado para definir operador de ordenação"
+    "export_sort_op" : "asc",
+    //"limita numera maximo de documentos a serem exportados"
+    "max_rows" : 10000
+  },
   "FACETS":[
       {"groupBy": {"id": "projetos", "label": "Projetos", "order": 0},
        "facetGroup": [
@@ -94,6 +103,21 @@
 
 
   "SANKEY_CHART":{
+      "default_level_1": {"value": "data_inicio_ano_exact", "label": "Ano de início"},
+      "default_level_2": {"value": "situacao", "label": "Situação"},
+      "options": [
+          {"value": "situacao", "label": "Situação"},
+          {"value": "data_inicio_ano_exact", "label": "Ano de início"},
+          {"value": "bolsas_pt", "label": "Bolsa"},
+          {"value": "auxilio_pesquisa_pt", "label": "Auxílio a Pesquisa"},
+          // {"value":"area_pt", "label":"Área do conhecimento"},
+          // {"value":"convenio_exact", "label":"Convênio"},
+          {"value": "tipo_convenio_exact", "label": "Tipo de convênio"},
+          {"value": "pais_convenio_exact", "label": "País de convênio"}
+      ]
+  },
+
+  "PIVOT_TABLE":{
       "default_level_1": {"value": "data_inicio_ano_exact", "label": "Ano de início"},
       "default_level_2": {"value": "situacao", "label": "Situação"},
       "options": [
@@ -212,65 +236,69 @@
            } ,
           "type": "string"
         },
+        // Campo do solr só esta pesquisando itens com termo exato, mesmo usando campo sem o exact
+        // {
+        //  "get_from_solr_field": "pesquisadores",
+        //  "label": "Pesquisador",
+        //  "operators": ["equal", "not_equal"],
+        //  "multiple": true,
+        //  "input": "autocomplete",
+        //  "solr_params": {
+        //    "q" : "*:*",
+        //    "fl" : "*",
+        //    "rows": "20",
+        //    "field": "pesquisadores",
+        //    "facet_field": "pesquisadores"
+        //   },
+        //  "type": "string"
+        //},
+        // Campo do solr só esta pesquisando itens com termo exato, mesmo usando campo sem o exact
+        //{
+        //  "get_from_solr_field": "convenio_exact",
+        //  "label": "Convênio",
+        //  "operators": ["equal", "not_equal", "is_empty", "is_not_empty"],
+        //  "input": "autocomplete",
+        //  "solr_params": {
+        //    "q" : "*:*",
+        //    "fl" : "*",
+        //    "rows": "20",
+        //    "field": "convenio",
+        //    "facet_field": "convenio_exact"
+        //   },
+        //  "type": "string"
+        //},
         {
-          "get_from_solr_field": "pesquisadores_exact",
-          "label": "Pesquisador",
-          "operators": ["equal", "not_equal"],
-          "multiple": true,
-          "input": "autocomplete",
-          "solr_params": {
-            "q" : "*:*",
-            "fl" : "pesquisadores_exact",
-            "rows": "20",
-            "field": "pesquisadores_exact",
-            "facet_field": "pesquisadores_exact"
-           },
-          "type": "string"
-        },
-        {
-          "get_from_solr_field": "convenio",
-          "label": "Convênio",
-          "operators": ["equal", "not_equal", "is_empty", "is_not_empty"],
-          "input": "autocomplete",
-          "solr_params": {
-            "q" : "django_ct:geral.acordo_convenio",
-            "fl" : "*",
-            "rows": "20",
-            "field": "titulo_pt_tooltip"
-           } ,
-          "type": "string"
-        },
-        {
-          "get_from_solr_field": "pais_convenio",
+          "get_from_solr_field": "pais_convenio_exact",
           "label": "País do convênio",
           "operators": ["equal", "not_equal", "is_empty", "is_not_empty"],
           "input": "autocomplete",
           "solr_params": {
-            "q" : "django_ct:geral.acordo_convenio",
+            "q" : "*:*",
             "fl" : ",",
-            "fq": "pais",
+            "fq": "pais_convenio",
             "rows": "20",
-            "facet_field" : "pais_exact",
-            "field": "pais_convenio"
+            "field": "pais_convenio",
+            "facet_field" : "pais_convenio_exact"
            } ,
           "type": "string"
         },
         {
-          "get_from_solr_field": "instituicao_colaboracao",
+          "get_from_solr_field": "instituicao_colaboracao_exact",
           "label": "Instituição no exterior/ Outras",
           "multiple": true,
           "operators": ["equal", "not_equal", "is_empty", "is_not_empty"],
           "input": "autocomplete",
           "solr_params": {
-            "q" : "django_ct:geral.instituicao_eterior",
+            "q" : "*:*",
             "fl" : "*",
             "rows": "20",
-            "field": "instituicao"
+            "field": "instituicao_colaboracao",
+            "facet_field" : "instituicao_colaboracao_exact"
            } ,
           "type": "string"
         },
         {
-          "get_from_solr_field": "data_inicio_ano",
+          "get_from_solr_field": "data_inicio",
           "label": "Ano de inicio",
           "operators": ["equal","not_equal", "less_or_equal", "greater_or_equal"],
           "type": "integer",
@@ -282,7 +310,7 @@
           }
         },
         {
-          "get_from_solr_field": "data_termino_ano",
+          "get_from_solr_field": "data_termino",
           "label": "Ano de termino",
           "operators": ["equal","not_equal", "less_or_equal", "greater_or_equal"],
           "type": "integer",
