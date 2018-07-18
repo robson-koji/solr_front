@@ -24,6 +24,7 @@ import logging
 import locale
 import sys, os, time, datetime
 import pandas
+import inspect
 
 # from conf import *
 
@@ -64,23 +65,25 @@ class LoginRequiredMixin(object):
 
 
 
-def find_template(template):
+def find_template(template, folder=''):
     """
     @params: template - template name. May include a folder with the name,
     if the template is not at the root folder.
     """
-    # if hasattr(settings, 'SORL_FRONT_TEMPLATE_PATH'):
-    #     try:
-    #         template_name = settings.SORL_FRONT_TEMPLATE_PATH + template
-    #         get_template(template_name)
-    #     except TemplateDoesNotExist as err:
-    #         logger.error('TemplateDoesNotExist: %s' %(err))
-    # else:
+    print 'find_template - caller name:', inspect.stack()[1][3]
+
     try:
-        template_name = 'solr_front/custom/' + template
+        template_name = 'solr_front/custom/' + folder + '/' + template
         get_template(template_name)
     except TemplateDoesNotExist as e:
-        template_name = 'solr_front/sample/' + template
+        try:
+            template_name = 'solr_front/custom/' + template
+            get_template(template_name)
+
+        except TemplateDoesNotExist as e:
+            template_name = 'solr_front/sample/' + template
+            get_template(template_name)
+
 
     return template_name
 
@@ -284,7 +287,7 @@ class NavigateCollection(View):
         if isinstance(vertice['body_json'], dict) and not vertice['body_json'].keys()[0] == self.collection:
             # Se parar aqui eh pq tem erro de navegacao.
             alerta = "Erro de navegação!"
-            return render(request, 'solr_front/muda_collection.html', {'alerta': alerta, 'collection':self.collection, 'idioma':'pt'})
+            return render(request, 'solr_front/muda_collection.html', {'alerta': alerta, 'collection':self.collection, 'idioma':'pt', 'template': self.kwargs['template']})
 
         # print '\n\n update_vertice'
         # import pdb; pdb.set_trace()
@@ -712,86 +715,66 @@ class SolrQueries(LoginRequiredMixin, View):
         for group in COLLECTIONS[self.collection]['FACETS']:
             for f in group['facetGroup']:
                 for item in f['facets']:
-                    json_facet += item['chave'] +':{type:terms, field:'+ item['chave'] + ',limit:-1, domain:{excludeTags:'+ item['chave'] + '_tag}},'
-                    facet_fields += '&json.facet={' + item['chave'] +':{type:terms, field:'+ item['chave'] + ',limit:-1, domain:{excludeTags:'+ item['chave'] + '}}}'
+                    json_facet += item['chave'] +':{type:terms, field:'+ item['chave'] + ',limit:5000, domain:{excludeTags:'+ item['chave'] + '_tag}},'
+                    facet_fields += '&json.facet={' + item['chave'] +':{type:terms, field:'+ item['chave'] + ',limit:5000, domain:{excludeTags:'+ item['chave'] + '}}}'
 
         json_facet = json_facet.rstrip(',')
         json_facet += '}'
         return (facet_fields, json_facet)
 
 
-
     def get_facet_4_autocomplete(self, request_data, facet='', selected_facets=[]):
         """
         Recupera o facet de um elemento solicitado pelo autocomplete
-
-        json.facet nao tem a opcao de facet.contains
-        Voltando para o facet via metodo get.
-
-        json_facet = '{' + request_data['ac_facet_field'] +':{type:terms, prefix:' + fq_split[1] + ', field:'+ request_data['ac_facet_field'] + ',limit:50, domain:{excludeTags:'+ request_data['ac_facet_field'] + '_tag}}}'
-        data = [('q','*:*'), ('wt', 'json'), ('rows', 0), ('fl',','), ('json.facet',json_facet)] + fqs + selected_facets
+        json.facet nao tem a opcao de facet.contains. Precisa usar o metodo get.
         """
 
         fqs = []
         fq = request_data['fq']
         if ":" in fq:
             fq_split = request_data['fq'].split(':')
+            fq_split[1] = fq_split[1].replace('"', '')
             for term in fq_split[1].split():
                 fq = fq_split[0] + ':' + term
-                fqs.append(fq)
+                fqs.append(('fq', fq))
+
         # acrescente facets de contexto na lista de parametros fq
         if selected_facets:
             fq = self.facets2fq_post(selected_facets)
-
             for fq_tuple in fq:
                 #pega segundo valor da tupla retornada da função, como paramentro
-                fqs.append(fq_tuple[1])
+                fqs.append(('fq', fq_tuple[1]))
 
+        solr_url = 'http://leydenh/solr/' + self.collection + '/select?'
 
-        solr_url = 'http://leydenh/solr/' + self.collection + '/select'
-        # if request_data['ac_facet_field']:
-        #data = [('wt', 'json'), ('rows', request_data['rows'] if 'rows' in request_data else 1), ('facet.field', request_data['ac_facet_field']),('facet', 'on'),('facet.contains', fq_split[1]), ('facet.contains.ignoreCase', 'true')] + fqs + selected_facets
-        # else:
-            # data = [('wt', 'json'), ('rows', request_data['rows'] if 'rows' in request_data else 1)] + fqs + selected_facets
+        # Essa regra funciona corretamente qdo ha um campo to tipo text para a busca e um campo facet para apresentar no autocomplete.
+        # Esse eh um filtro de primeiro nivel no Solr. Como ha limitacao de filtragem de facet no Solr,
+        # logo mais abaixo ha uma nova filtragem na camada da aplicacao.
+        data = [('wt', 'json'), ('fl', '*'), ('q','*:*'), ('rows', 0), ('facet.limit', 500), ('facet.field', request_data['facet.field']),('facet', 'on'),('facet.contains', fq_split[1].split()[0]),('facet.contains.ignoreCase', 'true')] + fqs
 
-        data = request_data.copy()
-
-        #inclui facets de contexto na query post do solr
-        data['fq'] = fqs
-
-        #descomentar e inserir variaveis para lattes de alguma maneira ainda não definida
-        # if fq_split:
-        #     data['facet'] = 'on'
-        #     data['facet.contains'] = data['fq']
-        #     data['facet.contains.ignoreCase'] = 'true'
-
-
-        #deleta csrf para nao enviar para o solr
-        del data['csrfmiddlewaretoken']
-
-
-        #solr_url += urllib.urlencode(data)
+        solr_url += urllib.urlencode(data)
 
         # Se necessario, fazer o escape de todos os caracterese que
         #solr_url = solr_url.replace('%', '%25')
-        response = requests.post(solr_url, data=data)
-        # import pdb; pdb.set_trace()
+
+        response = requests.get(solr_url)
         if response.status_code != 200:
             self.solr_response_error('get_facet_4_autocomplete', response, solr_url)
+
 
         json = response.json()
         docs = []
         if 'facet_counts' in json:
-            resultado = json['facet_counts']['facet_fields'][data['facet.field']]
-
+            resultado = json['facet_counts']['facet_fields'][request_data['facet.field']]
             for i,k in zip(resultado[0::2], resultado[1::2]):
+                # Filtro manual, pode causar lentidao.
+                # O Solr nao filtra facet com multiplos contains,
+                # por isso precisa filtrar aqui na camada da aplicacao.
+                # Verifica se os facets resultantes tem as strings buscadas.
+                if len(fq_split[1].split()) > 1 and not all(term.lower() in i.lower() for term in fq_split[1].split()):
+                    continue
                 docs.append({'count':k, 'val':i})
-
             return ({'buckets':docs})
-
-        #import pdb; pdb.set_trace()
-
-
 
 
     def get_facets_json_api_sum(self, sum_field, fq, selected_facets):
@@ -831,10 +814,6 @@ class SolrQueries(LoginRequiredMixin, View):
         ser trabalhdo (filtrado).
         """
         return str(int(hashlib.sha1(self.streaming_expression).hexdigest(), 16) % (10 ** 8))
-
-
-
-
 
 
     def update_atomico(self, url, collection2, campo_dinamico_busca):
@@ -1055,7 +1034,7 @@ class SolrQueries(LoginRequiredMixin, View):
 
         # import pdb; pdb.set_trace()
         # Recebe as variaveis do grafico.
-        json_facet = '{x_axis:{type: terms, field:' +  levels_list[0]['nivel_1'] + ', sort:{count:asc}, limit: -1 , facet:{y_axis:{type: terms,field: ' +  levels_list[1]['nivel_2'] + ',sort:{count:asc},limit: -1}}}}'
+        json_facet = '{x_axis:{type: terms, field:' +  levels_list[0]['nivel_1'] + ', sort:{count:asc}, limit:5000 , facet:{y_axis:{type: terms,field: ' +  levels_list[1]['nivel_2'] + ',sort:{count:asc},limit: 5000}}}}'
 
         #print json.dumps(response.json(), indent=4, sort_keys='true')
 
@@ -1092,9 +1071,9 @@ class SolrQueries(LoginRequiredMixin, View):
         for idx, val in enumerate(levels_list):
             nivel = 'nivel_' + str(idx + 1)
             if idx == 0 :
-                json_facet = '{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": -1'
+                json_facet = '{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": 5000'
             else:
-                json_facet += ', "facet":{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": -1}}'
+                json_facet += ', "facet":{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": 5000}}'
         json_facet += '}}'
         json_facet = json_facet.replace('\n', '').replace(' ', '')
 
@@ -1160,9 +1139,9 @@ class SolrQueries(LoginRequiredMixin, View):
         for idx, val in enumerate(levels_list):
             nivel = 'nivel_' + str(idx + 1)
             if idx == 0 :
-                json_facet = '{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": -1'
+                json_facet = '{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": 5000'
             else:
-                json_facet += ', "facet":{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": -1}}'
+                json_facet += ', "facet":{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": 5000}}'
 
         json_facet += '}}'
 
@@ -1236,13 +1215,14 @@ class EntryPointView(LoginRequiredMixin, View):
     """
     model = Pesquisa
     base_name = 'base_sf.html'
-    template_name = find_template(base_name)
-
 
     def dispatch(self, request, *args, **kwargs):
         # Trying access to a not known collection.
         if not kwargs['collection'] in COLLECTIONS:
             raise Http404("Collection does not exist")
+
+        self.template = find_template(self.base_name, folder=kwargs['template'])
+
 
         self.collection =  kwargs['collection']
         self.solr_queries = SolrQueries(self.collection)
@@ -1299,13 +1279,12 @@ class EntryPointView(LoginRequiredMixin, View):
 
 
 
-    #split valores retornados do querybuilder
+
     def split_value(self, value):
         if isinstance(value, int):
             return value
-        #considerando ::: delimitador de valores, definido em bv_querybuilder.js
-        if ':::' in value:
-            lego = value.split(':::')
+        if ',' in value:
+            lego = value.split(',')
             result = ''
 
             # modifica mecanica de palavras chaves incluindo aspas em cada palavra
@@ -1853,10 +1832,12 @@ class AddVerticeView(View):
     Ao final, redireciona o usuario para busca na collection de destino.
     """
     base_name = 'base_sf.html'
-    template_name = find_template(base_name)
-
 
     def dispatch(self, request, *args, **kwargs):
+
+
+        self.template = find_template(self.base_name, folder=kwargs['template'])
+
         self.collection =  kwargs['collection']
         self.solr_queries = SolrQueries(self.collection)
         self.se = StreamingExpressions(self.collection, self.solr_queries)
@@ -1918,7 +1899,7 @@ class AddVerticeView(View):
             return HttpResponseRedirect(self.get_success_url(self.collection))
 
     def get_success_url(self, collection):
-        return reverse('params_id',kwargs={'collection':collection, 'idioma':self.kwargs['idioma'], 'id':self.id})
+        return reverse('params_id',kwargs={'collection':collection, 'idioma':self.kwargs['idioma'],'template':self.kwargs['template'], 'id':self.id})
 
 
 
@@ -1947,9 +1928,12 @@ class HomeBuscador(LoginRequiredMixin, TemplateView):
         #pega collections disponiveis
         collections = sfs_object.get_collections_meta()
 
-        template_name = find_template(base_name)
 
-        return render(request, template_name, {'erro': erro, 'idioma':kwargs['idioma'], 'collections':collections })#, context_instance=RequestContext(self.request))
+        # import pdb; pdb.set_trace()
+        template_name = find_template(base_name, folder=kwargs['template'])
+
+
+        return render(request, template_name, {'erro': erro, 'idioma':kwargs['idioma'], 'collections':collections, 'template':kwargs['template'] })#, context_instance=RequestContext(self.request))
 
 
 
@@ -1963,20 +1947,19 @@ class HomeCollection(LoginRequiredMixin, TemplateView):
     """
     def get(self, request, *args, **kwargs):
             base_name = 'home_collection.html'
-            template_name = find_template(base_name)
-            return render(request, template_name, {'collection':kwargs['collection'], 'idioma':kwargs['idioma']})#, context_instance=RequestContext(request))
+
+            template_name = find_template(base_name, folder=kwargs['template'])
+
+
+            return render(request, template_name, {'collection':kwargs['collection'], 'idioma':kwargs['idioma'], 'template': kwargs['template'] })#, context_instance=RequestContext(request))
 
 
 
 class AutoComplete(View):
     def post(self, request, *args, **kwargs):
-
         self.solr_queries = SolrQueries(kwargs['collection'])
         try:
-            #existe algum motivo para isso?
-            #autocomplete = self.solr_queries.get_facet_4_autocomplete(request.GET, 'instituicao_exact', [])
             autocomplete = self.solr_queries.get_facet_4_autocomplete(request.POST, selected_facets = json.loads(request.POST['selected_facets']) )
-
             return JsonResponse(autocomplete)
         except GetSolarDataException:
             return HttpResponseServerError()
@@ -1985,7 +1968,6 @@ class AutoComplete(View):
 class ParamsView(LoginRequiredMixin, TemplateView):
     """ Carrega a pagina inicial da pesquisa de uma determinada collection """
     base_name = 'base_sf.html'
-    template_name = find_template(base_name)
 
     def dispatch(self, request, *args, **kwargs):
         """
@@ -1997,21 +1979,22 @@ class ParamsView(LoginRequiredMixin, TemplateView):
         if not kwargs['collection'] in COLLECTIONS:
             raise Http404("Collection does not exist")
 
+        self.template_name = find_template(self.base_name, folder=kwargs['template'])
+
         self.collection = kwargs['collection']
         self.id = int(kwargs['id'])
         self.idioma = kwargs['idioma']
         self.navigate = NavigateCollection(self.request, self.collection)
         self.vertice = self.navigate.get_vertice(int(kwargs['id']))
 
-        # import pdb; pdb.set_trace()
+
 
         if not self.vertice:
-            return redirect(reverse('start_research',kwargs={'collection':self.collection, 'idioma':self.kwargs['idioma']}), permanent=False )
+            return redirect(reverse('start_research',kwargs={'collection':self.collection, 'idioma':self.kwargs['idioma'], 'template': self.kwargs['template']}), permanent=False )
         elif self.vertice['id'] != self.id:
-            # import pdb; pdb.set_trace()
 
-            return redirect(reverse('clean_session',kwargs={'idioma':kwargs['idioma'], 'id':self.id}), permanent=False )
-            return redirect(reverse('home',kwargs={'idioma':kwargs['idioma']}), permanent=False )
+            return redirect(reverse('clean_session',kwargs={'idioma':kwargs['idioma'], 'id':self.id, 'template':self.kwargs['template'] }), permanent=False )
+            return redirect(reverse('home',kwargs={'idioma':kwargs['idioma'], 'template':kwargs['template']}), permanent=False )
 
 
 
@@ -2091,7 +2074,7 @@ class CleanSession(TemplateView):
         self.navigate = NavigateCollection(self.request, '')
         self.navigate.remove_vertice(int(kwargs['id']))
         erro = {}
-        return redirect(reverse('home',kwargs={'idioma':kwargs['idioma']}), permanent=False )
+        return redirect(reverse('home',kwargs={'idioma':kwargs['idioma'], 'template':kwargs['template']}), permanent=False )
 
 
 

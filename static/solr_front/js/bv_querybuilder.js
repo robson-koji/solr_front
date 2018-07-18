@@ -246,7 +246,7 @@ function ajax_solr(id, q, rows, fl, labelAtribute, valueAtribute, fq, facet_fiel
                     if(item.count > 0){
 
                       return {
-                        label: item.val +' ('+ item.count +')',
+                        label: item.val,// +' ('+ item.count +')',
                         query: item.val,
                         value: item.count,
                       };
