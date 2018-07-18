@@ -4,7 +4,7 @@
 <script type="text/javascript" src={% static "solr_front/js/external_lib/jquery.js" %}></script>
 </head>
 
-<h1>Buscador Analítico</h1>
+<h1>Buscador Analítico Sample</h1>
 
 <p>
 Esta é a página padrão do Buscador Analítico que se encontra em <i>solr_front/templates/solr_front/custom/home_default.html</i>.
@@ -22,7 +22,7 @@ Para criar a página do seu buscador copie este arquivo com o 'home_&lt;nome da 
 
   <h3>Nova pesquisa</h3>
   <p>Ao se iniciar uma nova pesquisa, todos os parâmetros da pesquisa atual serão perdidos.</p>
-  <p>Clique <a href="{% url 'clean_session' idioma='pt' id=0 %}">aqui</a> para iniciar uma nova pesquisa.</p>
+  <p>Clique <a href="{% url 'clean_session' idioma='pt' id=0 template=template %}">aqui</a> para iniciar uma nova pesquisa.</p>
 
 
   <hr>
@@ -30,7 +30,7 @@ Para criar a página do seu buscador copie este arquivo com o 'home_&lt;nome da 
   <p>Você pode continuar a pesquisa que já existe escolhendo uma etapa abaixo para continuar</p>
   <ul>
     {% for nf  in navigate_fieds  %}
-    		      <li><b>{{ nf.id }} - </b><a href="{% url 'params_id' collection=nf.collection  idioma='pt' id=nf.id %}">{{ nf.title }}</a> - <a href="{% url 'clean_session' idioma='pt' id=nf.id %}">Excluir essa etapa da pesquisa!</a></li>
+    		      <li><b>{{ nf.id }} - </b><a href="{% url 'params_id' collection=nf.collection  idioma='pt' id=nf.id template=template%}">{{ nf.title }}</a> - <a href="{% url 'clean_session' idioma='pt' id=nf.id template=template %}">Excluir essa etapa da pesquisa!</a></li>
     {% endfor %}
   </ul>
 
@@ -51,9 +51,9 @@ Para criar a página do seu buscador copie este arquivo com o 'home_&lt;nome da 
   <h2>Começar uma nova busca</h2>
   <p>Selecione a base de dados que você quer analisar</p>
 
-  <ul>    
+  <ul>
     {%for collection, meta_collection in collections.iteritems%}
-      <li><a href="{% url 'params_id' collection=collection idioma=idioma  id=0 %}">Collection {{meta_collection.label}}</a></li>
+      <li><a href="{% url 'params_id' collection=collection idioma=idioma  id=0 template=template%}">Collection {{meta_collection.label}}</a></li>
     {%endfor%}
   </ul>
 
@@ -66,7 +66,7 @@ Para criar a página do seu buscador copie este arquivo com o 'home_&lt;nome da 
 
   <ul>
     {%for collection, meta_collection in collections.iteritems%}
-      <li><a href="{% url 'home_collection' collection=collection idioma=idioma %}">Collection {{meta_collection.label}}</a></li>
+      <li><a href="{% url 'home_collection' collection=collection idioma=idioma template=template%}">Collection {{meta_collection.label}}</a></li>
     {%endfor%}
   </ul>
 

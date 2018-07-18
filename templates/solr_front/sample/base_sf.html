@@ -184,7 +184,7 @@
 					<select id="select_home" class="form-control">
 					 <option value="inicial">Opções:</option>
 					 <option value="modal_navigation_tree">Mapa de navegação da pesquisa em andamento</option>
-					 <option value="{% url 'home' idioma=idioma%}">Iniciar nova busca</option>
+					 <option value="{% url 'home' idioma=idioma template=template%}">Iniciar nova busca</option>
 					 <option value="inicial">Salvar pesquisa</option>
 					 <option value="exp_csv">Exportar a pesquisa para Excel</option>
 					</select>
@@ -502,7 +502,7 @@
 					 <h3>Pesquisas existentes</h3>
 					 <ul>
 						 {% for nf  in navigate_fieds  %}
-							 <li><b>{{ nf.id }} - </b><a href="{% url 'params_id' collection=nf.collection  idioma='pt' id=nf.id %}">{{ nf.title }}</a> - <a href="{% url 'clean_session' idioma='pt' id=nf.id %}">Excluir essa etapa da pesquisa!</a></li>
+							 <li><b>{{ nf.id }} - </b><a href="{% url 'params_id' collection=nf.collection  idioma='pt' id=nf.id template=template%}">{{ nf.title }}</a> - <a href="{% url 'clean_session' idioma='pt' id=nf.id template=template%}">Excluir essa etapa da pesquisa!</a></li>
 						 {% endfor %}
 					 </ul>
 				 </div>
@@ -543,7 +543,7 @@
 											<script type="text/javascript">
 											$("#form_csv").submit(function(e) {
 
-													var url = "{% url 'export_data' idioma=idioma collection=collection id=id%}"; // the script where you handle the form input.
+													var url = "{% url 'export_data' idioma=idioma collection=collection id=id template=template%}"; // the script where you handle the form input.
 
 													$.ajax({
 																 type: "GET",
