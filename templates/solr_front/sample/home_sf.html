@@ -22,7 +22,7 @@ Para criar a página do seu buscador copie este arquivo com o 'home_&lt;nome da 
 
   <h3>Nova pesquisa</h3>
   <p>Ao se iniciar uma nova pesquisa, todos os parâmetros da pesquisa atual serão perdidos.</p>
-  <p>Clique <a href="{% url 'clean_session' idioma='pt' id=0 template=template %}">aqui</a> para iniciar uma nova pesquisa.</p>
+  <p>Clique <a href="{% url 'clean_session' id=0 template=template %}">aqui</a> para iniciar uma nova pesquisa.</p>
 
 
   <hr>
@@ -30,7 +30,7 @@ Para criar a página do seu buscador copie este arquivo com o 'home_&lt;nome da 
   <p>Você pode continuar a pesquisa que já existe escolhendo uma etapa abaixo para continuar</p>
   <ul>
     {% for nf  in navigate_fieds  %}
-    		      <li><b>{{ nf.id }} - </b><a href="{% url 'params_id' collection=nf.collection  idioma='pt' id=nf.id template=template%}">{{ nf.title }}</a> - <a href="{% url 'clean_session' idioma='pt' id=nf.id template=template %}">Excluir essa etapa da pesquisa!</a></li>
+    		      <li><b>{{ nf.id }} - </b><a href="{% url 'params_id' collection=nf.collection id=nf.id template=template%}">{{ nf.title }}</a> - <a href="{% url 'clean_session' id=nf.id template=template %}">Excluir essa etapa da pesquisa!</a></li>
     {% endfor %}
   </ul>
 
@@ -53,7 +53,7 @@ Para criar a página do seu buscador copie este arquivo com o 'home_&lt;nome da 
 
   <ul>
     {%for collection, meta_collection in collections.iteritems%}
-      <li><a href="{% url 'params_id' collection=collection idioma=idioma  id=0 template=template%}">Collection {{meta_collection.label}}</a></li>
+      <li><a href="{% url 'params_id' collection=collection  id=0 template=template%}">Collection {{meta_collection.label}}</a></li>
     {%endfor%}
   </ul>
 
@@ -66,7 +66,7 @@ Para criar a página do seu buscador copie este arquivo com o 'home_&lt;nome da 
 
   <ul>
     {%for collection, meta_collection in collections.iteritems%}
-      <li><a href="{% url 'home_collection' collection=collection idioma=idioma template=template%}">Collection {{meta_collection.label}}</a></li>
+      <li><a href="{% url 'home_collection' collection=collection template=template%}">Collection {{meta_collection.label}}</a></li>
     {%endfor%}
   </ul>
 
