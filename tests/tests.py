@@ -1,10 +1,11 @@
 import unittest
-from django.test import Client
-from django.test import TestCase
-from django.test.runner import DiscoverRunner
-from django.conf import settings
 
-from django.urls import reverse
+from django.test.runner import DiscoverRunner
+from django.test import TestCase
+from django.test import Client
+
+from django.core.urlresolvers import reverse
+from django.conf import settings
 
 
 
@@ -13,42 +14,25 @@ class HomePageTestCase(unittest.TestCase):
         settings.DEBUG = True
         settings.TEST_RUNNER = 'tests.tests_with_no_db.NoDbTestRunner'
         self.client = Client()
-
-        url = reverse('home_sf', kwargs={'template':'bv'})
-
+        self.home_url = reverse('home_sf', kwargs={'template':'bv'})
 
     def test_details(self):
-        response = self.client.get('/pt/buscador/bv/')
+        response = self.client.get(self.home_url)
         self.assertEqual(response.status_code, 200)
 
-        # Check that the rendered context contains 5 customers.
-        # self.assertEqual(len(response.context['customers']), 5)
 
-#"""
 
 class SearchTestCase(unittest.TestCase):
-
     def setUp(self):
         settings.DEBUG = True
         settings.TEST_RUNNER = 'tests.tests_with_no_db.NoDbTestRunner'
         self.client = Client()
+        self.entrypoint_url = reverse('params_id', kwargs={'collection':'graph_auxilios', 'id':'123456', 'template':'bv'})
 
     def test_params(self):
-        response = self.client.get('/pt/buscador/bv/graph_auxilios/44480903/params/')
-
-        # dando erro no teste aqui.
-
-        # print(response['location'])
-
-        # import pdb; pdb.set_trace()
-        # Check that the response is 200 OK.
-
-        # !!! Corrigir aqui e a URL inicil tirando as referencias da BV.
-        self.assertEqual(response.status_code, 302)
-
-        # Check that the rendered context contains 5 customers.
-        # self.assertEqual(len(response.context['customers']), 5)
-#"""
+        response = self.client.get(self.entrypoint_url, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['id_collection'])
 
 
 
