@@ -11,7 +11,7 @@ urls = patterns('',
     (r'^foo/$', TemplateView.as_view(template_name='solr_front/graficos/parallel_coord.html')),
 
     # Pesquisa
-    url(r'^$', never_cache(HomeBuscador.as_view()), name='home' ),
+    url(r'^$', never_cache(HomeBuscador.as_view()), name='home_sf' ),
     url(r'^clean_session/(?P<id>\d+)/$',  never_cache(CleanSession.as_view()), name='clean_session'),
 
     # consulta celery tasks

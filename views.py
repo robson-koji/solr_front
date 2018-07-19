@@ -24,7 +24,6 @@ import logging
 import locale
 import sys, os, time, datetime
 import pandas
-import inspect
 
 # from conf import *
 
@@ -70,12 +69,11 @@ def find_template(template, folder=''):
     @params: template - template name. May include a folder with the name,
     if the template is not at the root folder.
     """
-    print 'find_template - caller name:', inspect.stack()[1][3]
-
     try:
         template_name = 'solr_front/custom/' + folder + '/' + template
         get_template(template_name)
     except TemplateDoesNotExist as e:
+
         try:
             template_name = 'solr_front/custom/' + template
             get_template(template_name)
@@ -149,9 +147,6 @@ class NavigateCollection(View):
         self.request = request
         self.collection = collection
         self.vertice_inicial = ''
-        # self.count_id = 1
-
-        self.idioma = request.resolver_match.kwargs.get('idioma')
         self.id = request.resolver_match.kwargs.get('id')
 
         if 'navigation' in self.request.session:
@@ -287,7 +282,13 @@ class NavigateCollection(View):
         if isinstance(vertice['body_json'], dict) and not vertice['body_json'].keys()[0] == self.collection:
             # Se parar aqui eh pq tem erro de navegacao.
             alerta = "Erro de navegação!"
-            return render(request, 'solr_front/muda_collection.html', {'alerta': alerta, 'collection':self.collection, 'idioma':'pt', 'template': self.kwargs['template']})
+            try:
+                return render(request, 'solr_front/muda_collection.html', {'alerta': alerta, 'collection':self.collection, 'template': self.kwargs['template']})
+            except Exception as e:
+                logger.error("---------------------------------------------")
+                logger.error(e)
+                logger.error("Class Error: %s in method 'update_vertice'" %(self.__class__.__name__))
+                logger.error("---------------------------------------------")
 
         # print '\n\n update_vertice'
         # import pdb; pdb.set_trace()
@@ -1221,8 +1222,7 @@ class EntryPointView(LoginRequiredMixin, View):
         if not kwargs['collection'] in COLLECTIONS:
             raise Http404("Collection does not exist")
 
-        self.template = find_template(self.base_name, folder=kwargs['template'])
-
+        self.template_name = find_template(self.base_name, folder=kwargs['template'])
 
         self.collection =  kwargs['collection']
         self.solr_queries = SolrQueries(self.collection)
@@ -1833,10 +1833,11 @@ class AddVerticeView(View):
     """
     base_name = 'base_sf.html'
 
+
+
     def dispatch(self, request, *args, **kwargs):
 
-
-        self.template = find_template(self.base_name, folder=kwargs['template'])
+        self.template_name = find_template(self.base_name, folder=kwargs['template'])
 
         self.collection =  kwargs['collection']
         self.solr_queries = SolrQueries(self.collection)
@@ -1899,8 +1900,13 @@ class AddVerticeView(View):
             return HttpResponseRedirect(self.get_success_url(self.collection))
 
     def get_success_url(self, collection):
-        return reverse('params_id',kwargs={'collection':collection, 'idioma':self.kwargs['idioma'],'template':self.kwargs['template'], 'id':self.id})
-
+        try:
+            return reverse('params_id',kwargs={'collection':collection, 'template':self.kwargs['template'], 'id':self.id})
+        except Exception as e:
+            logger.error("---------------------------------------------")
+            logger.error(e)
+            logger.error("Class Error: %s in method 'get_success_url'" %(self.__class__.__name__))
+            logger.error("---------------------------------------------")
 
 
 
@@ -1927,14 +1933,14 @@ class HomeBuscador(LoginRequiredMixin, TemplateView):
         base_name = 'home_sf.html'
         #pega collections disponiveis
         collections = sfs_object.get_collections_meta()
-
-
-        # import pdb; pdb.set_trace()
         template_name = find_template(base_name, folder=kwargs['template'])
-
-
-        return render(request, template_name, {'erro': erro, 'idioma':kwargs['idioma'], 'collections':collections, 'template':kwargs['template'] })#, context_instance=RequestContext(self.request))
-
+        try:
+            return render(request, template_name, {'erro': erro, 'collections':collections, 'template':kwargs['template'] })#, context_instance=RequestContext(self.request))
+        except Exception as e:
+            logger.error("---------------------------------------------")
+            logger.error(e)
+            logger.error("Class Error: %s in method 'get'" %(self.__class__.__name__))
+            logger.error("---------------------------------------------")
 
 
 class HomeCollection(LoginRequiredMixin, TemplateView):
@@ -1950,9 +1956,13 @@ class HomeCollection(LoginRequiredMixin, TemplateView):
 
             template_name = find_template(base_name, folder=kwargs['template'])
 
-
-            return render(request, template_name, {'collection':kwargs['collection'], 'idioma':kwargs['idioma'], 'template': kwargs['template'] })#, context_instance=RequestContext(request))
-
+            try:
+                return render(request, template_name, {'collection':kwargs['collection'], 'template': kwargs['template'] })#, context_instance=RequestContext(request))
+            except Exception as e:
+                logger.error("---------------------------------------------")
+                logger.error(e)
+                logger.error("Class Error: %s in method 'get'" %(self.__class__.__name__))
+                logger.error("---------------------------------------------")
 
 
 class AutoComplete(View):
@@ -1969,6 +1979,10 @@ class ParamsView(LoginRequiredMixin, TemplateView):
     """ Carrega a pagina inicial da pesquisa de uma determinada collection """
     base_name = 'base_sf.html'
 
+    def __init__(self, *args, **kwargs):
+        return super(ParamsView, self).__init__(*args, **kwargs)
+
+
     def dispatch(self, request, *args, **kwargs):
         """
         Recebe uma collectino e respectivo id.
@@ -1979,22 +1993,32 @@ class ParamsView(LoginRequiredMixin, TemplateView):
         if not kwargs['collection'] in COLLECTIONS:
             raise Http404("Collection does not exist")
 
-        self.template_name = find_template(self.base_name, folder=kwargs['template'])
+        self.template_name = find_template(self.base_name,folder=kwargs['template'])
 
         self.collection = kwargs['collection']
         self.id = int(kwargs['id'])
-        self.idioma = kwargs['idioma']
         self.navigate = NavigateCollection(self.request, self.collection)
         self.vertice = self.navigate.get_vertice(int(kwargs['id']))
 
 
 
         if not self.vertice:
-            return redirect(reverse('start_research',kwargs={'collection':self.collection, 'idioma':self.kwargs['idioma'], 'template': self.kwargs['template']}), permanent=False )
-        elif self.vertice['id'] != self.id:
+            try:
+                return redirect(reverse('start_research',kwargs={'collection':self.collection, 'template': self.kwargs['template']}), permanent=False )
+            except Exception as e:
+                logger.error("---------------------------------------------")
+                logger.error(e)
+                logger.error("Class Error: %s in method 'dispatch'" %(self.__class__.__name__))
+                logger.error("---------------------------------------------")
 
-            return redirect(reverse('clean_session',kwargs={'idioma':kwargs['idioma'], 'id':self.id, 'template':self.kwargs['template'] }), permanent=False )
-            return redirect(reverse('home',kwargs={'idioma':kwargs['idioma'], 'template':kwargs['template']}), permanent=False )
+        elif self.vertice['id'] != self.id:
+            try:
+                return redirect(reverse('clean_session',kwargs={'id':self.id, 'template':self.kwargs['template'] }), permanent=False )
+            except Exception as e:
+                logger.error("---------------------------------------------")
+                logger.error(e)
+                logger.error("Class Error: %s in method 'dispatch'" %(self.__class__.__name__))
+                logger.error("---------------------------------------------")
 
 
 
@@ -2013,6 +2037,8 @@ class ParamsView(LoginRequiredMixin, TemplateView):
         context['collection_label'] = COLLECTIONS[self.collection]['COLLECTION']['label']
         context['totalizadores'] = json.dumps(COLLECTIONS[self.collection]['OUTCOMES'])#, ensure_ascii=False ).encode('utf8')
         context['totalizadores_rel'] = json.dumps(self.get_totalizadores_rel())#, ensure_ascii=False ).encode('utf8')
+        context['home_sf_rurl'] = reverse("home_sf", kwargs={'template':self.kwargs['template']})
+
 
 
 
@@ -2074,7 +2100,13 @@ class CleanSession(TemplateView):
         self.navigate = NavigateCollection(self.request, '')
         self.navigate.remove_vertice(int(kwargs['id']))
         erro = {}
-        return redirect(reverse('home',kwargs={'idioma':kwargs['idioma'], 'template':kwargs['template']}), permanent=False )
+        try:
+            return redirect(reverse('home_sf',kwargs={'template':kwargs['template']}), permanent=False )
+        except Exception as e:
+            logger.error("---------------------------------------------")
+            logger.error(e)
+            logger.error("Class Error: %s in method 'get'" %(self.__class__.__name__))
+            logger.error("---------------------------------------------")
 
 
 
