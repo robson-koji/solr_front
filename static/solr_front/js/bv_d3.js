@@ -32,7 +32,7 @@ function recuperaBubbleChart(busca_realizada_str){
   // debugger;
 
   $.ajax({
-    url: '/pt/buscador/bv/' + bv_collection + '/' + id_collection + '/multidimensional_chart/bubble/',
+    url: home_sf_rurl + bv_collection + '/' + id_collection + '/multidimensional_chart/bubble/',
     type: 'post',
     dataType: 'json',
     headers: {
@@ -75,7 +75,7 @@ function recuperaWordCloudChart(busca_realizada_str){
   // debugger;
 
   $.ajax({
-    url: '/pt/buscador/bv/' + bv_collection + '/' + id_collection + '/unidimensional_chart/wordcloud/',
+    url: home_sf_rurl + bv_collection + '/' + id_collection + '/unidimensional_chart/wordcloud/',
     type: 'post',
     dataType: 'json',
     headers: {
@@ -127,7 +127,7 @@ function recuperaSankeyChart(busca_realizada_str){
   result_cp_gd[bv_collection]['json_levels_list'] = json_levels_list;
 
   $.ajax({
-    url: '/pt/buscador/bv/' + bv_collection + '/' + id_collection + '/multidimensional_chart/sankey/',
+    url: home_sf_rurl + bv_collection + '/' + id_collection + '/multidimensional_chart/sankey/',
     type: 'post',
     dataType: 'json',
     headers: {
@@ -169,7 +169,7 @@ function recuperaPivotTable(busca_realizada_str){
   result_cp_gd[bv_collection]['json_levels_list'] = json_levels_list;
 
   $.ajax({
-    url: '/pt/buscador/bv/' + bv_collection + '/' + id_collection + '/multidimensional_table/pivot_table/',
+    url: home_sf_rurl + bv_collection + '/' + id_collection + '/multidimensional_table/pivot_table/',
     type: 'post',
     dataType: 'json',
     headers: {
@@ -312,7 +312,7 @@ function recuperaGraficoDuplo(busca_realizada_str){
   }
 
   $.ajax({
-    url: '/pt/buscador/bv/' + bv_collection + '/' + id_collection + '/',
+    url: home_sf_rurl + bv_collection + '/' + id_collection + '/',
     type: 'post',
     dataType: 'json',
     headers: {

@@ -4,6 +4,8 @@ from django.test import TestCase
 from django.test.runner import DiscoverRunner
 from django.conf import settings
 
+from django.urls import reverse
+
 
 
 class HomePageTestCase(unittest.TestCase):
@@ -11,6 +13,9 @@ class HomePageTestCase(unittest.TestCase):
         settings.DEBUG = True
         settings.TEST_RUNNER = 'tests.tests_with_no_db.NoDbTestRunner'
         self.client = Client()
+
+        url = reverse('home_sf', kwargs={'template':'bv'})
+
 
     def test_details(self):
         response = self.client.get('/pt/buscador/bv/')

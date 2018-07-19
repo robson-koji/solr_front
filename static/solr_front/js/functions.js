@@ -89,7 +89,7 @@ function getData(busca_realizada_str){
   busca_realizada = define_busca(busca_realizada_str);
 
   if (!$.isEmptyObject(busca_realizada)) {
-    var url = '/pt/buscador/bv/' + bv_collection + '/' + id_collection + '/'
+    var url =  home_sf_rurl + bv_collection + '/' + id_collection + '/'
     var url_back = url + 'params/'
 
     $.ajax({
@@ -171,7 +171,7 @@ function getData(busca_realizada_str){
 */
 function consulta_pedido(id){
 
-  var url = '/pt/buscador/bv/consulta_pedido/'
+  var url =  home_sf_rurl + 'consulta_pedido/'
 
   $.ajax({
        url: url,
@@ -263,7 +263,7 @@ function collectionsRelacionadas(){
   if (typeof busca_realizada_str === 'undefined'){ busca_realizada = getBuscaRealizada() }
   else{ busca_realizada = JSON.parse(busca_realizada_str) }
 
-  var url = '/pt/buscador/bv/' + bv_collection + '/' + id_collection + '/relacionadas/';
+  var url =  home_sf_rurl + bv_collection + '/' + id_collection + '/relacionadas/';
 
 
   var html_funil = function(data){
@@ -274,7 +274,7 @@ function collectionsRelacionadas(){
     for (collection in count){
 
       if (count[collection]['col1']['value'] <= 0){continue}
-      var funil_url = '<p><a href="/' + idioma + '/buscador/bv/' + bv_collection + '/' + id_collection  + '/funil/'  + collection + '/' + count[collection]['col2']['parent_hash_querybuilder'] + '"' + ">Clique aqui para analisar " + count[collection]['col2']['value'] + ' ' + count[collection]['col2']['label'] +"</a></p>"
+      var funil_url = '<p><a href="' + home_sf_rurl + bv_collection + '/' + id_collection  + '/funil/'  + collection + '/' + count[collection]['col2']['parent_hash_querybuilder'] + '"' + ">Clique aqui para analisar " + count[collection]['col2']['value'] + ' ' + count[collection]['col2']['label'] +"</a></p>"
 
       // Main session for related collections
       htmls += '<div class="col-md-12" style="padding-top:40px">' +
@@ -386,7 +386,7 @@ function getTotalizadores(){
     busca_realizada = getBuscaRealizada()
     // debugger;
 
-    var url = '/pt/buscador/bv/' + bv_collection + '/' + id_collection + '/totalizadores/';
+    var url =  home_sf_rurl + bv_collection + '/' + id_collection + '/totalizadores/';
 
     $.ajax({
          url: url,

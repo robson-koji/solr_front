@@ -258,7 +258,7 @@ function update(source) {
 		  return d.children || d._children ? "end" : "start"; })
 	  .text(function(d) { return d.title  })
     .on("click", function(d) {
-      var href = '/pt/buscador/bv/'+d.collection + '/' + d.id + '/params/';
+      var href = home_sf_rurl + d.collection + '/' + d.id + '/params/';
       window.open(href, '_blank');
     })
 

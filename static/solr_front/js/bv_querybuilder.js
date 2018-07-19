@@ -199,7 +199,7 @@ function ajax_solr(id, q, rows, fl, labelAtribute, valueAtribute, fq, facet_fiel
 
         // var url = window.location.protocol+'//'+window.location.hostname+"/buscador/params/bv/select"
 
-        var url = '/pt/buscador/bv/' + bv_collection + '/autocomplete/'
+        var url = home_sf_rurl + bv_collection + '/autocomplete/'
 
         $.ajax({
           url: url,
