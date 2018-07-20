@@ -1006,7 +1006,8 @@ class SolrQueries(LoginRequiredMixin, View):
         Recupera dados facetados no Solr de um unico campo, e retorna para geracao do grafico wordcloud.
         """
         solr_url = 'http://leydenh/solr/' + content_type + '/query'
-        facet_field = 'aval_sug_facet'
+        # facet_field = 'aval_sug_facet'
+        facet_field = single_facet
         json_facet = '{single_facet:{type: terms, field:' +  facet_field + ', sort:{count:desc}, limit: 1000 }}'
         data = [('q','*:*'), ('rows','0'), ('fl','*'), ('fq',fq), ('json.facet', str(json_facet))] + selected_facets
 
@@ -1052,8 +1053,14 @@ class SolrQueries(LoginRequiredMixin, View):
         response_json = []
         x_tick = 0
         for x_elemen in response.json()['facets']['x_axis']['buckets']:
+            # Considera somente primeiro nivel do facet, no caso de utilziar um campo facetado.
+            if not isinstance(x_elemen['val'], int) and '|' in x_elemen['val']:
+                continue
             y_tick = 0
             for y_elemen in x_elemen['y_axis']['buckets']:
+                # Considera somente primeiro nivel do facet, no caso de utilziar um campo facetado.
+                if not isinstance(y_elemen['val'], int) and '|' in y_elemen['val']:
+                    continue
                 facet = {'name': 'label', 'y_elemen':y_elemen['val'], 'x_elemen':x_elemen['val'], 'count':y_elemen['count'], 'x_tick':x_tick, 'y_tick':y_tick }
                 response_json.append(facet)
                 y_tick += 1
@@ -1104,6 +1111,16 @@ class SolrQueries(LoginRequiredMixin, View):
                 return
 
             for f_dict in facets[nivel_str]['buckets']:
+                """
+                Considera somente primeiro nivel do facet, no caso de utilziar um campo facetado.
+                """
+                try:
+                    if 'val' in f_dict:
+                        if not isinstance(f_dict['val'], int) and '|' in f_dict['val']:
+                            continue
+                except Exception as e:
+                    print e
+
                 """
                 Itera o objeto e remonta para a estrutura do grafico d3js.
                 """
@@ -1221,6 +1238,9 @@ class EntryPointView(LoginRequiredMixin, View):
         # Trying access to a not known collection.
         if not kwargs['collection'] in COLLECTIONS:
             raise Http404("Collection does not exist")
+
+        if not 'template' in kwargs:
+            kwargs['template'] = ''
 
         self.template_name = find_template(self.base_name, folder=kwargs['template'])
 
@@ -1836,6 +1856,8 @@ class AddVerticeView(View):
 
 
     def dispatch(self, request, *args, **kwargs):
+        if not 'template' in kwargs:
+            kwargs['template'] = ''
 
         self.template_name = find_template(self.base_name, folder=kwargs['template'])
 
@@ -1933,6 +1955,10 @@ class HomeBuscador(LoginRequiredMixin, TemplateView):
         base_name = 'home_sf.html'
         #pega collections disponiveis
         collections = sfs_object.get_collections_meta()
+
+        if not 'template' in kwargs:
+            kwargs['template'] = ''
+
         template_name = find_template(base_name, folder=kwargs['template'])
         try:
             return render(request, template_name, {'erro': erro, 'collections':collections, 'template':kwargs['template'] })#, context_instance=RequestContext(self.request))
@@ -1953,6 +1979,8 @@ class HomeCollection(LoginRequiredMixin, TemplateView):
     """
     def get(self, request, *args, **kwargs):
             base_name = 'home_collection.html'
+            if not 'template' in kwargs:
+                kwargs['template'] = ''
 
             template_name = find_template(base_name, folder=kwargs['template'])
 
@@ -1992,6 +2020,9 @@ class ParamsView(LoginRequiredMixin, TemplateView):
         # Trying access to a not known collection.
         if not kwargs['collection'] in COLLECTIONS:
             raise Http404("Collection does not exist")
+
+        if not 'template' in kwargs:
+            kwargs['template'] = ''
 
         self.template_name = find_template(self.base_name,folder=kwargs['template'])
 

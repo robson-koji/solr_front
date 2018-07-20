@@ -143,7 +143,7 @@ $(document).ready(function(){
 
     // Limpa o Json de facets que envia para o servidor.
     $('#limpar_facets').click(function(){
-      // console.log('limpar_facets')    
+      // console.log('limpar_facets')
       selectedFacets = {}
       getData()
       $('#filtros_aplicados').hide()

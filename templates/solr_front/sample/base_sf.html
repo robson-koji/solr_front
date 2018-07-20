@@ -121,9 +121,6 @@
 	<body>
 		<script>
 			/* Variaveis de contexto global passadas para javascript  */
-
-			//passa para javascript token
-
 			var csrf = "{{csrf_token}}";
 			var home_sf_rurl = "{{ home_sf_rurl }}";
 			var bv_collection = "{{ collection }}"
@@ -133,7 +130,7 @@
 			var navigation_tree = {{ navigation_tree | safe }}
 			var omite_secoes = {{ omite_secoes | safe }}
 			var vertice = {{ vertice|safe }}
-			</script>
+		</script>
 
 		<!-- Loader fullscreen -->
 		<div id="loader_screen" class="text-center backgroundLoader" >
