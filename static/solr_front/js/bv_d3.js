@@ -67,12 +67,7 @@ function recuperaWordCloudChart(busca_realizada_str){
   else{
     var result_cp_gd = JSON.parse(busca_realizada_str)
   }
-
-  // json_levels_list.splice(-1,1) // O ultimo eh o botao. Exclui.
-  result_cp_gd[bv_collection]['single_facet'] = 'aval_sug_facet';
-
-
-  // debugger;
+  result_cp_gd[bv_collection]['single_facet'] = $(".wordcloud_options").val();
 
   $.ajax({
     url: home_sf_rurl + bv_collection + '/' + id_collection + '/unidimensional_chart/wordcloud/',
