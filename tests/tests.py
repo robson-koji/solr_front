@@ -14,7 +14,10 @@ class HomePageTestCase(unittest.TestCase):
         settings.DEBUG = True
         settings.TEST_RUNNER = 'tests.tests_with_no_db.NoDbTestRunner'
         self.client = Client()
-        self.home_url = reverse('home_sf', kwargs={'template':'bv'})
+
+        # When set kwargs['template'] = 'any' the system wont find the template folder
+        # and will use the default template.
+        self.home_url = reverse('home_sf', kwargs={'template':'any'})
 
     def test_details(self):
         response = self.client.get(self.home_url)
@@ -27,7 +30,10 @@ class SearchTestCase(unittest.TestCase):
         settings.DEBUG = True
         settings.TEST_RUNNER = 'tests.tests_with_no_db.NoDbTestRunner'
         self.client = Client()
-        self.entrypoint_url = reverse('params_id', kwargs={'collection':'graph_auxilios', 'id':'123456', 'template':'bv'})
+
+        # When set kwargs['template'] = 'any' the system wont find the template folder
+        # and will use the default template.
+        self.entrypoint_url = reverse('params_id', kwargs={'collection':'graph_auxilios', 'id':'123456', 'template':'any'})
 
     def test_params(self):
         response = self.client.get(self.entrypoint_url, follow=True)
