@@ -24,6 +24,7 @@ import logging
 import locale
 import sys, os, time, datetime
 import pandas
+import inspect
 
 # from conf import *
 
@@ -285,10 +286,7 @@ class NavigateCollection(View):
             try:
                 return render(request, 'solr_front/muda_collection.html', {'alerta': alerta, 'collection':self.collection, 'template': self.kwargs['template']})
             except Exception as e:
-                logger.error("---------------------------------------------")
-                logger.error(e)
-                logger.error("Class Error: %s in method 'update_vertice'" %(self.__class__.__name__))
-                logger.error("---------------------------------------------")
+                raise GenericLoggerException(self, e, inspect.stack())
 
         # print '\n\n update_vertice'
         # import pdb; pdb.set_trace()
@@ -1925,10 +1923,7 @@ class AddVerticeView(View):
         try:
             return reverse('params_id',kwargs={'collection':collection, 'template':self.kwargs['template'], 'id':self.id})
         except Exception as e:
-            logger.error("---------------------------------------------")
-            logger.error(e)
-            logger.error("Class Error: %s in method 'get_success_url'" %(self.__class__.__name__))
-            logger.error("---------------------------------------------")
+            raise GenericLoggerException(self, e, inspect.stack())
 
 
 
@@ -1963,10 +1958,7 @@ class HomeBuscador(LoginRequiredMixin, TemplateView):
         try:
             return render(request, template_name, {'erro': erro, 'collections':collections, 'template':kwargs['template'] })#, context_instance=RequestContext(self.request))
         except Exception as e:
-            logger.error("---------------------------------------------")
-            logger.error(e)
-            logger.error("Class Error: %s in method 'get'" %(self.__class__.__name__))
-            logger.error("---------------------------------------------")
+            raise GenericLoggerException(self, e, inspect.stack())
 
 
 class HomeCollection(LoginRequiredMixin, TemplateView):
@@ -1987,10 +1979,7 @@ class HomeCollection(LoginRequiredMixin, TemplateView):
             try:
                 return render(request, template_name, {'collection':kwargs['collection'], 'template': kwargs['template'] })#, context_instance=RequestContext(request))
             except Exception as e:
-                logger.error("---------------------------------------------")
-                logger.error(e)
-                logger.error("Class Error: %s in method 'get'" %(self.__class__.__name__))
-                logger.error("---------------------------------------------")
+                raise GenericLoggerException(self, e, inspect.stack())
 
 
 class AutoComplete(View):
@@ -2037,19 +2026,13 @@ class ParamsView(LoginRequiredMixin, TemplateView):
             try:
                 return redirect(reverse('start_research',kwargs={'collection':self.collection, 'template': self.kwargs['template']}), permanent=False )
             except Exception as e:
-                logger.error("---------------------------------------------")
-                logger.error(e)
-                logger.error("Class Error: %s in method 'dispatch'" %(self.__class__.__name__))
-                logger.error("---------------------------------------------")
+                raise GenericLoggerException(self, e, inspect.stack())
 
         elif self.vertice['id'] != self.id:
             try:
-                return redirect(reverse('clean_session',kwargs={'id':self.id, 'template':self.kwargs['template'] }), permanent=False )
+                return redirect(reverse('home_sf',kwargs={'template':self.kwargs['template'] }), permanent=False )
             except Exception as e:
-                logger.error("---------------------------------------------")
-                logger.error(e)
-                logger.error("Class Error: %s in method 'dispatch'" %(self.__class__.__name__))
-                logger.error("---------------------------------------------")
+                raise GenericLoggerException(self, e, inspect.stack())
 
 
 
@@ -2134,11 +2117,7 @@ class CleanSession(TemplateView):
         try:
             return redirect(reverse('home_sf',kwargs={'template':kwargs['template']}), permanent=False )
         except Exception as e:
-            logger.error("---------------------------------------------")
-            logger.error(e)
-            logger.error("Class Error: %s in method 'get'" %(self.__class__.__name__))
-            logger.error("---------------------------------------------")
-
+            raise GenericLoggerException(self, e, inspect.stack())
 
 
 class ExportDataView(View):
