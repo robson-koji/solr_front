@@ -8,4 +8,4 @@ SORL_FRONT_CONFIG_PATH = getattr(settings, "SORL_FRONT_CONFIG_PATH", None)
 #SORL_FRONT_CONFIG_PATH = ''
 
 
-USE_CELERY = True
+USE_CELERY = False

@@ -28,19 +28,20 @@ app = custom_import(PROJECT_NAME + '.celery.app')
 """
 
 from django.conf import settings
-from bv.celery import app
+# from bv.celery import app
+from celery import shared_task
 
 
 
 
 
-@app.task
+@shared_task
 def add(x, y):
     # send_mail('teste', 'teste', 'cdi2@fapesp.br', ['hconzatti@fapesp.br'])
     return x + y
 
 
-@app.task
+@shared_task
 def update_atomico(url, collection2, campo_dinamico_busca, hash_querybuilder):
     """
     Faz update atomico da collection solicitada
@@ -84,7 +85,7 @@ def update_atomico(url, collection2, campo_dinamico_busca, hash_querybuilder):
         raise Exception('HTTP CODE ', response.status_code)
 
 
-@app.task
+@shared_task
 def makeCsv(data_list, nome, email, para, msg, fields):
 
 
@@ -133,7 +134,8 @@ def makeCsv(data_list, nome, email, para, msg, fields):
 
         send_mail(assunto, corpo, 'cdi2@fapesp.br', [para])
 
-@app.task
+
+@shared_task
 def makeData(data_list, nome, email, para, msg, fields, formato):
 
     data_frame = pandas.DataFrame(data_list)
