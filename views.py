@@ -35,13 +35,17 @@ from solr_front.forms import *
 
 from solr_front import *
 
-from solr_front.tasks import update_atomico as update_atomico_celery
-from solr_front.tasks import makeCsv as makeCsv_celery
-from solr_front.tasks import makeData as makeData_celery
 
 from django.contrib.auth.decorators import login_required
 
-from celery.result import AsyncResult
+
+if settings_sf.USE_CELERY:
+    from solr_front.tasks import update_atomico as update_atomico_celery
+    from solr_front.tasks import makeCsv as makeCsv_celery
+    from solr_front.tasks import makeData as makeData_celery
+    from celery.result import AsyncResult
+
+
 
 
 logger = logging.getLogger(__name__)
@@ -935,11 +939,10 @@ class SolrQueries(LoginRequiredMixin, View):
         # Metodo deley eh do celery.
         if settings_sf.USE_CELERY:
             pedido = update_atomico_celery.delay(url, collection_destino, self.campo_dinamico_busca, self.hash_querybuilder)
-        else:
-            pedido = update_atomico_celery(url, collection_destino, self.campo_dinamico_busca, self.hash_querybuilder)
+        #else:
+            # Desta maneira, nao chama no Celery, chama diretamente no script da task.
+        #    pedido = update_atomico_celery(url, collection_destino, self.campo_dinamico_busca, self.hash_querybuilder)
 
-        # Desta maneira, nao chama no Celery, chama diretamente no script da task.
-        # import pdb; pdb.set_trace()
         return pedido
 
 
@@ -1527,6 +1530,7 @@ class SearchView(EntryPointView):
         self.se = StreamingExpressions(self.collection, self.solr_queries)
 
         if self.vertice['pedido']:
+
             consulta = 0
             while consulta != 1:
                 resultado = self.celery_check(self.vertice)
@@ -1866,8 +1870,14 @@ class AddVerticeView(View):
 
 
     def get(self, request, *args, **kwargs):
+
         # import pdb; pdb.set_trace()
         if 'collection_destino' in kwargs:
+
+            if not settings_sf.USE_CELERY:
+                return HttpResponse('Celery not found. You have to have Celery installed to use this feature.', content_type='text/plain')
+
+
             """ Se for funil, pega vertice pai e adiciona um vertice filho """
             self.navigate = NavigateCollection(self.request, kwargs['collection_destino'])
             parent_vertice = self.navigate.get_vertice(kwargs['id'])
@@ -2249,7 +2259,8 @@ class ExportDataView(View):
             if settings_sf.USE_CELERY:
                 makeData_celery.delay(data_list, nome, email, para, msg, fields, formato)
             else:
-                makeData_celery(data_list, nome, email, para, msg, fields, formato)
+                return HttpResponse('Celery not found. You have to have Celery installed  to use this feature.', content_type='text/plain')
+                #makeData_celery(data_list, nome, email, para, msg, fields, formato)
 
             return data_list
 
@@ -2265,7 +2276,8 @@ class ExportDataView(View):
         if settings_sf.USE_CELERY:
             makeCsv_celery.delay(data_list, nome, email, para, msg)
         else:
-            makeCsv_celery(data_list, nome, email, para, msg)
+            return HttpResponse('Celery not found. You have to have Celery installed to use this feature.', content_type='text/plain')
+            #makeCsv_celery(data_list, nome, email, para, msg)
 
         if 'export_fields' in COLLECTIONS[self.vertice['collection']]:
             fields = COLLECTIONS[self.vertice['collection']]['export_fields']
@@ -2292,10 +2304,10 @@ class ExportDataView(View):
 
             data_list = self.dict_values_to_string(data_list)
 
-            #celery
-            # makeCsv_celery.delay(data_list, nome, email, para, msg, fields)
-            #local
-            makeCsv_celery(data_list, nome, email, para, msg, fields)
+            if settings_sf.USE_CELERY:
+                makeCsv_celery.delay(data_list, nome, email, para, msg, fields)
+            else:
+                return HttpResponse('Celery not found. You have to have Celery installed to have this feature.', content_type='text/plain')
 
         else:
             raise ValueError("export_fields nao foi definido na configuracao desta collection")
