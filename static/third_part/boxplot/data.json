@@ -1,0 +1,6 @@
+[
+  {"campox":"90","metrics":{"min":0, "quartile1":13, "med":13, "mean":20, "quartile3":33,"max":55,"count":40}},
+  {"campox":"50","metrics":{"min":10, "quartile1":30, "med":33, "mean":35, "quartile3":50,"max":55,"count":50}},
+  {"campox":"40","metrics":{"min":0, "quartile1":10, "med":13, "mean":15, "quartile3":20,"max":25,"count":40}}
+
+]
