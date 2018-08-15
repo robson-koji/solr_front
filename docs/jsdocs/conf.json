@@ -1,0 +1,43 @@
+
+{
+    "plugins": [
+      "plugins/markdown"
+
+    ],
+    "recurseDepth": 1,
+    "source": {
+        "include": ["../static/solr_front/js/"],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "sourceType": "module",
+    "tags": {
+      "allowUnknownTags": true
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "useCollapsibles": true,
+        "name": "Javascript Docs Solr Front",
+        "logo": {
+          "url": "/static-files/solr_front/img/logo_buscador.jpg",
+          "width": "160px",
+          "height": "52px",
+          "link": "/buscador/docs"
+        },
+        "tabNames": {
+        "api": "API",
+        "tutorials": "Tutorias"
+        }
+    },
+    "opts": {
+      /* "template": "/usr/lib/node_modules/docdash/", */
+      "template": "/usr/lib/node_modules/tui-jsdoc-template/",
+        /* "template": "/usr/lib/node_modules/minami/", */
+        "encoding": "utf8",
+        "destination": "./jsdocs/build/",
+        "recurse": true,
+         "tutorials": "jsdocs/tutoriais/",
+         "readme" : "jsdocs/index.md"
+    }
+}
