@@ -145,6 +145,9 @@ function getData(busca_realizada_str){
           if (omite_secoes.indexOf('wordcloud') === -1){
             recuperaWordCloudChart(busca_realizada)
           }
+          if (omite_secoes.indexOf('boxplot') === -1){
+            recuperaBoxPlotChart(busca_realizada)
+          }          
           $(".group_half_pie_chart").empty()
           geraCharts(data.facet_counts.hierarquico)
         }

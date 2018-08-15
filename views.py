@@ -35,9 +35,7 @@ from solr_front.forms import *
 
 from solr_front import *
 
-
 from django.contrib.auth.decorators import login_required
-
 
 if settings_sf.USE_CELERY:
     from solr_front.tasks import update_atomico as update_atomico_celery
@@ -45,28 +43,16 @@ if settings_sf.USE_CELERY:
     from solr_front.tasks import makeData as makeData_celery
     from celery.result import AsyncResult
 
-
-
-
 logger = logging.getLogger(__name__)
 
 
-"""
-
-!!! Sem verificacao de login !!!
-
-"""
 class LoginRequiredMixin(object):
     @classmethod
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
-        if not settings.DEBUG:
-            return login_required(view)
-
+        # if not settings.DEBUG:
+        #     return login_required(view)
         return view
-
-
-
 
 
 def find_template(template, folder=''):
@@ -87,9 +73,7 @@ def find_template(template, folder=''):
             template_name = 'solr_front/sample/' + template
             get_template(template_name)
 
-
     return template_name
-
 
 
 class AjaxCeleryStatusView(View):
@@ -98,14 +82,13 @@ class AjaxCeleryStatusView(View):
         if task_id:
             async_result = AsyncResult(task_id)
             if async_result.failed():
-                return JsonResponse({'status': -1, 'msg':async_result.traceback})
+                return JsonResponse({'status': -1, 'msg': async_result.traceback})
             else:
                 if async_result.ready():
-                    return JsonResponse({'status': 1, 'msg':async_result.state})
+                    return JsonResponse({'status': 1, 'msg': async_result.state})
                 else:
-                    return JsonResponse({'status': 0, 'msg':async_result.state})
-        return JsonResponse({'status': 'undefined', 'msg':'enviar id!'})
-
+                    return JsonResponse({'status': 0, 'msg': async_result.state})
+        return JsonResponse({'status': 'undefined', 'msg': 'enviar id!'})
 
 
 class AjaxVerticeEditFieldView(View):
@@ -113,12 +96,13 @@ class AjaxVerticeEditFieldView(View):
     Recebe os requests ajax para editar o campo de um vertice.
     O pai (EntryPointView) trata o request, recupera resultados no Solr e retorna para o frontend.
     """
+
     def dispatch(self, request, *args, **kwargs):
         # Trying access to a not known collection.
         if not kwargs['collection'] in COLLECTIONS:
             raise Http404("Collection does not exist")
 
-        self.collection =  kwargs['collection']
+        self.collection = kwargs['collection']
 
         self.navigate = NavigateCollection(self.request, self.collection)
         self.vertice = self.navigate.get_vertice(int(kwargs['id']))
@@ -134,11 +118,9 @@ class AjaxVerticeEditFieldView(View):
 
         navigation_tree = self.navigate.get_navigation_tree()
         if change:
-            return JsonResponse(data={'status':'success', 'vertice': self.vertice, 'navigation_tree': navigation_tree })
+            return JsonResponse(data={'status': 'success', 'vertice': self.vertice, 'navigation_tree': navigation_tree})
         else:
-            return JsonResponse(data={'status':'error', 'msg':'Erro ao atualizar '+ label +', tente novamente'})
-
-
+            return JsonResponse(data={'status': 'error', 'msg': 'Erro ao atualizar ' + label + ', tente novamente'})
 
 
 class NavigateCollection(View):
@@ -148,6 +130,7 @@ class NavigateCollection(View):
     de dados de uma segunda collection
     Armazena na sessao.
     """
+
     def __init__(self, request, collection):
         self.request = request
         self.collection = collection
@@ -157,7 +140,6 @@ class NavigateCollection(View):
         if 'navigation' in self.request.session:
             self.vertice_inicial = self.request.session['navigation'].itervalues().next()
 
-
     def get_navigation_tree(self):
         """ Retorna arvore de navegacao """
 
@@ -166,8 +148,11 @@ class NavigateCollection(View):
             return {}
 
         navigation_tree = []
+
         def get_rec_navigate_fieds(dict, collection, parent_id):
-            my_dict = {'title':dict['title'], 'description':dict['description'], 'label':dict['label'], 'id':dict['id'], 'collection':dict['collection'], 'parent_id':parent_id, 'hash_querybuilder':dict['hash_querybuilder'] }
+            my_dict = {'title': dict['title'], 'description': dict['description'], 'label': dict['label'],
+                       'id': dict['id'], 'collection': dict['collection'], 'parent_id': parent_id,
+                       'hash_querybuilder': dict['hash_querybuilder']}
             navigation_tree.append(my_dict)
 
             for vertice in dict['tree']:
@@ -181,7 +166,6 @@ class NavigateCollection(View):
         get_rec_navigate_fieds(navigation[navigation.keys()[0]], navigation.keys()[0], "null")
 
         return navigation_tree
-
 
     def remove_tree(self, tree, id):
         vertices = []
@@ -198,7 +182,6 @@ class NavigateCollection(View):
         """ Conta a quantidade de vertices recursivamente """
         return int(hashlib.sha1(str(datetime.now())).hexdigest(), 16) % (10 ** 8)
 
-
     def add_vertice(self, collection, pai_id, selected_facets, hash_querybuilder, initial_search, pedido=None):
         """
         Se existe grapho recupera o vertice atual e adiciona um filho.
@@ -208,29 +191,27 @@ class NavigateCollection(View):
         # print '\n\n add_vertice 1'
         # import pdb; pdb.set_trace()
 
-
         def set_vertice(collection, hash_id, pai_id, pedido):
 
-            return {'label':COLLECTIONS[collection]['COLLECTION']['label'],
-                    'collection':collection,
+            return {'label': COLLECTIONS[collection]['COLLECTION']['label'],
+                    'collection': collection,
                     'pedido': pedido if pedido else '',
                     'body_json': {
-                         collection: {
+                        collection: {
                             'query': 'null',
                             'collection': collection,
                             'selected_facets_col1': selected_facets['qs_selected_facets'],
                             'selected_facets_col2': {},
-                         }
-                      },
-                    'id':hash_id,
-                    'parent_id':pai_id,
-                    'hash_querybuilder':hash_querybuilder,
-                    'tree':[],
-                    'initial_search':initial_search,
-                        'title': COLLECTIONS[collection]['COLLECTION']['label'],
+                        }
+                    },
+                    'id': hash_id,
+                    'parent_id': pai_id,
+                    'hash_querybuilder': hash_querybuilder,
+                    'tree': [],
+                    'initial_search': initial_search,
+                    'title': COLLECTIONS[collection]['COLLECTION']['label'],
                     'description': u'Descrição'
                     }
-
 
         if pai_id is not None:
             vertice = self.get_vertice(pai_id)
@@ -245,13 +226,11 @@ class NavigateCollection(View):
 
         else:
             # If master parent, create a "random" id
-            random_id =  int(hashlib.sha1(str(datetime.now())).hexdigest(), 16) % (10 ** 8)
+            random_id = int(hashlib.sha1(str(datetime.now())).hexdigest(), 16) % (10 ** 8)
             self.request.session['navigation'] = {}
             self.request.session['navigation'][collection] = set_vertice(collection, random_id, None, pedido)
             # import pdb; pdb.set_trace()
-            return random_id # Nova navegacao.
-
-
+            return random_id  # Nova navegacao.
 
     def get_vertice(self, id):
         """ Localiza recursivamente um vertice especifico """
@@ -270,7 +249,6 @@ class NavigateCollection(View):
                     if rec_vertice:
                         return rec_vertice
 
-
         vertice = None
         if self.request.session['navigation'].itervalues().next()['tree']:
             vertice = get_rec_vertice(self.vertice_inicial['tree'], id)
@@ -280,7 +258,6 @@ class NavigateCollection(View):
         else:
             return self.request.session['navigation'].itervalues().next()
 
-
     def update_vertice(self, body_json, hash_querybuilder, id, fq, selected_facets, initial_search):
         vertice = self.get_vertice(id)
 
@@ -288,7 +265,8 @@ class NavigateCollection(View):
             # Se parar aqui eh pq tem erro de navegacao.
             alerta = "Erro de navegação!"
             try:
-                return render(request, 'solr_front/muda_collection.html', {'alerta': alerta, 'collection':self.collection, 'template': self.kwargs['template']})
+                return render(request, 'solr_front/muda_collection.html',
+                              {'alerta': alerta, 'collection': self.collection, 'template': self.kwargs['template']})
             except Exception as e:
                 raise GenericLoggerException(self, e, inspect.stack())
 
@@ -301,10 +279,9 @@ class NavigateCollection(View):
         vertice['selected_facets_col1'] = selected_facets['se_selected_facets']
         vertice['initial_search'] = initial_search
 
-
     def remove_vertice(self, id):
         if id == 0:
-            if 'navigation' in  self.request.session: del self.request.session['navigation']
+            if 'navigation' in self.request.session: del self.request.session['navigation']
         else:
 
             """
@@ -324,7 +301,6 @@ class NavigateCollection(View):
 
             navigation[navigation.keys()[0]]['tree'] = vertices
 
-
     def update_vertice_field(self, field, value, id):
         vertice = self.get_vertice(id)
         if isinstance(vertice['body_json'], dict) and not vertice['body_json'].keys()[0] == self.collection:
@@ -332,9 +308,6 @@ class NavigateCollection(View):
             return False
         vertice[field] = value
         return True
-
-
-
 
 
 ###################
@@ -362,7 +335,6 @@ class StreamingExpressions(View):
         self.solr_queries = solr_queries
         # import pdb; pdb.set_trace()
 
-
     def get_search(self, collection, fq, selected_facets):
         """
         Monta a expressao de search para um vertice
@@ -379,13 +351,12 @@ class StreamingExpressions(View):
         # fq2 = fq + ', ' + selected_facets
 
         search_se = 'search(%s, qt="/export", q=*:*, fl="id", sort="id asc", %s)'
-        search_se  = search_se % (collection, selected_facets)
+        search_se = search_se % (collection, selected_facets)
 
         # import pdb; pdb.set_trace()
         return search_se
 
         # import pdb; pdb.set_trace()
-
 
     def get_join(self, fq, selected_facets, facets_col2):
         """
@@ -405,7 +376,6 @@ class StreamingExpressions(View):
             fq = ',fq=' + fq
         fq2 = fq + ', ' + selected_facets
 
-
         for v in self.vertices:
             vertice = edge['vertices'][v]
             if vertice['relationship_type'] == 'one_to_many':
@@ -419,7 +389,10 @@ class StreamingExpressions(View):
                     )
                 """
 
-                hash_join  = hash_join % (self.collection, vertice['one'], vertice['one'], fq2, v, vertice['many'], vertice['many'], facets_col2, vertice['many'], vertice['one'], vertice['many'])
+                hash_join = hash_join % (
+                    self.collection, vertice['one'], vertice['one'], fq2, v, vertice['many'], vertice['many'],
+                    facets_col2,
+                    vertice['many'], vertice['one'], vertice['many'])
                 # hash_join = (textwrap.fill(textwrap.dedent(hash_join))).replace('\n', ' ')
             elif vertice['relationship_type'] == 'many_to_one':
                 hash_join = """\
@@ -433,7 +406,10 @@ class StreamingExpressions(View):
                     on=%s=%s
                     )
                 """
-                hash_join  = hash_join % (v, vertice['one'], vertice['one'], vertice['one'], facets_col2, self.collection, vertice['many'], fq2, vertice['many'], 'id as id_2', vertice['many'], vertice['one'],vertice['many'])
+                hash_join = hash_join % (
+                    v, vertice['one'], vertice['one'], vertice['one'], facets_col2, self.collection, vertice['many'],
+                    fq2,
+                    vertice['many'], 'id as id_2', vertice['many'], vertice['one'], vertice['many'])
                 # hash_join = (textwrap.fill(textwrap.dedent(hash_join))).replace('\n', ' ')
             elif vertice['relationship_type'] == 'one_to_one':
                 hash_join = """\
@@ -443,7 +419,9 @@ class StreamingExpressions(View):
                       on="%s=%s"
                     )
                 """
-                hash_join  = hash_join % (self.collection, vertice['from_one'], vertice['from_one'], vertice['from_one'], facets_col2, v, vertice['to_one'],  vertice['to_one'], fq2,  vertice['from_one'],  vertice['to_one']  )
+                hash_join = hash_join % (
+                    self.collection, vertice['from_one'], vertice['from_one'], vertice['from_one'], facets_col2, v,
+                    vertice['to_one'], vertice['to_one'], fq2, vertice['from_one'], vertice['to_one'])
                 # hash_join = (textwrap.fill(textwrap.dedent(hash_join))).replace('\n', ' ')
 
             pat = re.compile(r'\n\s+')
@@ -451,10 +429,7 @@ class StreamingExpressions(View):
 
             hash_join = hash_join.replace('%', '%25')
 
-            self.hash_join[v] = hash_join # Streaming expression de hashJoin
-
-
-
+            self.hash_join[v] = hash_join  # Streaming expression de hashJoin
 
     def get_count_joined(self, related_collection):
         """ Recupera o valor total de registros joins de duas collections """
@@ -463,10 +438,10 @@ class StreamingExpressions(View):
 
         self.solr_queries.streaming_expression = self.hash_join[v]
         self.solr_queries.hash_querybuilder = self.solr_queries.create_hash_querybuilder()
-        self.count[v] = {'col1':{'value':0, 'se':''}, 'col2':{'value':0, 'se':''}}
+        self.count[v] = {'col1': {'value': 0, 'se': ''}, 'col2': {'value': 0, 'se': ''}}
         self.count[v]['col2']['label'] = self.edges['vertices'][v]['label']
         self.count[v]['col2']['parent_hash_querybuilder'] = [self.solr_queries.hash_querybuilder]
-        vertice =  self.edges['vertices'][v]
+        vertice = self.edges['vertices'][v]
 
         count = 'null(unique(sort( %s, by="%s asc"),over="%s"),sort="%s asc")'
 
@@ -475,20 +450,19 @@ class StreamingExpressions(View):
         # Atribui resultado ao dict de contagem, no valor do vertice
         # Faz isso para col1 e col2
 
-
         if vertice['relationship_type'] == 'one_to_many':
             count_sort_field = self.edges['vertices'][v]['many']
-            count_col1 = count % (self.hash_join[v], count_sort_field, count_sort_field, count_sort_field )
+            count_col1 = count % (self.hash_join[v], count_sort_field, count_sort_field, count_sort_field)
             count_col2 = count % (self.hash_join[v], 'id', 'id', 'id')
 
-        elif vertice['relationship_type'] == 'many_to_one': # Inverte
+        elif vertice['relationship_type'] == 'many_to_one':  # Inverte
             count_sort_field = self.edges['vertices'][v]['many']
-            count_col2 = count % (self.hash_join[v], count_sort_field, count_sort_field, count_sort_field )
+            count_col2 = count % (self.hash_join[v], count_sort_field, count_sort_field, count_sort_field)
             count_col1 = count % (self.hash_join[v], 'id_2', 'id_2', 'id_2')
 
-        elif vertice['relationship_type'] == 'one_to_one': # Inverte
+        elif vertice['relationship_type'] == 'one_to_one':  # Inverte
             count_sort_field = self.edges['vertices'][v]['from_one']
-            count_col2 = count % (self.hash_join[v], count_sort_field, count_sort_field, count_sort_field )
+            count_col2 = count % (self.hash_join[v], count_sort_field, count_sort_field, count_sort_field)
             count_col1 = count % (self.hash_join[v], 'id', 'id', 'id')
 
         # import pdb; pdb.set_trace()
@@ -501,14 +475,11 @@ class StreamingExpressions(View):
         except GetSolarDataException:
             raise
 
-
         try:
             response_json = self.solr_queries.executaStreamingExpression(count_col2)
             self.count[v]['col2']['value'] = response_json['result-set']['docs'][0]['nullCount']
         except GetSolarDataException:
             raise
-
-
 
     def get_top_joined(self, related_collection):
         """ Recupera os ultimos n registros do join de duas collections """
@@ -524,7 +495,7 @@ class StreamingExpressions(View):
             top_sort_field = self.edges['vertices'][vertice]['many']
 
         top = 'top(n=3,unique(sort( %s, by="%s asc"),over="%s"),sort="%s asc")'
-        top = top % (self.hash_join[vertice], top_sort_field, top_sort_field, top_sort_field )
+        top = top % (self.hash_join[vertice], top_sort_field, top_sort_field, top_sort_field)
         try:
             response_json = self.solr_queries.executaStreamingExpression(top)
             self.top[vertice]['value'] = response_json['result-set']['docs']
@@ -533,32 +504,27 @@ class StreamingExpressions(View):
             raise
 
 
-
-
-
 class SolrQueries(LoginRequiredMixin, View):
     """ Encapsula as buscas no Solr """
 
     def __init__(self, collection):
 
         self.collection = collection
-        self.solr_connection = 'http://leydenh/solr/'
+        self.solr_connection = settings_sf.SOLR_URL
         self.server_stream_url = self.solr_connection + self.collection + '/stream?expr='
-        self.server_zkhost =  'http://leydenh:9983'
         self.server_qt = '/select'
         self.hash_querybuilder = 0
         self.campo_dinamico_busca = COLLECTIONS[self.collection]['COLLECTION']['campo_dinamico_busca']
 
-
     def solr_response_error(self, method, response, solr_url):
         """ Method used to throw and log Solr response errors. """
         logger.error("---------------------------\n")
-        logger.error("Solr HTTP Response ERROR: %s ( %s ). Method: %s" %(response.status_code, response.reason, method))
+        logger.error(
+            "Solr HTTP Response ERROR: %s ( %s ). Method: %s" % (response.status_code, response.reason, method))
         logger.error("For HTTP 400 Solr log used to tell what is wrong with the request.")
-        logger.error("Solr URL Error: %s \n" %(solr_url))
+        logger.error("Solr URL Error: %s \n" % (solr_url))
         logger.error("---------------------------\n")
         raise GetSolarDataException()
-
 
     def executaStreamingExpression(self, se):
         """ Executes a standard Streaming Expression """
@@ -572,7 +538,6 @@ class SolrQueries(LoginRequiredMixin, View):
 
         return response.json()
 
-
     def sorlGenericConnection(self, select):
         """ Executa url do Solr a partir do raiz """
         solr_url = self.solr_connection + select
@@ -581,7 +546,6 @@ class SolrQueries(LoginRequiredMixin, View):
             self.solr_response_error('sorlGenericConnection', response, solr_url)
 
         return response.json()
-
 
     def sorlJsonQuery(self, data):
         """
@@ -597,8 +561,6 @@ class SolrQueries(LoginRequiredMixin, View):
             self.solr_response_error('sorlJsonQuery', response, solr_url)
 
         return response.json()
-
-
 
     def facets2query(self, selected_facets):
         """
@@ -630,20 +592,20 @@ class SolrQueries(LoginRequiredMixin, View):
         # {u'bolsas_pt': [u'01;Bolsas no Brasil'], u'situacao': [u'Em andamento']}
 
         for sf in selected_facets:
-            #categoria = sf.replace('_exact', '')
+            # categoria = sf.replace('_exact', '')
             categoria = sf
             if len(selected_facets[sf]) > 1:
                 # import pdb; pdb.set_trace()
                 for i, item in enumerate(selected_facets[sf]):
 
-                    if i: # O primeiro item do enumerate retorna falso
+                    if i:  # O primeiro item do enumerate retorna falso
                         fq += 'OR "' + item + '" '
-                        #se_fq += ' fq=' + categoria + ':"' + item + '", '
+                        # se_fq += ' fq=' + categoria + ':"' + item + '", '
                         se_fq += 'OR "' + item + '" '
-                    else: # Primeiro item do enumerate
+                    else:  # Primeiro item do enumerate
                         # import pdb; pdb.set_trace()
-                        fq = '&fq={!tag=' + categoria + '}'  + categoria + ':( "' + item + '" '
-                        #se_fq = ' fq={!tag=' + categoria + '_tag}' + categoria + ':("' + item + '" '
+                        fq = '&fq={!tag=' + categoria + '}' + categoria + ':( "' + item + '" '
+                        # se_fq = ' fq={!tag=' + categoria + '_tag}' + categoria + ':("' + item + '" '
                         se_fq = ' fq=' + categoria + ':(\"' + item + '\" '
                 fq += ')'
                 se_fq += '),'
@@ -652,7 +614,7 @@ class SolrQueries(LoginRequiredMixin, View):
                 # import pdb; pdb.set_trace()
                 fq = '&fq={!tag=' + categoria + '}' + categoria + ':"' + selected_facets[sf][0] + '"'
                 se_fq = ' fq=' + categoria + ':\"' + selected_facets[sf][0] + '\",'
-                #se_fq = ' fq=' + categoria + ':"' + selected_facets[sf][0] + '",'
+                # se_fq = ' fq=' + categoria + ':"' + selected_facets[sf][0] + '",'
                 # import pdb; pdb.set_trace()
             else:
                 fq = ''
@@ -666,7 +628,7 @@ class SolrQueries(LoginRequiredMixin, View):
                 fq = fq.replace('"', '')
 
             fq_qstring += fq
-            se_fqs +=  se_fq
+            se_fqs += se_fq
 
             se_fqs = se_fqs.replace('"*"', '*')
             fq_qstring = fq_qstring.replace('"*"', '*')
@@ -675,9 +637,7 @@ class SolrQueries(LoginRequiredMixin, View):
 
         # import pdb; pdb.set_trace()
         # Retorna dict com facets para a querystring e para a streaming_expression.
-        return ({'qs_selected_facets':fq_qstring, 'se_selected_facets':se_fqs})
-
-
+        return ({'qs_selected_facets': fq_qstring, 'se_selected_facets': se_fqs})
 
     def facets2fq_post(self, selected_facets):
         """
@@ -688,7 +648,7 @@ class SolrQueries(LoginRequiredMixin, View):
         !!!! Ver se dah para apgar o metodo acima
         """
 
-        lot = [] # list of tuples
+        lot = []  # list of tuples
         for key, value in selected_facets.iteritems():
             # import pdb; pdb.set_trace()
             facets = '('
@@ -698,16 +658,13 @@ class SolrQueries(LoginRequiredMixin, View):
                 facets += '"' + item + '" OR '
 
             facets = facets.rstrip(' OR ')
-            facets = '{!tag='+ key +'_tag}' + key + ':' + facets + ')'
+            facets = '{!tag=' + key + '_tag}' + key + ':' + facets + ')'
 
             if item == '*':
-                facets = '{!tag='+ key +'_tag}' + key + ':*'
+                facets = '{!tag=' + key + '_tag}' + key + ':*'
 
             lot.append(('fq', facets))
         return lot
-
-
-
 
     def get_facets_json_api(self):
         """
@@ -718,13 +675,14 @@ class SolrQueries(LoginRequiredMixin, View):
         for group in COLLECTIONS[self.collection]['FACETS']:
             for f in group['facetGroup']:
                 for item in f['facets']:
-                    json_facet += item['chave'] +':{type:terms, field:'+ item['chave'] + ',limit:5000, domain:{excludeTags:'+ item['chave'] + '_tag}},'
-                    facet_fields += '&json.facet={' + item['chave'] +':{type:terms, field:'+ item['chave'] + ',limit:5000, domain:{excludeTags:'+ item['chave'] + '}}}'
+                    json_facet += item['chave'] + ':{type:terms, field:' + item[
+                        'chave'] + ',limit:5000, domain:{excludeTags:' + item['chave'] + '_tag}},'
+                    facet_fields += '&json.facet={' + item['chave'] + ':{type:terms, field:' + item[
+                        'chave'] + ',limit:5000, domain:{excludeTags:' + item['chave'] + '}}}'
 
         json_facet = json_facet.rstrip(',')
         json_facet += '}'
         return (facet_fields, json_facet)
-
 
     def get_facet_4_autocomplete(self, request_data, facet='', selected_facets=[]):
         """
@@ -745,59 +703,57 @@ class SolrQueries(LoginRequiredMixin, View):
         if selected_facets:
             fq = self.facets2fq_post(selected_facets)
             for fq_tuple in fq:
-                #pega segundo valor da tupla retornada da função, como paramentro
+                # pega segundo valor da tupla retornada da função, como paramentro
                 fqs.append(('fq', fq_tuple[1]))
 
-        solr_url = 'http://leydenh/solr/' + self.collection + '/select?'
+        solr_url = self.solr_connection + self.collection + '/select?'
 
         # Essa regra funciona corretamente qdo ha um campo to tipo text para a busca e um campo facet para apresentar no autocomplete.
         # Esse eh um filtro de primeiro nivel no Solr. Como ha limitacao de filtragem de facet no Solr,
         # logo mais abaixo ha uma nova filtragem na camada da aplicacao.
-        data = [('wt', 'json'), ('fl', '*'), ('q','*:*'), ('rows', 0), ('facet.limit', 500), ('facet.field', request_data['facet.field']),('facet', 'on'),('facet.contains', fq_split[1].split()[0]),('facet.contains.ignoreCase', 'true')] + fqs
+        data = [('wt', 'json'), ('fl', '*'), ('q', '*:*'), ('rows', 0), ('facet.limit', 500),
+                ('facet.field', request_data['facet.field']), ('facet', 'on'),
+                ('facet.contains', fq_split[1].split()[0]), ('facet.contains.ignoreCase', 'true')] + fqs
 
         solr_url += urllib.urlencode(data)
 
         # Se necessario, fazer o escape de todos os caracterese que
-        #solr_url = solr_url.replace('%', '%25')
+        # solr_url = solr_url.replace('%', '%25')
 
         response = requests.get(solr_url)
         if response.status_code != 200:
             self.solr_response_error('get_facet_4_autocomplete', response, solr_url)
 
-
         json = response.json()
         docs = []
         if 'facet_counts' in json:
             resultado = json['facet_counts']['facet_fields'][request_data['facet.field']]
-            for i,k in zip(resultado[0::2], resultado[1::2]):
+            for i, k in zip(resultado[0::2], resultado[1::2]):
                 # Filtro manual, pode causar lentidao.
                 # O Solr nao filtra facet com multiplos contains,
                 # por isso precisa filtrar aqui na camada da aplicacao.
                 # Verifica se os facets resultantes tem as strings buscadas.
                 if len(fq_split[1].split()) > 1 and not all(term.lower() in i.lower() for term in fq_split[1].split()):
                     continue
-                docs.append({'count':k, 'val':i})
-            return ({'buckets':docs})
-
+                docs.append({'count': k, 'val': i})
+            return ({'buckets': docs})
 
     def get_facets_json_api_sum(self, sum_field, fq, selected_facets):
         """ Soma todos os valores de um determinado facet """
         sum = '{sum:"sum(' + sum_field + ')"}'
-        data = [('q','*:*'), ('fl','*'), ('json.facet',sum)] + selected_facets
+        data = [('q', '*:*'), ('fl', '*'), ('json.facet', sum)] + selected_facets
         return data
-
 
     def get_facets_json_api_avg(self, avg_field, fq, selected_facets):
         """ Retorna a media dos valores numericos de um facet """
         avg = '{avg:"avg(' + avg_field + ')"}'
-        data = [('q','*:*'), ('fl',','), ('fq', fq), ('json.facet',avg)] + selected_facets
+        data = [('q', '*:*'), ('fl', ','), ('fq', fq), ('json.facet', avg)] + selected_facets
         return data
-
 
     def get_facets_json_api_unique(self, unique_field, fq, selected_facets):
         """ Recupera a qt de valores unicos para um determinado facet """
         se = 'null(unique(search(%s, qt="/export", q=*:*, fl="%s", sort="%s asc", %s),over="%s"),)'
-        se  = se % (self.collection, unique_field, unique_field, selected_facets, unique_field)
+        se = se % (self.collection, unique_field, unique_field, selected_facets, unique_field)
 
         result = self.executaStreamingExpression(se)
 
@@ -806,7 +762,6 @@ class SolrQueries(LoginRequiredMixin, View):
 
         result = result['result-set']['docs'][0]['nullCount']
         return result
-
 
     def create_hash_querybuilder(self):
         """
@@ -817,7 +772,6 @@ class SolrQueries(LoginRequiredMixin, View):
         ser trabalhdo (filtrado).
         """
         return str(int(hashlib.sha1(self.streaming_expression).hexdigest(), 16) % (10 ** 8))
-
 
     def update_atomico(self, url, collection2, campo_dinamico_busca):
         """
@@ -830,7 +784,6 @@ class SolrQueries(LoginRequiredMixin, View):
         no documento, criando ou excluindo o campo enviando no "jsons_ids".
         """
 
-
         def monta_json_para_update(campo, operador):
             """
             :param valor_campo: utilizado para criar ou excluir campo dinamico no Solr
@@ -841,8 +794,7 @@ class SolrQueries(LoginRequiredMixin, View):
             response = requests.get(url)
             if response.status_code != 200:
                 self.solr_response_error('monta_json_para_update', response, url)
-            related_collection_json =  response.json()
-
+            related_collection_json = response.json()
 
             """
             Prepara o uma lista de dict para fazer o update atomico.
@@ -854,8 +806,8 @@ class SolrQueries(LoginRequiredMixin, View):
             for doc in related_collection_json['result-set']['docs']:
                 if 'id' in doc:
                     json_ids.append({
-                        'id':doc['id'],
-                        campo:{operador:self.hash_querybuilder}
+                        'id': doc['id'],
+                        campo: {operador: self.hash_querybuilder}
                     })
             return json_ids
 
@@ -863,14 +815,12 @@ class SolrQueries(LoginRequiredMixin, View):
         json_ids = monta_json_para_update(campo_dinamico_busca, 'add')
 
         # Chamar o Celery
-        update_url = 'http://leydenh/solr/' + collection2 + '/update?commit=true'
+        update_url = self.solr_connection + collection2 + '/update?commit=true'
 
         response = requests.post(update_url, json=json_ids)
 
         if response.status_code != 200:
             self.solr_response_error('update_atomico', response, update_url)
-
-
 
     def get_or_create_related_collection_db(self, collection, streaming_expression):
         """
@@ -892,14 +842,14 @@ class SolrQueries(LoginRequiredMixin, View):
 
         # Se registro jah existe no banco
         try:
-            related_collection_chk = RelatedCollectionsCheck.objects.get(hash_querybuilder = self.hash_querybuilder )
+            related_collection_chk = RelatedCollectionsCheck.objects.get(hash_querybuilder=self.hash_querybuilder)
             # Se nao precisar recontar, retorna objeto recuperado.
             if not related_collection_chk.recount():
                 return related_collection_chk
             # Senao, reconta, grava e retorna objeto atualizado.
             else:
                 (count, top) = get_count_get_top(streaming_expression, collection)
-                related_collection_chk.join=streaming_expression.hash_join[collection]
+                related_collection_chk.join = streaming_expression.hash_join[collection]
                 related_collection_chk.qt_col1 = count['col1']['value']
                 related_collection_chk.qt_col2 = count['col2']['value']
         # Senao, cria registro no banco.
@@ -907,14 +857,12 @@ class SolrQueries(LoginRequiredMixin, View):
             print "\n\n\n Does not exist"
             (count, top) = get_count_get_top(streaming_expression, collection)
             related_collection_chk = RelatedCollectionsCheck(hash_querybuilder=self.hash_querybuilder,
-                join=streaming_expression.hash_join[collection],
-                qt_col1 = count['col1']['value'],
-                qt_col2 = count['col2']['value'],
-                )
+                                                             join=streaming_expression.hash_join[collection],
+                                                             qt_col1=count['col1']['value'],
+                                                             qt_col2=count['col2']['value'],
+                                                             )
         related_collection_chk.save()
         return related_collection_chk
-
-
 
     def do_reindex(self, se, collection_destino):
         self.streaming_expression = se
@@ -927,31 +875,28 @@ class SolrQueries(LoginRequiredMixin, View):
         Melhorar essa verificacao pq em muitos casos nao vai haver docs relacionados pelo
         fato de que realmente nao existem docs relacionados para muitas buscas.
         """
-        url = "http://leydenh/solr/graph_auxilios/stream?expr=" + se
-
+        url = self.solr_connection + "graph_auxilios/stream?expr=" + se
 
         # print
         # print collection_destino
         # print self.campo_dinamico_busca
         # print self.hash_querybuilder
 
-
         # Metodo deley eh do celery.
         if settings_sf.USE_CELERY:
-            pedido = update_atomico_celery.delay(url, collection_destino, self.campo_dinamico_busca, self.hash_querybuilder)
-        #else:
-            # Desta maneira, nao chama no Celery, chama diretamente no script da task.
+            pedido = update_atomico_celery.delay(url, collection_destino, self.campo_dinamico_busca,
+                                                 self.hash_querybuilder)
+        # else:
+        # Desta maneira, nao chama no Celery, chama diretamente no script da task.
         #    pedido = update_atomico_celery(url, collection_destino, self.campo_dinamico_busca, self.hash_querybuilder)
 
         return pedido
 
-
-
     def get_content(self, content_type, fq, selected_facets):
         facet_fields = self.get_facets_json_api()[1]
 
-        solr_url = 'http://leydenh/solr/' + content_type + '/query'
-        data = [('q','*:*'), ('fl','*'), ('fq', fq), ('json.facet',facet_fields)] + selected_facets
+        solr_url = self.solr_connection + content_type + '/query'
+        data = [('q', '*:*'), ('fl', '*'), ('fq', fq), ('json.facet', facet_fields)] + selected_facets
 
         # Se necessario, fazer o escape de todos os caracterese que
         solr_url = solr_url.replace('%', '%25')
@@ -960,9 +905,6 @@ class SolrQueries(LoginRequiredMixin, View):
         if response.status_code != 200:
             self.solr_response_error('get_content', response, solr_url)
         return response.json()
-
-
-
 
     def get_totalizador(self, content_type, fq, sf, docs):
         fl = ','
@@ -974,16 +916,15 @@ class SolrQueries(LoginRequiredMixin, View):
         sf = sf.replace('"*"', '*')
 
         if fq:
-            fq = 'fq='+fq
-        solr_url = 'http://leydenh/solr/%s/query?q=*:*&rows=3&%s%s&fl=%s' % (str(content_type), fq, sf, fl)
+            fq = 'fq=' + fq
+        solr_url = self.solr_connection + '%s/query?q=*:*&rows=3&%s%s&fl=%s' % (str(content_type), fq, sf, fl)
 
         response = requests.get(solr_url)
         if response.status_code != 200:
             self.solr_response_error('get_totalizador', response, solr_url)
 
         response = response.json()['response']
-        return ({'numFound':response['numFound'], 'docs':response['docs']})
-
+        return ({'numFound': response['numFound'], 'docs': response['docs']})
 
     def get_content_json_facet(self, content_type, fq, json_facet, selected_facets):
         """
@@ -991,7 +932,7 @@ class SolrQueries(LoginRequiredMixin, View):
         Utilizar a estrutura de facet multinivel do Solr.
         """
         facet_fields = self.get_facets_json_api()[0]
-        solr_url = 'http://leydenh/solr/' + content_type + '/query?q=*:*&rows=0&json.facet=' + json_facet + '&fq=' + fq + selected_facets
+        solr_url = self.solr_connection + content_type + '/query?q=*:*&rows=0&json.facet=' + json_facet + '&fq=' + fq + selected_facets
 
         response = requests.get(solr_url)
         if response.status_code != 200:
@@ -999,54 +940,98 @@ class SolrQueries(LoginRequiredMixin, View):
 
         return response
 
+    def get_content_boxplot_json_facet(self, content_type, fq, levels_list, selected_facets):
+        """
+        Recupera dados facetados no Solr e retorna dois objetos para o front end
+        para geracao do grafico d3js boxplot.
+        http://yonik.com/percentiles-for-solr-faceting/
 
+        !!! Acertar o threshold...
+        """
 
+        # levels_list = []
+        # levels_list.append({'nivel_1':'Idade', 'nivel_2':'Vl_Rem_Novembro_CC'})
+        # content_type = 'rais'
+
+        solr_url = self.solr_connection + content_type + '/query'
+
+        # Recebe as variaveis do grafico.
+        json_facet = '{x_axis:{type: terms, field:' + levels_list[0][
+
+            'nivel_1'] + ', limit: -1, facet:{y_axis:"percentile(' + levels_list[1][
+                         'nivel_2'] + ',25,50,75)",avg:"avg(' + levels_list[1]['nivel_2'] + ')"}}}'
+
+        data = [('q', '*:*'), ('rows', '0'), ('fl', '*'), ('fq', fq), ('json.facet', str(json_facet))] + selected_facets
+        # data = [('q', '-'+levels_list[1]['nivel_2']+':0'), ('rows', '0'), ('fl', '*'), ('fq', fq), ('json.facet', str(json_facet))] + selected_facets
+
+        response = requests.get(solr_url, data=data)
+        if response.status_code != 200:
+            self.solr_response_error('get_content_boxplot_json_facet', response, solr_url)
+
+        # Caso o Solr tenha retornado um json
+        response_json = []
+        x_tick = 0
+        for x_elemen in response.json()['facets']['x_axis']['buckets']:
+            # Considera somente primeiro nivel do facet, no caso de utilziar um campo facetado.
+            if not isinstance(x_elemen['val'], int) and '|' in x_elemen['val']:
+                continue
+
+            # Considera somente primeiro nivel do facet, no caso de utilziar um campo facetado.
+            if not isinstance(x_elemen['val'], int) and '|' in x_elemen['val']:
+                continue
+            if x_elemen['avg']== 0:
+                continue
+            else:
+
+                facet = {"x_axis": x_elemen['val'],
+                         "y_axis": {"quartile1": x_elemen['y_axis'][0], "median": x_elemen['y_axis'][1],
+                                    "quartile3": x_elemen['y_axis'][2], "count": x_elemen['count'], "mean":x_elemen['avg']}}
+            response_json.append(facet)
+        return response_json
 
     def get_content_wordcloud_json_facet(self, content_type, fq, single_facet, selected_facets):
         """
         Recupera dados facetados no Solr de um unico campo, e retorna para geracao do grafico wordcloud.
         """
-        solr_url = 'http://leydenh/solr/' + content_type + '/query'
+        solr_url = self.solr_connection + content_type + '/query'
         # facet_field = 'aval_sug_facet'
         facet_field = single_facet
-        json_facet = '{single_facet:{type: terms, field:' +  facet_field + ', sort:{count:desc}, limit: 1000 }}'
-        data = [('q','*:*'), ('rows','0'), ('fl','*'), ('fq',fq), ('json.facet', str(json_facet))] + selected_facets
+        json_facet = '{single_facet:{type: terms, field:' + facet_field + ', sort:{count:desc}, limit: 1000 }}'
+        data = [('q', '*:*'), ('rows', '0'), ('fl', '*'), ('fq', fq), ('json.facet', str(json_facet))] + selected_facets
 
         response = requests.get(solr_url, data=data)
         if response.status_code != 200:
             self.solr_response_error('get_content_json_facet', response, solr_url)
 
-
         # Convertendo a chave dos objetos para ficar compativel com a lib d3wordcloud no front
         obj = response.json()['facets']['single_facet']['buckets']
-        buckets = {'buckets':[]}
+        buckets = {'buckets': []}
         for o in obj:
             if len(o['val']) <= 2:
                 continue
-            buckets['buckets'].append({'text':o['val'], 'size':o['count']})
+            buckets['buckets'].append({'text': o['val'], 'size': o['count']})
         return buckets
-
 
     def get_content_bubble_json_facet(self, content_type, fq, levels_list, selected_facets):
         """
         Recupera dados facetados no Solr e retorna dois objetos para o front end
         para geracao do grafico d3js Bubble.
         """
-        solr_url = 'http://leydenh/solr/' + content_type + '/query'
-
+        solr_url = self.solr_connection + content_type + '/query'
 
         # import pdb; pdb.set_trace()
         # Recebe as variaveis do grafico.
-        json_facet = '{x_axis:{type: terms, field:' +  levels_list[0]['nivel_1'] + ', sort:{count:asc}, limit:5000 , facet:{y_axis:{type: terms,field: ' +  levels_list[1]['nivel_2'] + ',sort:{count:asc},limit: 5000}}}}'
+        json_facet = '{x_axis:{type: terms, field:' + levels_list[0][
+            'nivel_1'] + ', sort:{count:asc}, limit:5000 , facet:{y_axis:{type: terms,field: ' + levels_list[1][
+                         'nivel_2'] + ',sort:{count:asc},limit: 5000}}}}'
 
-        #print json.dumps(response.json(), indent=4, sort_keys='true')
+        # print json.dumps(response.json(), indent=4, sort_keys='true')
 
-        data = [('q','*:*'), ('rows','0'), ('fl','*'), ('fq',fq), ('json.facet', str(json_facet))] + selected_facets
+        data = [('q', '*:*'), ('rows', '0'), ('fl', '*'), ('fq', fq), ('json.facet', str(json_facet))] + selected_facets
 
         response = requests.get(solr_url, data=data)
         if response.status_code != 200:
             self.solr_response_error('get_content_json_facet', response, solr_url)
-
 
         """
         Caso o Solr tenha retornado um json
@@ -1062,13 +1047,12 @@ class SolrQueries(LoginRequiredMixin, View):
                 # Considera somente primeiro nivel do facet, no caso de utilziar um campo facetado.
                 if not isinstance(y_elemen['val'], int) and '|' in y_elemen['val']:
                     continue
-                facet = {'name': 'label', 'y_elemen':y_elemen['val'], 'x_elemen':x_elemen['val'], 'count':y_elemen['count'], 'x_tick':x_tick, 'y_tick':y_tick }
+                facet = {'name': 'label', 'y_elemen': y_elemen['val'], 'x_elemen': x_elemen['val'],
+                         'count': y_elemen['count'], 'x_tick': x_tick, 'y_tick': y_tick}
                 response_json.append(facet)
                 y_tick += 1
             x_tick += 1
         return response_json
-
-
 
     def get_content_sankey_json_facet(self, content_type, fq, levels_list, selected_facets):
         """
@@ -1079,29 +1063,28 @@ class SolrQueries(LoginRequiredMixin, View):
         json_facet = ''
         for idx, val in enumerate(levels_list):
             nivel = 'nivel_' + str(idx + 1)
-            if idx == 0 :
-                json_facet = '{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": 5000'
+            if idx == 0:
+                json_facet = '{"' + nivel + '":{"field":"' + val[nivel] + '", "type": "terms", "limit": 5000'
             else:
-                json_facet += ', "facet":{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": 5000}}'
+                json_facet += ', "facet":{"' + nivel + '":{"field":"' + val[
+                    nivel] + '", "type": "terms", "limit": 5000}}'
         json_facet += '}}'
         json_facet = json_facet.replace('\n', '').replace(' ', '')
 
-        solr_url = 'http://leydenh/solr/' + content_type + '/query'
-        data = [('q','*:*'), ('rows','0'), ('fl','*'), ('fq',fq), ('json.facet', str(json_facet))] + selected_facets
-
+        solr_url = self.solr_connection + content_type + '/query'
+        data = [('q', '*:*'), ('rows', '0'), ('fl', '*'), ('fq', fq), ('json.facet', str(json_facet))] + selected_facets
 
         response = requests.get(solr_url, data=data)
         if response.status_code != 200:
             self.solr_response_error('get_content_sankey_json_facet', response, solr_url)
 
         links = []
-        nodes = collections.OrderedDict() # Utiliza dict para facilitar a busca do elemento
+        nodes = collections.OrderedDict()  # Utiliza dict para facilitar a busca do elemento
 
         def rec_niveis(source, facets, nivel):
             """
             recupera recursivamente os niveis do facet.
             """
-
 
             nivel_str = 'nivel_' + str(nivel)
 
@@ -1133,7 +1116,7 @@ class SolrQueries(LoginRequiredMixin, View):
                 if source:
                     # if nodes[source] == nodes[f_dict['val']]:
                     #     continue
-                    links.append({'source':nodes[source], 'target':nodes[f_dict['val']], 'value':f_dict['count']})
+                    links.append({'source': nodes[source], 'target': nodes[f_dict['val']], 'value': f_dict['count']})
                 rec_nivel = nivel + 1
                 rec_niveis(f_dict['val'], f_dict, rec_nivel)
 
@@ -1144,7 +1127,7 @@ class SolrQueries(LoginRequiredMixin, View):
             """
             response_json = response.json()
             rec_niveis(0, response_json['facets'], 1)
-            return (links,  nodes.keys())
+            return (links, nodes.keys())
         except:
             return None
 
@@ -1157,32 +1140,31 @@ class SolrQueries(LoginRequiredMixin, View):
 
         for idx, val in enumerate(levels_list):
             nivel = 'nivel_' + str(idx + 1)
-            if idx == 0 :
-                json_facet = '{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": 5000'
+            if idx == 0:
+                json_facet = '{"' + nivel + '":{"field":"' + val[nivel] + '", "type": "terms", "limit": 5000'
             else:
-                json_facet += ', "facet":{"' + nivel + '":{"field":"' +  val[nivel] + '", "type": "terms", "limit": 5000}}'
+                json_facet += ', "facet":{"' + nivel + '":{"field":"' + val[
+                    nivel] + '", "type": "terms", "limit": 5000}}'
 
         json_facet += '}}'
 
         json_facet = json_facet.replace('\n', '').replace(' ', '')
 
-        solr_url = 'http://leydenh/solr/' + content_type + '/query'
-        data = [('q','*:*'), ('rows','0'), ('fl','*'), ('fq',fq), ('json.facet', str(json_facet))] + selected_facets
-
+        solr_url = self.solr_connection + content_type + '/query'
+        data = [('q', '*:*'), ('rows', '0'), ('fl', '*'), ('fq', fq), ('json.facet', str(json_facet))] + selected_facets
 
         response = requests.get(solr_url, data=data)
         if response.status_code != 200:
             self.solr_response_error('get_content_pivot_table_json_facet', response, solr_url)
 
         links = []
-        nodes = collections.OrderedDict() # Utiliza dict para facilitar a busca do elemento
-        conf = {'rows':['Ano'], 'cols': ['Situação']}
+        nodes = collections.OrderedDict()  # Utiliza dict para facilitar a busca do elemento
+        conf = {'rows': ['Ano'], 'cols': ['Situação']}
 
         def rec_niveis(source, facets, nivel):
             """
             recupera recursivamente os niveis do facet.
             """
-
 
             nivel_str = 'nivel_' + str(nivel)
 
@@ -1206,7 +1188,7 @@ class SolrQueries(LoginRequiredMixin, View):
                         continue
                     # import pdb; pdb.set_trace()
 
-                    links.append({'source':source, 'target':f_dict['val'], 'value':f_dict['count']})
+                    links.append({'source': source, 'target': f_dict['val'], 'value': f_dict['count']})
                 rec_nivel = nivel + 1
                 rec_niveis(f_dict['val'], f_dict, rec_nivel)
 
@@ -1245,7 +1227,7 @@ class EntryPointView(LoginRequiredMixin, View):
 
         self.template_name = find_template(self.base_name, folder=kwargs['template'])
 
-        self.collection =  kwargs['collection']
+        self.collection = kwargs['collection']
         self.solr_queries = SolrQueries(self.collection)
         self.hash_querybuilder = self.solr_queries.hash_querybuilder
         self.vertices = GRAPH[self.collection]
@@ -1266,7 +1248,7 @@ class EntryPointView(LoginRequiredMixin, View):
         # Caso tenha uma query, transforma para query do Solr.
         # ALterer o front para sempre mandar esses paramentros vazios.
         self.fq = ''
-        if self.query and  not 'null' in self.query:
+        if self.query and not 'null' in self.query:
             (self.fq, ultimo) = self.rec_json('', self.query['rules'], self.query['condition'], 0)
 
         try:
@@ -1278,14 +1260,8 @@ class EntryPointView(LoginRequiredMixin, View):
         except Exception as e:
             logger.error(e)
             logger.error("Class Error: EntryPointView")
-            logger.error("Subclass Error: %s" %(self.__class__.__name__))
-            logger.error("URL Error: %s \n" %(request.build_absolute_uri()))
-
-
-
-
-
-
+            logger.error("Subclass Error: %s" % (self.__class__.__name__))
+            logger.error("URL Error: %s \n" % (request.build_absolute_uri()))
 
     def update_vertice(self):
 
@@ -1293,13 +1269,8 @@ class EntryPointView(LoginRequiredMixin, View):
         if not self.vertice['parent_id']:
             initial_search = self.se.get_search(self.collection, self.fq, self.selected_facets['se_selected_facets'])
 
-
-
-
-        self.navigate.update_vertice(self.body_json, self.solr_queries.hash_querybuilder, int(self.kwargs['id']), self.fq, self.selected_facets, initial_search)
-
-
-
+        self.navigate.update_vertice(self.body_json, self.solr_queries.hash_querybuilder, int(self.kwargs['id']),
+                                     self.fq, self.selected_facets, initial_search)
 
     def split_value(self, value):
         if isinstance(value, int):
@@ -1312,15 +1283,14 @@ class EntryPointView(LoginRequiredMixin, View):
             for frase in lego:
 
                 if result == '':
-                    result = '"'+frase+'"'
+                    result = '"' + frase + '"'
                 else:
-                    result +=  ' OR ' + '"'+frase+'"'
+                    result += ' OR ' + '"' + frase + '"'
 
             value = result
             return '(' + value + ')'
         else:
             return '"' + value + '"'
-
 
     def dict_to_solr(self, dict):
         """
@@ -1336,13 +1306,13 @@ class EntryPointView(LoginRequiredMixin, View):
 
         # Por enquanto somente para data
         elif isinstance(dict['value'], list):
-            #return self.dict_operators_3[dict['operator']] % (dict['field'], dict['value'][0], dict['value'][1])
+            # return self.dict_operators_3[dict['operator']] % (dict['field'], dict['value'][0], dict['value'][1])
             return 'data_inicio_ano:[%s TO *] AND data_termino_ano:[%s TO *]' % (dict['value'][0], dict['value'][1])
         else:
 
             # import pdb; pdb.set_trace()
-            if not isinstance(dict['value'],basestring):
-                dict['value'] = str(dict['value'] )
+            if not isinstance(dict['value'], basestring):
+                dict['value'] = str(dict['value'])
 
             dict['value'] = dict['value'].replace('\t', '')
 
@@ -1355,7 +1325,6 @@ class EntryPointView(LoginRequiredMixin, View):
                 dict['value'] = dict['value'].replace('"', '')
 
             return self.dict_operators_2[dict['operator']] % (dict['field'], self.split_value(dict['value']))
-
 
     def rec_json(self, fq, rules, condition, ultimo):
         """
@@ -1377,25 +1346,24 @@ class EntryPointView(LoginRequiredMixin, View):
             if 'rules' in dict and len(dict['rules']) == 1:
                 dict = dict['rules'][0]
 
-            if not 'rules' in dict:                     # Se for uma regra, monta a chamada.
-                if idx == 0 and idx == len(rules) -1:   # Regra solitaria, sem irmaos
+            if not 'rules' in dict:  # Se for uma regra, monta a chamada.
+                if idx == 0 and idx == len(rules) - 1:  # Regra solitaria, sem irmaos
                     fq += self.dict_to_solr(dict) + ') '
-                elif idx == len(rules) -1:              # Ultima regra
+                elif idx == len(rules) - 1:  # Ultima regra
                     fq += self.dict_to_solr(dict) + ') '
                     return (fq, 1)
-                else:                                   # Primeira regra e regras intermediarias
+                else:  # Primeira regra e regras intermediarias
                     fq += self.dict_to_solr(dict) + ' '
-            else:                                       # Se for uma lista de regras, chama recursivamente.
+            else:  # Se for uma lista de regras, chama recursivamente.
                 (fq, ultimo) = self.rec_json(fq, dict['rules'], dict['condition'], 0)
 
                 # Se houver mais de um rules o ultimo 'rules', significando que existe no minimo uma
                 # indentacao de rules, e o ultimo rules sair, incluir um parenteses no final.
-                if len(rules) > 1 and (len(rules) -1 == idx):
+                if len(rules) > 1 and (len(rules) - 1 == idx):
                     fq += ') '
             if len(rules) > 1 and not ultimo:
                 fq += condition + ' '
         return (fq, ultimo)
-
 
     def consolida_totalizador(self, solr_json, generic_json, totalizador):
         """ Metodo utilizado nas classes TotalizadorView e RelatedCollection """
@@ -1411,22 +1379,18 @@ class EntryPointView(LoginRequiredMixin, View):
 
     # Dicionario de operadores.
     # Para operacoes com 1, 2 e 3 parametros.
-    dict_operators_1 = {'is_empty':'-%s:["" TO *]',
-                        'is_not_empty':'%s:["" TO *]',
-                    }
-    dict_operators_2 = {'equal':'%s:%s',
-                        'not_equal':'-%s:%s',
-                        'less_or_equal':'%s:[* TO %s]',
-                        'greater_or_equal':'%s:[%s TO *]',
-                        'contains':'%s:%s',
-                        'not_contains':'-%s:%s',
-                    }
-    dict_operators_3 = {'between':'%s:[%s TO %s]',
-                    }
-
-
-
-
+    dict_operators_1 = {'is_empty': '-%s:["" TO *]',
+                        'is_not_empty': '%s:["" TO *]',
+                        }
+    dict_operators_2 = {'equal': '%s:%s',
+                        'not_equal': '-%s:%s',
+                        'less_or_equal': '%s:[* TO %s]',
+                        'greater_or_equal': '%s:[%s TO *]',
+                        'contains': '%s:%s',
+                        'not_contains': '-%s:%s',
+                        }
+    dict_operators_3 = {'between': '%s:[%s TO %s]',
+                        }
 
 
 class MultidimensionalTableView(EntryPointView):
@@ -1437,15 +1401,17 @@ class MultidimensionalTableView(EntryPointView):
     def json_response(self):
         # Sankey Chart
         # import pdb; pdb.set_trace()
-        if self.kwargs['table_type'] == 'pivot_table' and not 'pivot_table' in COLLECTIONS[self.collection]['COLLECTION']['omite_secoes']:
+        if self.kwargs['table_type'] == 'pivot_table' and not 'pivot_table' in \
+                                                              COLLECTIONS[self.collection]['COLLECTION'][
+                                                                  'omite_secoes']:
             levels_list = self.data['json_levels_list']
             try:
-                retorno = self.solr_queries.get_content_pivot_table_json_facet(self.collection, self.fq, levels_list , self.json_selected_facets)
+                retorno = self.solr_queries.get_content_pivot_table_json_facet(self.collection, self.fq, levels_list,
+                                                                               self.json_selected_facets)
                 solr_json = {'links': json.dumps(retorno[0]), 'conf': json.dumps(retorno[1])}
                 return solr_json
             except GetSolarDataException:
                 raise
-
 
 
 class MultidimensionalChartView(EntryPointView):
@@ -1456,21 +1422,37 @@ class MultidimensionalChartView(EntryPointView):
 
     def json_response(self):
         # Sankey Chart
-        if self.kwargs['chart_type'] == 'sankey' and not 'sankey' in COLLECTIONS[self.collection]['COLLECTION']['omite_secoes']:
+        if self.kwargs['chart_type'] == 'sankey' and not 'sankey' in COLLECTIONS[self.collection]['COLLECTION'][
+            'omite_secoes']:
             levels_list = self.data['json_levels_list']
             try:
-                retorno = self.solr_queries.get_content_sankey_json_facet(self.collection, self.fq, levels_list , self.json_selected_facets)
+                retorno = self.solr_queries.get_content_sankey_json_facet(self.collection, self.fq, levels_list,
+                                                                          self.json_selected_facets)
                 solr_json = {'links': json.dumps(retorno[0]), 'nodes': json.dumps(retorno[1])}
                 return solr_json
             except GetSolarDataException:
                 raise
 
         # Bubble Chart
-        if self.kwargs['chart_type'] == 'bubble' and not 'bubblechart' in COLLECTIONS[self.collection]['COLLECTION']['omite_secoes']:
+        if self.kwargs['chart_type'] == 'bubble' and not 'bubblechart' in COLLECTIONS[self.collection]['COLLECTION'][
+            'omite_secoes']:
             levels_list = self.data['json_levels_list']
             try:
-                retorno_list = self.solr_queries.get_content_bubble_json_facet(self.collection, self.fq, levels_list, self.json_selected_facets)
-                retorno_list = {'result':retorno_list}
+                retorno_list = self.solr_queries.get_content_bubble_json_facet(self.collection, self.fq, levels_list,
+                                                                               self.json_selected_facets)
+                retorno_list = {'result': retorno_list}
+                return retorno_list if retorno_list else None
+            except GetSolarDataException:
+                raise
+
+        # Boxplot Chart
+        if self.kwargs['chart_type'] == 'boxplot' and not 'boxplot' in COLLECTIONS[self.collection]['COLLECTION'][
+            'omite_secoes']:
+            levels_list = self.data['json_levels_list']
+            try:
+                retorno_list = self.solr_queries.get_content_boxplot_json_facet(self.collection, self.fq, levels_list,
+                                                                                self.json_selected_facets)
+                retorno_list = {'result': retorno_list}
                 return retorno_list if retorno_list else None
             except GetSolarDataException:
                 raise
@@ -1478,16 +1460,18 @@ class MultidimensionalChartView(EntryPointView):
 
 class UnidimensionalChartView(EntryPointView):
     """ For a unique facet field query """
+
     def json_response(self):
-        if self.kwargs['chart_type'] == 'wordcloud' and not 'wordcloud' in COLLECTIONS[self.collection]['COLLECTION']['omite_secoes']:
+        if self.kwargs['chart_type'] == 'wordcloud' and not 'wordcloud' in COLLECTIONS[self.collection]['COLLECTION'][
+            'omite_secoes']:
             single_facet = self.data['single_facet']
             try:
-                retorno_list = self.solr_queries.get_content_wordcloud_json_facet(self.collection, self.fq, single_facet, self.json_selected_facets)
+                retorno_list = self.solr_queries.get_content_wordcloud_json_facet(self.collection, self.fq,
+                                                                                  single_facet,
+                                                                                  self.json_selected_facets)
                 return retorno_list if retorno_list else None
             except GetSolarDataException:
                 raise
-
-
 
 
 class SearchView(EntryPointView):
@@ -1516,15 +1500,14 @@ class SearchView(EntryPointView):
         sf_request = self.data['selected_facets_col1']
         dif_sf = cmp(sf_session, sf_request)
 
-
         if (dif_query or dif_sf) and self.vertice['tree']:
-            data = {'message':'<p><strong>Atenção! </strong></p><p> Esta busca possui filhos (funil). <br>'
-                        'Não é possível alterar a busca desta collection '
-                        'porque isso tornaria a árvore de navegação inconsistente.</p>'
-                        '<p>Você pode continuar analisando os resultados desta busca. </p>'
-                        '<p>Caso você queira iniciar uma nova busca '
-                        'ou alterar a estrutura da árvore de navegação, clique abaixo para iniciar nova navegação. <br> Ou clique no botão voltar para visualizar a busca atual. </p>',
-                        'status':409}
+            data = {'message': '<p><strong>Atenção! </strong></p><p> Esta busca possui filhos (funil). <br>'
+                               'Não é possível alterar a busca desta collection '
+                               'porque isso tornaria a árvore de navegação inconsistente.</p>'
+                               '<p>Você pode continuar analisando os resultados desta busca. </p>'
+                               '<p>Caso você queira iniciar uma nova busca '
+                               'ou alterar a estrutura da árvore de navegação, clique abaixo para iniciar nova navegação. <br> Ou clique no botão voltar para visualizar a busca atual. </p>',
+                    'status': 409}
             return data
 
         self.se = StreamingExpressions(self.collection, self.solr_queries)
@@ -1535,13 +1518,13 @@ class SearchView(EntryPointView):
             while consulta != 1:
                 resultado = self.celery_check(self.vertice)
 
-                #sucesso
+                # sucesso
                 if resultado['status'] == 1:
                     consulta = resultado['status']
-                #falhou
+                # falhou
                 elif resultado['status'] == -1:
                     return {'status': 500, 'message': 'Erro de indexação', 'log': resultado['msg']}
-                #em processo
+                # em processo
                 else:
                     time.sleep(1)
 
@@ -1551,6 +1534,7 @@ class SearchView(EntryPointView):
             raise
 
     """Retorna JSON do solr"""
+
     def get_solr_json(self):
         # Multilevel chart
         # import pdb; pdb.set_trace()
@@ -1558,21 +1542,21 @@ class SearchView(EntryPointView):
             json_facet = json.dumps(self.data['json_facet'])
 
             try:
-                solr_json = self.solr_queries.get_content_json_facet(self.collection, self.fq, json_facet , self.selected_facets['qs_selected_facets']).json()
+                solr_json = self.solr_queries.get_content_json_facet(self.collection, self.fq, json_facet,
+                                                                     self.selected_facets['qs_selected_facets']).json()
             except GetSolarDataException:
                 raise
-        else: # Main request
+        else:  # Main request
             try:
                 solr_json = self.solr_queries.get_content(self.collection, self.fq, self.json_selected_facets)
             except GetSolarDataException:
                 raise
 
-
         self.update_vertice()
         return solr_json
 
-
     """ Função gera JSON modificado apartir do JSON retornado do solr """
+
     def geraJson(self, pivot=None):
         # API JSON FACET
         try:
@@ -1582,35 +1566,34 @@ class SearchView(EntryPointView):
 
         hierarquia = {}
 
-
         for f in solr_json['facets']:
             # if f != 'iden_Emp_incubada':
             #     continue
 
             hierarquia[f] = []
-            if f == 'count': continue # ignora item caso chave for count
+            if f == 'count': continue  # ignora item caso chave for count
 
             if solr_json['facets'][f]['buckets']:
                 for bucket in solr_json['facets'][f]['buckets']:
                     hierarquia[f].append({
-                        'value' : bucket['val'],
-                        'count' : bucket['count']
+                        'value': bucket['val'],
+                        'count': bucket['count']
                     })
 
         pivot_solr = {}
+
         def monta_dict(elemento_pai, chave, elemento, count, group_by):
             if not elemento in elemento_pai:
                 elemento_pai[elemento] = {
-                    'chave':chave,
-                    'count':count,
-                    'label':elemento,
-                    'facets':{},
-                    "groupBy":group_by
+                    'chave': chave,
+                    'count': count,
+                    'label': elemento,
+                    'facets': {},
+                    "groupBy": group_by
                 }
             return elemento_pai[elemento]['facets']
 
-
-        #Itera elementos da colection no dict do conf.py
+        # Itera elementos da colection no dict do conf.py
         for group in COLLECTIONS[self.collection]['FACETS']:
             for f in group['facetGroup']:
                 for item in f['facets']:
@@ -1618,26 +1601,26 @@ class SearchView(EntryPointView):
                     if not item['chave'] in hierarquia or not hierarquia[item['chave']]:
                         continue
 
-                    #if item['chave'] != 'AREAS-DO-CONHECIMENTO-DE-ATUACAO_FACET':
-                    #if item['chave'] != 'LIVRE-DOCENCIA':
+                    # if item['chave'] != 'AREAS-DO-CONHECIMENTO-DE-ATUACAO_FACET':
+                    # if item['chave'] != 'LIVRE-DOCENCIA':
                     #    continue
 
                     facet = hierarquia[item['chave']]
                     dict_inicial = {item['chave']: {
-                                        'label': item['label'],
-                                        'chave': item['chave'],
-                                        'facets': {},
-                                        'groupBy': group['groupBy'],
-                                        'order': counter_facets,
-                                        'count': 0
-                                        }
-                                    }
+                        'label': item['label'],
+                        'chave': item['chave'],
+                        'facets': {},
+                        'groupBy': group['groupBy'],
+                        'order': counter_facets,
+                        'count': 0
+                    }
+                    }
 
                     for idx_facet, value in enumerate(facet):
                         # if not 'CIENCIAS_BIOLOGICAS|Química' in value['value']:
                         #     continue
 
-                        dict_ref = dict_inicial[ item['chave'] ]['facets']
+                        dict_ref = dict_inicial[item['chave']]['facets']
                         if '|' in unicode(value['value']):
                             valores = unicode(value['value']).split('|')
                             chave = ''
@@ -1653,16 +1636,16 @@ class SearchView(EntryPointView):
                             monta_dict(dict_ref, chave, unicode(value['value']), value['count'], group['groupBy'])
                     pivot_solr.update(dict_inicial)
                     counter_facets += 1
-        solr_json['facet_counts'] = {'hierarquico':pivot_solr}
+        solr_json['facet_counts'] = {'hierarquico': pivot_solr}
 
         # import pdb; pdb.set_trace()
         return solr_json
 
-
     """ função limpa numeros que vem no inciio do texto no padrão 'xx;texto' retornando apenas texto """
-    def limpa_label(self,label, parents = None):
+
+    def limpa_label(self, label, parents=None):
         label = str(label)
-        #parents é usado para remover duplicatas no label quando repete o mesmo nome do facet pai
+        # parents é usado para remover duplicatas no label quando repete o mesmo nome do facet pai
         if parents:
             label = label.replace('-', '')
             for parent in parents:
@@ -1673,26 +1656,25 @@ class SearchView(EntryPointView):
         else:
             return label
 
-
     def celery_check(self, vertice):
         task_id = vertice['pedido']
 
         if not self.vertice['hash_querybuilder'] == 0:
             """ Atualiza a data de indexacao da sub-collection """
-            sub_collection = RelatedCollectionsCheck.objects.get(hash_querybuilder = self.vertice['hash_querybuilder'])
+            sub_collection = RelatedCollectionsCheck.objects.get(hash_querybuilder=self.vertice['hash_querybuilder'])
             sub_collection.indexed_date = datetime.now()
             sub_collection.save()
 
         async_result = AsyncResult(task_id)
         if async_result.failed():
-            return {'status': -1, 'msg':async_result.traceback}
+            return {'status': -1, 'msg': async_result.traceback}
         else:
             if async_result.ready():
                 # Armazena modified_date no registro da collection relacionada.
                 # self.solr_queries.update_indexed(hash_querybuilder)
-                return {'status': 1, 'msg':async_result.state}
+                return {'status': 1, 'msg': async_result.state}
             else:
-                return {'status': 0, 'msg':async_result.state}
+                return {'status': 0, 'msg': async_result.state}
 
 
 class RelatedCollection(EntryPointView):
@@ -1727,32 +1709,32 @@ class RelatedCollection(EntryPointView):
             # no AddVerticeView e na SearchView respectivamente.
             related_collection_chk = self.solr_queries.get_or_create_related_collection_db(vertice, self.se)
 
-            count[vertice]={'col2':{'value':related_collection_chk.qt_col2,
-                             'label':EDGES[self.collection]['vertices'][vertice]['label'],
-                             'parent_hash_querybuilder':related_collection_chk.hash_querybuilder},
-                      'col1':{'value':related_collection_chk.qt_col1}}
+            count[vertice] = {'col2': {'value': related_collection_chk.qt_col2,
+                                       'label': EDGES[self.collection]['vertices'][vertice]['label'],
+                                       'parent_hash_querybuilder': related_collection_chk.hash_querybuilder},
+                              'col1': {'value': related_collection_chk.qt_col1}}
             totalizadores = COLLECTIONS[vertice]['OUTCOMES']
 
-            solr_json = {'facet':{}, 'sum':{}, 'unique':{}, 'avg':{}}
+            solr_json = {'facet': {}, 'sum': {}, 'unique': {}, 'avg': {}}
             for totalizador in totalizadores:
                 if 'facet' in totalizador:
                     selected_facets_col2 = self.solr_queries.facets2query(totalizador['facet'])
-                    sum_facets = selected_facets_col2['qs_selected_facets']  + self.selected_facets['qs_selected_facets']
+                    sum_facets = selected_facets_col2['qs_selected_facets'] + self.selected_facets['qs_selected_facets']
                     docs = totalizador['docs']
                     fq = self.solr_queries.campo_dinamico_busca + ':' + str(related_collection_chk.hash_querybuilder)
                     try:
-                        totalizador_dict = self.solr_queries.get_totalizador(vertice, fq, selected_facets_col2['qs_selected_facets'], docs)
-                        solr_json['facet'] = self.consolida_totalizador(solr_json['facet'], totalizador_dict, totalizador)
+                        totalizador_dict = self.solr_queries.get_totalizador(vertice, fq,
+                                                                             selected_facets_col2['qs_selected_facets'],
+                                                                             docs)
+                        solr_json['facet'] = self.consolida_totalizador(solr_json['facet'], totalizador_dict,
+                                                                        totalizador)
                     except GetSolarDataException:
                         raise
 
             related_content[vertice] = solr_json
 
         self.update_vertice()
-        return {'count':count, 'top':top, 'related_content':related_content}
-
-
-
+        return {'count': count, 'top': top, 'related_content': related_content}
 
 
 class TotalizadorView(EntryPointView):
@@ -1773,20 +1755,19 @@ class TotalizadorView(EntryPointView):
             function = possibles.get(totalizador['data_type'])
             return function
 
-
     def json_response(self):
         """
          Os totalizadores tem entradas diferentes mas retornos iguais. Exemplo de retorno:
         {'docs': [], 'numFound': 4260, 'order': 1, 'label': 'Aux\xc3\xadlios - Em andamento'}
         """
         totalizadores = COLLECTIONS[self.collection]['OUTCOMES']
-        solr_json = {'facet':{}, 'sum':{}, 'unique':{}, 'avg':{}}
+        solr_json = {'facet': {}, 'sum': {}, 'unique': {}, 'avg': {}}
         for totalizador in totalizadores:
             data_type_fn = self.check_data_type(totalizador)
 
             if 'facet' in totalizador:
                 selected_facets = self.solr_queries.facets2query(totalizador['facet'])
-                sum_facets = selected_facets['qs_selected_facets']  + self.selected_facets['qs_selected_facets']
+                sum_facets = selected_facets['qs_selected_facets'] + self.selected_facets['qs_selected_facets']
                 docs = totalizador['docs']
                 try:
                     totalizador_dict = self.solr_queries.get_totalizador(self.collection, self.fq, sum_facets, docs)
@@ -1797,7 +1778,8 @@ class TotalizadorView(EntryPointView):
 
             elif 'sum' in totalizador:
                 try:
-                    data = self.solr_queries.get_facets_json_api_sum(totalizador['sum'], self.fq, self.json_selected_facets)
+                    data = self.solr_queries.get_facets_json_api_sum(totalizador['sum'], self.fq,
+                                                                     self.json_selected_facets)
                 except GetSolarDataException:
                     raise
 
@@ -1815,14 +1797,18 @@ class TotalizadorView(EntryPointView):
             elif 'unique' in totalizador:
                 try:
                     totalizador_dict = {}
-                    totalizador_dict['numFound'] = self.solr_queries.get_facets_json_api_unique(totalizador['unique'], self.fq, self.selected_facets['se_selected_facets'])
+                    totalizador_dict['numFound'] = self.solr_queries.get_facets_json_api_unique(totalizador['unique'],
+                                                                                                self.fq,
+                                                                                                self.selected_facets[
+                                                                                                    'se_selected_facets'])
                 except GetSolarDataException:
                     raise
 
                 solr_json['unique'] = self.consolida_totalizador(solr_json['unique'], totalizador_dict, totalizador)
             elif 'avg' in totalizador:
                 try:
-                    data = self.solr_queries.get_facets_json_api_avg(totalizador['avg'], self.fq, self.json_selected_facets)
+                    data = self.solr_queries.get_facets_json_api_avg(totalizador['avg'], self.fq,
+                                                                     self.json_selected_facets)
                     totalizador_dict = {}
                     totalizador_dict['numFound'] = self.solr_queries.sorlJsonQuery(data)['facets']['avg']
                     totalizador_dict['numFound'] = totalizador_dict['numFound']
@@ -1834,12 +1820,6 @@ class TotalizadorView(EntryPointView):
                 solr_json['avg'] = self.consolida_totalizador(solr_json['avg'], totalizador_dict, totalizador)
 
         return solr_json
-
-
-
-
-
-
 
 
 ##################
@@ -1855,19 +1835,16 @@ class AddVerticeView(View):
     """
     base_name = 'base_sf.html'
 
-
-
     def dispatch(self, request, *args, **kwargs):
         if not 'template' in kwargs:
             kwargs['template'] = ''
 
         self.template_name = find_template(self.base_name, folder=kwargs['template'])
 
-        self.collection =  kwargs['collection']
+        self.collection = kwargs['collection']
         self.solr_queries = SolrQueries(self.collection)
         self.se = StreamingExpressions(self.collection, self.solr_queries)
         return super(AddVerticeView, self).dispatch(request, *args, **kwargs)
-
 
     def get(self, request, *args, **kwargs):
 
@@ -1875,8 +1852,8 @@ class AddVerticeView(View):
         if 'collection_destino' in kwargs:
 
             if not settings_sf.USE_CELERY:
-                return HttpResponse('Celery not found. You have to have Celery installed to use this feature.', content_type='text/plain')
-
+                return HttpResponse('Celery not found. You have to have Celery installed to use this feature.',
+                                    content_type='text/plain')
 
             """ Se for funil, pega vertice pai e adiciona um vertice filho """
             self.navigate = NavigateCollection(self.request, kwargs['collection_destino'])
@@ -1890,7 +1867,7 @@ class AddVerticeView(View):
             muito custoso.
             """
             # 1 - Primeiro recupera a Streaming Expression
-            self.se.get_join(parent_fq,parent_vertice['selected_facets_col1'], '')
+            self.se.get_join(parent_fq, parent_vertice['selected_facets_col1'], '')
             se = self.se.hash_join[kwargs['collection_destino']]
 
             # 2 - Configura instancia do solr_queries para pegar o hash_querybuilder
@@ -1901,7 +1878,7 @@ class AddVerticeView(View):
             # com o respectivo campo.
             exclui_campo_dinamico_busca = 'fq=-' + self.solr_queries.campo_dinamico_busca + ':' + self.solr_queries.hash_querybuilder
 
-            self.se.get_join(parent_fq,parent_vertice['selected_facets_col1'], exclui_campo_dinamico_busca)
+            self.se.get_join(parent_fq, parent_vertice['selected_facets_col1'], exclui_campo_dinamico_busca)
             se = self.se.hash_join[kwargs['collection_destino']]
 
             """
@@ -1917,31 +1894,27 @@ class AddVerticeView(View):
             if id is not None:
                 pedido = id.id
 
-            self.id = self.navigate.add_vertice( kwargs['collection_destino'], int(kwargs['id']), {'qs_selected_facets':{self.solr_queries.campo_dinamico_busca:[self.solr_queries.hash_querybuilder]}}, self.solr_queries.hash_querybuilder, '', pedido)
+            self.id = self.navigate.add_vertice(kwargs['collection_destino'], int(kwargs['id']), {
+                'qs_selected_facets': {self.solr_queries.campo_dinamico_busca: [self.solr_queries.hash_querybuilder]}},
+                                                self.solr_queries.hash_querybuilder, '', pedido)
 
-            #import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
             return HttpResponseRedirect(self.get_success_url(self.kwargs['collection_destino']))
         else:
             """ Se for uma nova navegacao, inicializa objeto navigation na sessao """
             # A busca inicial fica na sessao. Os joins de collections ficam em banco.
             initial_search = self.se.get_search(self.collection, '', '')
             self.navigate = NavigateCollection(self.request, self.collection)
-            self.id = int(self.navigate.add_vertice(self.collection, None, {'qs_selected_facets':{}}, self.solr_queries.hash_querybuilder, initial_search))
+            self.id = int(self.navigate.add_vertice(self.collection, None, {'qs_selected_facets': {}},
+                                                    self.solr_queries.hash_querybuilder, initial_search))
             return HttpResponseRedirect(self.get_success_url(self.collection))
 
     def get_success_url(self, collection):
         try:
-            return reverse('params_id',kwargs={'collection':collection, 'template':self.kwargs['template'], 'id':self.id})
+            return reverse('params_id',
+                           kwargs={'collection': collection, 'template': self.kwargs['template'], 'id': self.id})
         except Exception as e:
             raise GenericLoggerException(self, e, inspect.stack())
-
-
-
-
-
-
-
-
 
 
 ####################
@@ -1952,13 +1925,14 @@ class HomeBuscador(LoginRequiredMixin, TemplateView):
     """
     Home inicial do buscador, que sempre verifica se jah tem pesquisa na sessao.
     """
+
     def get(self, request, *args, **kwargs):
         erro = {}
         if 'navigation' in self.request.session.keys():
-            erro = {'titulo':'Já existe uma pesquisa em andamento',
-                'descricao': ''}
+            erro = {'titulo': 'Já existe uma pesquisa em andamento',
+                    'descricao': ''}
         base_name = 'home_sf.html'
-        #pega collections disponiveis
+        # pega collections disponiveis
         collections = sfs_object.get_collections_meta()
 
         if not 'template' in kwargs:
@@ -1966,7 +1940,8 @@ class HomeBuscador(LoginRequiredMixin, TemplateView):
 
         template_name = find_template(base_name, folder=kwargs['template'])
         try:
-            return render(request, template_name, {'erro': erro, 'collections':collections, 'template':kwargs['template'] })#, context_instance=RequestContext(self.request))
+            return render(request, template_name, {'erro': erro, 'collections': collections, 'template': kwargs[
+                'template']})  # , context_instance=RequestContext(self.request))
         except Exception as e:
             raise GenericLoggerException(self, e, inspect.stack())
 
@@ -1979,24 +1954,27 @@ class HomeCollection(LoginRequiredMixin, TemplateView):
     Utilizar por exemplo como pagina de ajuda, como ela se relaciona com outras
     collectios etc.
     """
+
     def get(self, request, *args, **kwargs):
-            base_name = 'home_collection.html'
-            if not 'template' in kwargs:
-                kwargs['template'] = ''
+        base_name = 'home_collection.html'
+        if not 'template' in kwargs:
+            kwargs['template'] = ''
 
-            template_name = find_template(base_name, folder=kwargs['template'])
+        template_name = find_template(base_name, folder=kwargs['template'])
 
-            try:
-                return render(request, template_name, {'collection':kwargs['collection'], 'template': kwargs['template'] })#, context_instance=RequestContext(request))
-            except Exception as e:
-                raise GenericLoggerException(self, e, inspect.stack())
+        try:
+            return render(request, template_name, {'collection': kwargs['collection'], 'template': kwargs[
+                'template']})  # , context_instance=RequestContext(request))
+        except Exception as e:
+            raise GenericLoggerException(self, e, inspect.stack())
 
 
 class AutoComplete(View):
     def post(self, request, *args, **kwargs):
         self.solr_queries = SolrQueries(kwargs['collection'])
         try:
-            autocomplete = self.solr_queries.get_facet_4_autocomplete(request.POST, selected_facets = json.loads(request.POST['selected_facets']) )
+            autocomplete = self.solr_queries.get_facet_4_autocomplete(request.POST, selected_facets=json.loads(
+                request.POST['selected_facets']))
             return JsonResponse(autocomplete)
         except GetSolarDataException:
             return HttpResponseServerError()
@@ -2008,7 +1986,6 @@ class ParamsView(LoginRequiredMixin, TemplateView):
 
     def __init__(self, *args, **kwargs):
         return super(ParamsView, self).__init__(*args, **kwargs)
-
 
     def dispatch(self, request, *args, **kwargs):
         """
@@ -2023,48 +2000,43 @@ class ParamsView(LoginRequiredMixin, TemplateView):
         if not 'template' in kwargs:
             kwargs['template'] = ''
 
-        self.template_name = find_template(self.base_name,folder=kwargs['template'])
+        self.template_name = find_template(self.base_name, folder=kwargs['template'])
 
         self.collection = kwargs['collection']
         self.id = int(kwargs['id'])
         self.navigate = NavigateCollection(self.request, self.collection)
         self.vertice = self.navigate.get_vertice(int(kwargs['id']))
 
-
-
         if not self.vertice:
             try:
-                return redirect(reverse('start_research',kwargs={'collection':self.collection, 'template': self.kwargs['template']}), permanent=False )
+                return redirect(reverse('start_research',
+                                        kwargs={'collection': self.collection, 'template': self.kwargs['template']}),
+                                permanent=False)
             except Exception as e:
                 raise GenericLoggerException(self, e, inspect.stack())
 
         elif self.vertice['id'] != self.id:
             try:
-                return redirect(reverse('home_sf',kwargs={'template':self.kwargs['template'] }), permanent=False )
+                return redirect(reverse('home_sf', kwargs={'template': self.kwargs['template']}), permanent=False)
             except Exception as e:
                 raise GenericLoggerException(self, e, inspect.stack())
 
-
-
         self.get_context_data()
         return super(ParamsView, self).dispatch(request, *args, **kwargs)
-
 
     def get_context_data(self, **kwargs):
         context = super(ParamsView, self).get_context_data(**kwargs)
         context['id_collection'] = self.id
         context['collection'] = self.collection
-        context['vertice'] = json.dumps(self.vertice)#, ensure_ascii=False ).encode('utf8')
+        context['vertice'] = json.dumps(self.vertice)  # , ensure_ascii=False ).encode('utf8')
         if 'QUERY_BUILDER' in COLLECTIONS[self.collection]:
-            context['querybuilder_config'] =  json.dumps(COLLECTIONS[self.collection]['QUERY_BUILDER'])
+            context['querybuilder_config'] = json.dumps(COLLECTIONS[self.collection]['QUERY_BUILDER'])
         context['facets_categorias'] = json.dumps(COLLECTIONS[self.collection]['FACETS'])
         context['collection_label'] = COLLECTIONS[self.collection]['COLLECTION']['label']
-        context['totalizadores'] = json.dumps(COLLECTIONS[self.collection]['OUTCOMES'])#, ensure_ascii=False ).encode('utf8')
-        context['totalizadores_rel'] = json.dumps(self.get_totalizadores_rel())#, ensure_ascii=False ).encode('utf8')
-        context['home_sf_rurl'] = reverse("home_sf", kwargs={'template':self.kwargs['template']})
-
-
-
+        context['totalizadores'] = json.dumps(
+            COLLECTIONS[self.collection]['OUTCOMES'])  # , ensure_ascii=False ).encode('utf8')
+        context['totalizadores_rel'] = json.dumps(self.get_totalizadores_rel())  # , ensure_ascii=False ).encode('utf8')
+        context['home_sf_rurl'] = reverse("home_sf", kwargs={'template': self.kwargs['template']})
 
         # context['omite_secoes'] = COLLECTIONS[self.collection]['COLLECTION']['omite_secoes']
         # context['documentos'] =   json.dumps(COLLECTIONS[self.collection]['COLLECTION']['documentos'], ensure_ascii=False ).encode('utf8')
@@ -2073,40 +2045,45 @@ class ParamsView(LoginRequiredMixin, TemplateView):
         # context['totalizadores_rel'] = json.dumps(self.get_totalizadores_rel(), ensure_ascii=False ).encode('utf8')
 
         try:
-            context['omite_secoes'] = json.dumps(COLLECTIONS[self.collection]['COLLECTION']['omite_secoes'], ensure_ascii=False ).encode('utf8')
+            context['omite_secoes'] = json.dumps(COLLECTIONS[self.collection]['COLLECTION']['omite_secoes'],
+                                                 ensure_ascii=False).encode('utf8')
         except:
             context['omite_secoes'] = []
 
-
-        context['multilevel_barchart_1'] =  ''
-        if 'MULTILEVEL_BARCHART_1' in COLLECTIONS[self.collection] and COLLECTIONS[self.collection]['MULTILEVEL_BARCHART_1']:
+        context['multilevel_barchart_1'] = ''
+        if 'MULTILEVEL_BARCHART_1' in COLLECTIONS[self.collection] and COLLECTIONS[self.collection][
+            'MULTILEVEL_BARCHART_1']:
             context['multilevel_barchart_1'] = COLLECTIONS[self.collection]['MULTILEVEL_BARCHART_1']
 
-        context['sankey_chart'] =  ''
+        context['sankey_chart'] = ''
         if 'SANKEY_CHART' in COLLECTIONS[self.collection] and COLLECTIONS[self.collection]['SANKEY_CHART']:
             context['sankey_chart_json'] = json.dumps(COLLECTIONS[self.collection]['SANKEY_CHART'])
             context['sankey_chart'] = COLLECTIONS[self.collection]['SANKEY_CHART']
 
-        context['pivot_table'] =  ''
+        context['pivot_table'] = ''
         if 'PIVOT_TABLE' in COLLECTIONS[self.collection] and COLLECTIONS[self.collection]['PIVOT_TABLE']:
             context['pivot_table_json'] = json.dumps(COLLECTIONS[self.collection]['PIVOT_TABLE'])
             context['pivot_table'] = COLLECTIONS[self.collection]['PIVOT_TABLE']
 
-        context['bubble_chart'] =  ''
+        context['bubble_chart'] = ''
         if 'BUBBLE_CHART' in COLLECTIONS[self.collection] and COLLECTIONS[self.collection]['BUBBLE_CHART']:
             context['bubble_chart_json'] = json.dumps(COLLECTIONS[self.collection]['BUBBLE_CHART'])
             context['bubble_chart'] = COLLECTIONS[self.collection]['BUBBLE_CHART']
 
-        context['wordcloud'] =  ''
+        context['wordcloud'] = ''
         if 'WORDCLOUD_CHART' in COLLECTIONS[self.collection] and COLLECTIONS[self.collection]['WORDCLOUD_CHART']:
             context['wordcloud_chart_json'] = json.dumps(COLLECTIONS[self.collection]['WORDCLOUD_CHART'])
             context['wordcloud_chart'] = COLLECTIONS[self.collection]['WORDCLOUD_CHART']
+
+        context['boxplot'] = ''
+        if 'BOXPLOT_CHART' in COLLECTIONS[self.collection] and COLLECTIONS[self.collection]['BOXPLOT_CHART']:
+            context['boxplot_chart_json'] = json.dumps(COLLECTIONS[self.collection]['BOXPLOT_CHART'])
+            context['boxplot_chart'] = COLLECTIONS[self.collection]['BOXPLOT_CHART']
 
         context['form_csv'] = ExportForm()
         context['graph'] = GRAPH[self.collection]
 
         return context
-
 
     def get_totalizadores_rel(self):
         """ Recupera os totalizadores das collections relacionadas """
@@ -2114,7 +2091,6 @@ class ParamsView(LoginRequiredMixin, TemplateView):
         for edge in GRAPH[self.collection]:
             totalizadores_rel.append({edge: COLLECTIONS[edge]['OUTCOMES']})
         return totalizadores_rel
-
 
 
 class CleanSession(TemplateView):
@@ -2125,7 +2101,7 @@ class CleanSession(TemplateView):
         self.navigate.remove_vertice(int(kwargs['id']))
         erro = {}
         try:
-            return redirect(reverse('home_sf',kwargs={'template':kwargs['template']}), permanent=False )
+            return redirect(reverse('home_sf', kwargs={'template': kwargs['template']}), permanent=False)
         except Exception as e:
             raise GenericLoggerException(self, e, inspect.stack())
 
@@ -2140,12 +2116,11 @@ class ExportDataView(View):
     """
 
     def dispatch(self, request, *args, **kwargs):
-        self.collection =  self.kwargs['collection']
+        self.collection = self.kwargs['collection']
         self.navigate = NavigateCollection(self.request, self.collection)
         self.vertice = self.navigate.get_vertice(int(self.kwargs['id']))
         self.solr_queries = SolrQueries(self.collection)
         return super(ExportDataView, self).dispatch(request, *args, **kwargs)
-
 
     def get(self, request, *args, **kwargs):
         if not self.vertice['parent_id']:
@@ -2155,33 +2130,31 @@ class ExportDataView(View):
             # Recupera o id do hash_join para pegar no db o hash_join
             # Com essa streaming expression eh possivel recuperar os dados no Solr.
             hash_querybuilder = navigation[0]["hash_querybuilder"]
-            se = RelatedCollectionsCheck.objects.get(hash_querybuilder = hash_querybuilder).join
+            se = RelatedCollectionsCheck.objects.get(hash_querybuilder=hash_querybuilder).join
 
-
-        #recria form apartir do request
+        # recria form apartir do request
         form = ExportForm(request.GET)
-
 
         if form.is_valid():
 
-            self.makeDataFrame(se, form.cleaned_data['name'], form.cleaned_data['email_from'], form.cleaned_data['email_to'],form.cleaned_data['comentario'], form.cleaned_data['formato'] )
+            self.makeDataFrame(se, form.cleaned_data['name'], form.cleaned_data['email_from'],
+                               form.cleaned_data['email_to'], form.cleaned_data['comentario'],
+                               form.cleaned_data['formato'])
 
             # Return information about the status of report
             # User will receive e-mail with link to download the report.
-            data = {'message':'Seu pedido está em processamento e será enviado por e-mail.', 'status': 200}
+            data = {'message': 'Seu pedido está em processamento e será enviado por e-mail.', 'status': 200}
 
         else:
-            data = {'message':'erro', 'status':500, 'error': form.errors }
+            data = {'message': 'erro', 'status': 500, 'error': form.errors}
 
         return JsonResponse(data)
-
-
 
     def dict_values_to_string(self, data):
 
         if isinstance(data, dict):
             final_dict = {}
-            for key,value in data.iteritems():
+            for key, value in data.iteritems():
                 if isinstance(value, str):
                     final_dict[key] = value
                 elif isinstance(value, list):
@@ -2196,7 +2169,7 @@ class ExportDataView(View):
             for dados in data:
                 if isinstance(dados, dict):
                     final_dict = {}
-                    for key,value in dados.iteritems():
+                    for key, value in dados.iteritems():
                         if isinstance(value, basestring):
                             if isinstance(value, unicode):
                                 final_dict[key] = value
@@ -2204,7 +2177,7 @@ class ExportDataView(View):
                                 final_dict[key] = unicode(value, "utf-8")
 
                         elif isinstance(value, list):
-                            valor =' ,'.join(value)
+                            valor = ' ,'.join(value)
                             if isinstance(valor, unicode):
                                 final_dict[key] = valor
                             else:
@@ -2232,18 +2205,19 @@ class ExportDataView(View):
         if 'export_fields' in COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']:
             fields = COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['export_fields']
 
-
             if 'export_sort_by' in COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']:
-                sort = COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['export_sort_by'] +' '+ COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['export_sort_op']
+                sort = COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['export_sort_by'] + ' ' + \
+                       COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['export_sort_op']
             else:
-                sort = fields[0] +' asc'
+                sort = fields[0] + ' asc'
 
-            se = se.replace(', sort="id asc"',', sort="'+sort+'"')
-            se = se.replace('fl="id"','fl="'+ ', '.join(fields)+'"')
+            se = se.replace(', sort="id asc"', ', sort="' + sort + '"')
+            se = se.replace('fl="id"', 'fl="' + ', '.join(fields) + '"')
 
             if 'max_rows' in COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']:
                 try:
-                    data_list = self.solr_queries.executaStreamingExpression(se)['result-set']['docs'][ : COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['max_rows'] ]
+                    data_list = self.solr_queries.executaStreamingExpression(se)['result-set']['docs'][
+                                : COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['max_rows']]
                 except GetSolarDataException:
                     return HttpResponseServerError()
             else:
@@ -2252,15 +2226,15 @@ class ExportDataView(View):
                 except GetSolarDataException:
                     return HttpResponseServerError()
 
-
             data_list = self.dict_values_to_string(data_list)
 
-            #converte para dataframe
+            # converte para dataframe
             if settings_sf.USE_CELERY:
                 makeData_celery.delay(data_list, nome, email, para, msg, fields, formato)
             else:
-                return HttpResponse('Celery not found. You have to have Celery installed  to use this feature.', content_type='text/plain')
-                #makeData_celery(data_list, nome, email, para, msg, fields, formato)
+                return HttpResponse('Celery not found. You have to have Celery installed  to use this feature.',
+                                    content_type='text/plain')
+                # makeData_celery(data_list, nome, email, para, msg, fields, formato)
 
             return data_list
 
@@ -2276,24 +2250,25 @@ class ExportDataView(View):
         if settings_sf.USE_CELERY:
             makeCsv_celery.delay(data_list, nome, email, para, msg)
         else:
-            return HttpResponse('Celery not found. You have to have Celery installed to use this feature.', content_type='text/plain')
-            #makeCsv_celery(data_list, nome, email, para, msg)
+            return HttpResponse('Celery not found. You have to have Celery installed to use this feature.',
+                                content_type='text/plain')
+            # makeCsv_celery(data_list, nome, email, para, msg)
 
         if 'export_fields' in COLLECTIONS[self.vertice['collection']]:
             fields = COLLECTIONS[self.vertice['collection']]['export_fields']
 
-
             if 'export_sort_by' in COLLECTIONS[self.vertice['collection']]:
                 sort = COLLECTIONS[self.vertice['collection']]['export_sort_by']
             else:
-                sort = fields[0] +' asc'
+                sort = fields[0] + ' asc'
 
-            se = se.replace(', sort="id asc"',', sort="'+sort+'"')
-            se = se.replace('fl="id"','fl="'+ ', '.join(fields)+'"')
+            se = se.replace(', sort="id asc"', ', sort="' + sort + '"')
+            se = se.replace('fl="id"', 'fl="' + ', '.join(fields) + '"')
 
             if self.limite_itens_export:
                 try:
-                    data_list = self.solr_queries.executaStreamingExpression(se)['result-set']['docs'][:self.limite_itens_export]
+                    data_list = self.solr_queries.executaStreamingExpression(se)['result-set']['docs'][
+                                :self.limite_itens_export]
                 except GetSolarDataException:
                     return HttpResponseServerError()
             else:
@@ -2307,11 +2282,11 @@ class ExportDataView(View):
             if settings_sf.USE_CELERY:
                 makeCsv_celery.delay(data_list, nome, email, para, msg, fields)
             else:
-                return HttpResponse('Celery not found. You have to have Celery installed to have this feature.', content_type='text/plain')
+                return HttpResponse('Celery not found. You have to have Celery installed to have this feature.',
+                                    content_type='text/plain')
 
         else:
             raise ValueError("export_fields nao foi definido na configuracao desta collection")
-
 
     def pos_process(self, data, list_fields_extraction):
         """Metodo utiliza configuração do fields_extraction para extrair valores de data e tratalos com a função especificada"""
@@ -2323,8 +2298,8 @@ class ExportDataView(View):
 
             for key, value in item.iteritems():
 
-                #se existir no lista de tratamento trata
-                #valor usando função especificada, caso não retorna valor original
+                # se existir no lista de tratamento trata
+                # valor usando função especificada, caso não retorna valor original
                 if key in fields_extraction:
                     method_to_call = getattr(extractors, dict_fields_extraction[key])
                     item_data[key] = method_to_call(value)
@@ -2333,13 +2308,11 @@ class ExportDataView(View):
 
             final_data.append(item_data)
 
-
         return final_data
-
 
     def list_tuple_to_dict(self, list_tuple):
         dict = {}
-        for key,value in list_tuple:
+        for key, value in list_tuple:
             if value:
                 dict[key] = value
 

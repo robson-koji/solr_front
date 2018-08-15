@@ -21,7 +21,7 @@ Script principal de execução
 */
 $(document).ready(function(){
 
-    //inicia loader screen
+    //inicia loader screen - .show() - apresenta elemento correspondent
     $('#loader_screen').show()
 
 
@@ -126,6 +126,10 @@ $(document).ready(function(){
     // Grafico Bubble. Mudanca dos selects
     $(document).on('change', '.bubble_options', function(){
       recuperaBubbleChart()
+    })  ;
+    // Grafico Boxplot. Mudanca dos selects
+    $(document).on('change', '.boxplot_options', function(){
+      recuperaBoxPlotChart()
     })  ;
 
     // Grafico Bubble. Mudanca dos selects
