@@ -106,9 +106,15 @@ function getSortMethod(){
 
 Array.prototype.sortBy = function() {
 
-        var lista =  this.sort( getSortMethod.apply(null, arguments));
+  //tratamento criado porque o boxsplot gera erro ao tentar utilizar um objeto não array em um Array
+  try {
+    var lista =  this.sort( getSortMethod.apply(null, arguments));
+    return lista
+  }
+  catch(err) {
+    return this
+  }
 
-        return lista
 }
 
 

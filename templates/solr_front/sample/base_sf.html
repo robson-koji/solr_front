@@ -115,6 +115,9 @@
 		<script src='{% static "third_part/wordcloud/d3.wordcloud.js" %}'></script>
 		<script src='{% static "third_part/wordcloud/example.words.js" %}'></script>
 
+		<script src='{% static "third_part/boxplot/distrochart.js" %}'></script>
+        <link rel="stylesheet" href='{% static "third_part/boxplot/distrochart.css" %}' type="text/css" media="all"/>
+
 
 	<link rel="stylesheet" href='{% static "solr_front/css/loadingOne.css" %}' type="text/css" media="all"/>
 	</head>
@@ -123,13 +126,13 @@
 			/* Variaveis de contexto global passadas para javascript  */
 			var csrf = "{{csrf_token}}";
 			var home_sf_rurl = "{{ home_sf_rurl }}";
-			var bv_collection = "{{ collection }}"
-			var id_collection = "{{ id }}"
+			var bv_collection = "{{ collection }}";
+			var id_collection = "{{ id }}";
 
 			var facetsCategorias = {{ facets_categorias|safe }};
-			var navigation_tree = {{ navigation_tree | safe }}
-			var omite_secoes = {{ omite_secoes | safe }}
-			var vertice = {{ vertice|safe }}
+			var navigation_tree = {{ navigation_tree | safe }};
+			var omite_secoes = {{ omite_secoes | safe }};
+			var vertice = {{ vertice|safe }};
 		</script>
 
 		<!-- Loader fullscreen -->
@@ -180,12 +183,6 @@
 					 <option value="inicial">Salvar pesquisa</option>
 					 <option value="exp_csv">Exportar a pesquisa para Excel</option>
 					</select>
-				</div>
-
-
-				<div class="alert alert-danger fade in alert-dismissible">
-					<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-					<strong></strong>Este sistema está em fase de testes e funciona no Google Chrome e no Firefox. Atualmente o mesmo não funciona no Edge, Safari, IE. Obrigado pela compreensão!
 				</div>
 
 
@@ -387,6 +384,12 @@
 						</div>
 						{% endif %}
 
+						{% if not 'boxplot' in omite_secoes %}
+							<div class="svg_divs" id="svg_boxplot_div">
+							  {% include "solr_front/graficos/boxplot.html" %}
+							</div>
+						{% endif %}
+
 						{% if not 'sankey' in omite_secoes %}
 							<div class="svg_divs" id="svg_sankeychart_div">
 							  {% include "solr_front/graficos/sankeychart.html" %}
@@ -432,7 +435,35 @@
 						</div>
 					</div>
 				</div>
+
 			</div>
+			</section>
+
+			<section>
+				<div class="container">
+					<div class="content_section">
+
+						<div class="alert alert-danger fade in alert-dismissible">
+							<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+							<strong>Atenção!</strong>
+							<p>
+							Este programa é distribuído na esperança de que possa ser útil,
+							mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO
+							a qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a
+							Licença Pública Geral GNU para mais detalhes.
+							</p>
+							<p>
+							Este portal é uma prova de conceito de um sistema cujo código fonte é open source, e onde a origem dos dados são dados governamentais abertos.
+							<br> Se você tiver dúvidas sobre a integridade dos dados ou sobre as análises efetuadas, você deve analisar os dados originais e o código fonte do sistema.
+							<br> Em nenhuma hipótese as informçaões geradas neste portal podem ser utilizados para endossar qualquer análise, opinião etc.
+
+
+							</p>
+
+
+						</div>
+					</div>
+				</div>
 		</section>
 
 

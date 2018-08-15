@@ -8,6 +8,8 @@ from solr_front.views import *
 
 
 urls = patterns('',
+
+
     (r'^foo/$', TemplateView.as_view(template_name='solr_front/graficos/parallel_coord.html')),
 
     # Pesquisa
@@ -37,4 +39,6 @@ urls = patterns('',
 
     # ajax editable
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/params/node_edit$', AjaxVerticeEditFieldView.as_view(), name='node_edit'),
+
+
 )

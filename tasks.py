@@ -8,6 +8,9 @@ import os
 
 from django.core.mail import send_mail
 from django.utils.translation import ugettext as _
+from solr_front import settings_sf
+
+
 
 """
 Para importar os arquivos relativos ao projeto.
@@ -37,7 +40,6 @@ from celery import shared_task
 
 @shared_task
 def add(x, y):
-    # send_mail('teste', 'teste', 'cdi2@fapesp.br', ['hconzatti@fapesp.br'])
     return x + y
 
 
@@ -75,7 +77,7 @@ def update_atomico(url, collection2, campo_dinamico_busca, hash_querybuilder):
 
     # Indexa atomicamente (cria campos dinamicos nos documentos enviados em jsons_ids)
     json_ids = monta_json_para_update(campo_dinamico_busca, 'add')
-    update_url = 'http://192.168.0.212/solr/' + collection2 + '/update?commit=true'
+    update_url = settings_sf.SOLR_URL + collection2 + '/update?commit=true'
 
 
     response = requests.post(update_url, json=json_ids)
@@ -122,17 +124,17 @@ def makeCsv(data_list, nome, email, para, msg, fields):
 
 
         # send mail
-        assunto = u'Biblioteca Virtual da FAPESP - Exportação em Excel (CSV)'
+        assunto = u'Exportação em Excel (CSV)'
         corpo = nome + u' (' + email + u') ' +u'enviou um arquivo em Excel (CSV) com os resultados de sua pesquisa'+u'.\n\n'
 
         corpo += u'Clique no link para baixar o arquivo em Excel (CSV)'+u':\n' + url_csv + u'\n\n'+u'O arquivo ficará disponível por 02 dias'+u'.\n\n'
         if msg:
             corpo += u'Comentários'+u': ' + msg + u'\n\n'
-        corpo += u'Biblioteca Virtual da FAPESP'+u'\nwww.bv.fapesp.br'
+        corpo += u'TESTE'
         corpo = corpo.encode('utf-8')
 
 
-        send_mail(assunto, corpo, 'cdi2@fapesp.br', [para])
+        send_mail(assunto, corpo, 'send@email.teste', [para])
 
 
 @shared_task
@@ -163,14 +165,14 @@ def makeData(data_list, nome, email, para, msg, fields, formato):
     url_file = os.path.join(settings.MEDIA_URL,rel_path, arquivo_name)
     abspath_arquivo = os.path.join(settings.EXPORTACAO_CSV_PATH, arquivo_name)
     # send mail
-    assunto = u'Biblioteca Virtual da FAPESP - Exportação em Excel (CSV)'
+    assunto = u'Exportação em Excel (CSV)'
     corpo = nome + u' (' + email + u') ' +u'enviou um arquivo em Excel (CSV) com os resultados de sua pesquisa'+u'.\n\n'
 
     corpo += u'Clique no link para baixar o arquivo em Excel (CSV)'+u':\n' + url_file + u'\n\n'+u'O arquivo ficará disponível por 02 dias'+u'.\n\n'
     if msg:
         corpo += u'Comentários'+u': ' + msg + u'\n\n'
-    corpo += u'Biblioteca Virtual da FAPESP'+u'\nwww.bv.fapesp.br'
+    corpo += u'TESTE'
     corpo = corpo.encode('utf-8')
 
 
-    send_mail(assunto, corpo, 'cdi2@fapesp.br', [para])
+    send_mail(assunto, corpo, 'send@email.teste', [para])
