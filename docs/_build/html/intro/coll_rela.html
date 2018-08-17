@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Collections relacionadas &mdash; Documentação Solr Font 0.1</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Índice"
+              href="../genindex.html"/>
+        <link rel="search" title="Pesquisar" href="../search.html"/>
+    <link rel="top" title="Documentação Solr Font 0.1" href="../index.html"/>
+        <link rel="prev" title="Infraestrutura" href="../infra/infra.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Solr Font
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html">Utilização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Instalação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/config.html">Configuração</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../infra/infra.html">Infraestrutura</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Collections relacionadas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#conf-py">conf.py.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contabilizacao-da-quantidade-dos-objetos-relacionados">Contabilização da quantidade dos objetos relacionados</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#views-py">views.py</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sub-collection">Sub-collection</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Solr Font</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Collections relacionadas</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/intro/coll_rela.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="collections-relacionadas">
+<span id="collections-relacionadas"></span><h1>Collections relacionadas<a class="headerlink" href="#collections-relacionadas" title="Link permanente para este título">¶</a></h1>
+<p>A estrutura de Grafo do buscador permite que collections sejam relacionadas através de campos com valores comuns. Desta maneira elas podem ser trabalhandas em conjunto no sistema.
+conf.py
+As collections se relacionam através de campos determinados no dicionário  EDGES do arquivo</p>
+<div class="section" id="conf-py">
+<span id="conf-py"></span><h2>conf.py.<a class="headerlink" href="#conf-py" title="Link permanente para este título">¶</a></h2>
+<p>Tomo como exemplo abaixo que Col4 é um subconjunto de Col 1.
+<img alt="Use Case" src="../_images/conjunto_collections.png" /></p>
+<p>Para implementar o uso das collections relacionadas no sistema, dois processos principais foram estabelecidos e serão descritos abaixo, sendo eles a “Contabilização da quantidade dos objetos relacionas” e o processo de apresentação de “Sub-collections”.</p>
+</div>
+<div class="section" id="contabilizacao-da-quantidade-dos-objetos-relacionados">
+<span id="contabilizacao-da-quantidade-dos-objetos-relacionados"></span><h2>Contabilização da quantidade dos objetos relacionados<a class="headerlink" href="#contabilizacao-da-quantidade-dos-objetos-relacionados" title="Link permanente para este título">¶</a></h2>
+<p>Este processo de contabilização existe para apresentar o “join” das collections relacionadas, como no exemplo abaixo:</p>
+<p><img alt="Use Case" src="../_images/qt_coll_relacionadas.png" /></p>
+<p>Quando a página de uma collection do buscador é carregada, um Ajax chama a view RelatedCollection que recupera todas as collections relacionadas a collection em questão, para montar a apresentação conforme indicado acima.</p>
+<div class="section" id="views-py">
+<span id="views-py"></span><h3>views.py<a class="headerlink" href="#views-py" title="Link permanente para este título">¶</a></h3>
+<p>A view utilizada neste processo é a RelatedCollections, que faz as verificações dos relacionamentos citados acima, e a função get_or_create_related_collection_db é quem efetivamente contabiliza, e armazena as informações de contabilização.
+As quantidades de cada relacionamento são “cacheadas” em banco de dados para que o processo de contabilização das quantidades dos relacionamentos não precise ser executado sempre.</p>
+</div>
+</div>
+<div class="section" id="sub-collection">
+<span id="sub-collection"></span><h2>Sub-collection<a class="headerlink" href="#sub-collection" title="Link permanente para este título">¶</a></h2>
+<p>A quantidade dos registros que fazerm parte de um relacionamento entre duas collections é apresentada no exemplo da figura abaixo, conforme já explicado anterioremente.</p>
+<p>O link abaixo direciona para o subconjunto da collection B que faz interseção com a Collection A.</p>
+<p><img alt="Use Case" src="../_images/qt_coll_relacionadas.png" /></p>
+<p>Para que seja possível acessar o subconjunto da collection B que faz intersecção com a collection A, é necessário indexar os registros da collection B com um marcador dessa intersecção. O subconjunto da collection B é o que chamamos de sub-collection.</p>
+<p>Portanto ao clicar no link acima, a view AddVerticeView é acessada para cuidar do processo de reinidexação.</p>
+<p><img alt="Use Case" src="../_images/subcollections.png" /></p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../infra/infra.html" class="btn btn-neutral" title="Infraestrutura" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

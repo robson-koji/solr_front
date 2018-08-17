@@ -33,8 +33,8 @@ function makeDistroChart(settings) {
         axisLables: null,
         yTicks: 1,
         scale: 'linear',
-        chartSize: {width: 800, height: 400},
-        margin: {top: 15, right: 40, bottom: 40, left: 50},
+        //chartSize: {width: 1800, height: 1450},
+        margin: {top: 15, right: 45, bottom: 120, left: 50},
         constrainExtremes: false,
         chartAlignment: 'horizontal',
         color: d3.scale.category10()
@@ -143,7 +143,8 @@ function makeDistroChart(settings) {
         var tooltipString = "Group: " + groupName;
         //tooltipString += "<br\>Max: " + formatAsFloat(metrics.max, 0.1);
         tooltipString += "<br\>Q3: " + formatAsFloat(metrics.quartile3);
-        tooltipString += "<br\>Median: " + formatAsFloat(metrics.median);
+        tooltipString += "<br\>Mediana: " + formatAsFloat(metrics.median);
+        tooltipString += "<br\>Média: " + formatAsFloat(metrics.mean);
         tooltipString += "<br\>Q1: " + formatAsFloat(metrics.quartile1);
         //tooltipString += "<br\>Min: " + formatAsFloat(metrics.min);
         tooltipString += "<br\>Count: " + formatAsFloat(metrics.count);
@@ -237,8 +238,11 @@ function makeDistroChart(settings) {
             }
         }
 
+
+
         for (var cName in chart.groupObjs) {
             //chart.groupObjs[cName].values.sort(d3.ascending);
+            //console.log(chart.groupObjs[cName].values)
             chart.groupObjs[cName].metrics = {};
             chart.groupObjs[cName].metrics = calcMetrics(chart.groupObjs[cName].values);
             //console.log(chart.groupObjs)
@@ -360,8 +364,8 @@ function makeDistroChart(settings) {
             .selectAll("text")
             .attr("y", 5)
             .attr("x", -5)
-            .attr("transform", "rotate(0,0,0)")
-            .style("text-anchor", "end");
+            .attr("transform", "rotate(45,-10,0)")
+            .style("text-anchor", "start");
         chart.objs.g.select('.y.axis').call(chart.objs.yAxis.innerTickSize(-chart.width));
 
         chart.objs.g.select('.x.axis .label').attr("x", chart.width / 2);

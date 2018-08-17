@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Utilização &mdash; Documentação Solr Font 0.1</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Índice"
+              href="../genindex.html"/>
+        <link rel="search" title="Pesquisar" href="../search.html"/>
+    <link rel="top" title="Documentação Solr Font 0.1" href="../index.html"/>
+        <link rel="next" title="Instalação" href="../install/install.html"/>
+        <link rel="prev" title="Introdução" href="intro.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Solr Font
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introdução</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Utilização</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#analise-de-negocios-e-processos-etl">Análise de negócios e processos ETL</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#use-cases">Use-cases</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#analisa-os-dados">Analisa os dados</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scripts-etl">Scripts ETL</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuracao-das-collections">Configuração das Collections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#solr-front-conf-json">solr_front_conf.json</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#collection-json"><collection>.json</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Instalação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/config.html">Configuração</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../infra/infra.html">Infraestrutura</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coll_rela.html">Collections relacionadas</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Solr Font</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Utilização</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/intro/util.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="utilizacao">
+<span id="utilizacao"></span><h1>Utilização<a class="headerlink" href="#utilizacao" title="Link permanente para este título">¶</a></h1>
+<p>Aqui considera-se que a aplicação como um todo esteja instalada e configurada, conforme descrito no documento …
+Para utilizar o sistema é necessário realizar dois processos:
+Análise de negócios e processos ETL
+Configuração da coleção de dados</p>
+<div class="section" id="analise-de-negocios-e-processos-etl">
+<span id="analise-de-negocios-e-processos-etl"></span><h2>Análise de negócios e processos ETL<a class="headerlink" href="#analise-de-negocios-e-processos-etl" title="Link permanente para este título">¶</a></h2>
+<div class="section" id="use-cases">
+<span id="use-cases"></span><h3>Use-cases<a class="headerlink" href="#use-cases" title="Link permanente para este título">¶</a></h3>
+<p><img alt="Use Case" src="../_images/use_case_1.png" /></p>
+<div class="section" id="analisa-os-dados">
+<span id="analisa-os-dados"></span><h4>Analisa os dados<a class="headerlink" href="#analisa-os-dados" title="Link permanente para este título">¶</a></h4>
+<p>Listar todos os campos que serão facets
+Listar os campos que serão buscáveis. Geralmente campos do tipo texto livre; esses não podem de maneira alguma serem facetados, porque sobrecarrega o mecanismo de facets (filtros).</p>
+</div>
+<div class="section" id="scripts-etl">
+<span id="scripts-etl"></span><h4>Scripts ETL<a class="headerlink" href="#scripts-etl" title="Link permanente para este título">¶</a></h4>
+<p>Os script de ETL (extração, transformação e carga) executam essas etapas para realizar as atividades demonstradas no diagrama abaixo.
+Segue uma descrição das atividades de um modo geral, onde pode haver variação de caso para caso.</p>
+<ul class="simple">
+<li>Extração - Recuperação dos dados
+Estes dados podem estar em uma base de dados, em um portal da Intenet, etc.</li>
+<li>Transformação
+Duas transformações principais podem ser efetuadas nesta etapa:</li>
+</ul>
+<ol class="simple">
+<li>Normalização dos dados segundo regras de negócios
+Por exemplo, conversão de códigos de municípios, estado sexo etc para texto.</li>
+<li>Normalização dos dados para apresentação nas áreas e campos do front end (filtros, busca, gráficos etc).
+A maneira como os dados são apresentados exigem que os mesmos sejam indexados segundo regras do backend Solr. Essas regras são descritas na sessão … do documento …</li>
+</ol>
+<p><img alt="Use Case" src="../_images/processos_etl.png" /></p>
+</div>
+</div>
+</div>
+<div class="section" id="configuracao-das-collections">
+<span id="configuracao-das-collections"></span><h2>Configuração das Collections<a class="headerlink" href="#configuracao-das-collections" title="Link permanente para este título">¶</a></h2>
+<p>Para incluir uma nova collection no sistema é necessário realizar os processos de ETL acima descritos e configurar a collection.
+A configuração de uma collection se dá em dois pontos:
+Incluir a collection no grapho do sistema, no arquivo solr_front_conf.json
+Criar um arquivo JSON para a collection a pasta <PASTA CUSTOMIZADA>/conf/collections/<collection>.json</p>
+<div class="section" id="solr-front-conf-json">
+<span id="solr-front-conf-json"></span><h3>solr_front_conf.json<a class="headerlink" href="#solr-front-conf-json" title="Link permanente para este título">¶</a></h3>
+<p>Incluir a collection no grafo:</p>
+<ul class="simple">
+<li>GRAPH - Objeto de listas
+Cada collection do sistema precisa ser registrada como um objeto de lista.
+A lista indica quais são as collections com quem ela se relaciona no grafo. A lista pode ser vazia ou não.</li>
+<li>EDGES - Objeto de objetos
+Além de registrar a collection o grafo, é necessário documentar as collections relacionadas (vértices). Caso a collection não tenha relacionamentos, o seu objeto deverá vazio.</li>
+</ul>
+</div>
+<div class="section" id="collection-json">
+<span id="collection-json"></span><h3><collection>.json<a class="headerlink" href="#collection-json" title="Link permanente para este título">¶</a></h3>
+<p>A página de análise do buscador possui vários elementos, como por exemplo:</p>
+<ul class="simple">
+<li>Mecanismo de busca</li>
+<li>Filtragem</li>
+<li>Gráficos dinâmicos</li>
+<li>Gráficos estáticos</li>
+<li>Totalizadores</li>
+<li>etc</li>
+</ul>
+<p>Todos estes elementos devem ser configurados no arquivo json.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../install/install.html" class="btn btn-neutral float-right" title="Instalação" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="intro.html" class="btn btn-neutral" title="Introdução" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

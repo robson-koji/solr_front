@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Pré-Requisitos &mdash; Documentação Solr Font 0.1</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Índice"
+              href="../genindex.html"/>
+        <link rel="search" title="Pesquisar" href="../search.html"/>
+    <link rel="top" title="Documentação Solr Font 0.1" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Solr Font
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html">Utilização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Instalação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/config.html">Configuração</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../infra/infra.html">Infraestrutura</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coll_rela.html">Collections relacionadas</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Solr Font</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Pré-Requisitos</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/intro/pre-requisitos.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pre-requisitos">
+<span id="id1"></span><h1>Pré-Requisitos<a class="headerlink" href="#pre-requisitos" title="Link permanente para este título">¶</a></h1>
+<p>Abaixo estão documentados os pré-requisitos para o servidor, assim como
+dicas e observações sobre os aplicativos. Esta configuração foi testada
+em ambiente Linux, em ambientes Microsoft Windows ajustes adicionais
+podem ser necessários.</p>
+<div class="section" id="software">
+<h2>Software<a class="headerlink" href="#software" title="Link permanente para este título">¶</a></h2>
+<p>Os pré-requisitos de software para o funcionamento do sistema BV-FAPESP são:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Python 2.7</dt>
+<dd><ul class="first last">
+<li><a class="reference external" href="http://www.pip-installer.org/en/latest/installing.html">PIP 1.5+</a></li>
+<li><a class="reference external" href="https://pypi.python.org/pypi/virtualenv">Virtualenv 1.11+</a></li>
+<li><a class="reference external" href="https://pypi.python.org/pypi/virtualenvwrapper">Virtualenvwrapper 4.2+</a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>MySQL 5.5</li>
+<li><a class="reference external" href="https://uwsgi.readthedocs.org/en/latest/tutorials/Django_and_nginx.html">Nginx 1.4+ e uWSGI 2.0+</a> ou <a class="reference external" href="https://docs.djangoproject.com/en/stable/howto/deployment/wsgi/modwsgi/">Apache 2.2+ e mod_wsgi 3.4+</a> (Servidor Web)</li>
+<li><a class="reference external" href="https://lucene.apache.org/solr/">Apache Solr 4.6+</a> (Servidor de Pesquisa)</li>
+</ul>
+</div>
+<div class="section" id="servidor-web">
+<h2>Servidor Web<a class="headerlink" href="#servidor-web" title="Link permanente para este título">¶</a></h2>
+<p>Como solução de Servidor Web, em teste controlado foi identificado que a
+solução Nginx + uWSGI possui um desempenho superior ao Apache + mod_wsgi.
+Comparado ao Apache + mod_wsgi, o Nginx + uWSGI reduziu em 50%, em média,
+o tempo de entrega de páginas aos usuários. Além disso, a carga de
+processamento e memória do servidor foram reduzidas, a pesar do tráfego
+de acesso não ter reduzido.</p>
+</div>
+<div class="section" id="servidor-de-pesquisa">
+<h2>Servidor de Pesquisa<a class="headerlink" href="#servidor-de-pesquisa" title="Link permanente para este título">¶</a></h2>
+<p>Uma opção de publicação do servidor de pesquisa é fazer uso da imagem da
+Máquina Virtual ou do Instalador disponível no site <a class="reference external" href="http://bitnami.com/stack/solr">Bitnami</a>, para facilitar
+no trabalho de instalação.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

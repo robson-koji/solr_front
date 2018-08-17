@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Instalação &mdash; Documentação Solr Font 0.1</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Índice"
+              href="../genindex.html"/>
+        <link rel="search" title="Pesquisar" href="../search.html"/>
+    <link rel="top" title="Documentação Solr Font 0.1" href="../index.html"/>
+        <link rel="next" title="Configuração" href="config.html"/>
+        <link rel="prev" title="Utilização" href="../intro/util.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Solr Font
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro/intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/util.html">Utilização</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Instalação</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#modos">Modos</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#collections-desacopladas">Collections desacopladas</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#requisitos-minimos">Requisitos mínimos:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#collections-relacionadas">Collections relacionadas</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#requisitos-opcionais">Requisitos opcionais:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#estrutura-de-dados">Estrutura de dados</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#grafo">Grafo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#arvore">Árvore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vertice">Vértice</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuração</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../infra/infra.html">Infraestrutura</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/coll_rela.html">Collections relacionadas</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Solr Font</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Instalação</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/install/install.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="instalacao">
+<span id="instalacao"></span><h1>Instalação<a class="headerlink" href="#instalacao" title="Link permanente para este título">¶</a></h1>
+<p>Este sistema é uma aplicação open source Django, que pode ser clonada do repositório … diretamente em um projeto Django.
+A instalação via PIP ainda não foi disponibilizada.</p>
+<div class="section" id="modos">
+<span id="modos"></span><h2>Modos<a class="headerlink" href="#modos" title="Link permanente para este título">¶</a></h2>
+<p>O sistema pode ser utilizado em dois modos, “Collections desacopladas” e “Collections Relacionadas”, conforme descrito abaixo. Para o primeiro modo, há uma lista de requisitos mínimos, e uma lista de requisitos opcionais para segundo modo.</p>
+<div class="section" id="collections-desacopladas">
+<span id="collections-desacopladas"></span><h3>Collections desacopladas<a class="headerlink" href="#collections-desacopladas" title="Link permanente para este título">¶</a></h3>
+<p>Com os requisitos mínimos instalados é possível executar a aplicação com as Collections em modo “collections desacopladas”.
+Este modo é executado por padrão caso os requisitos opcionais não forem configurados no sistema (settings_sf.py/local_settings.py).</p>
+<p>No modo “Collections desacopladas” as Collections configuradas no sistema só podem ser analisadas unitariamente, sem que se estabeleça nenhum tipo de relacionamento entre as mesmas.</p>
+<div class="section" id="requisitos-minimos">
+<span id="requisitos-minimos"></span><h4>Requisitos mínimos:<a class="headerlink" href="#requisitos-minimos" title="Link permanente para este título">¶</a></h4>
+<ul class="simple">
+<li>Solr Cloud</li>
+<li>Python</li>
+<li>Django</li>
+<li>Banco de dados relacional</li>
+</ul>
+</div>
+</div>
+<div class="section" id="collections-relacionadas">
+<span id="collections-relacionadas"></span><h3>Collections relacionadas<a class="headerlink" href="#collections-relacionadas" title="Link permanente para este título">¶</a></h3>
+<p>Os requisitos opcionais são necessários para a execução do sistema com as Collections em modo “collections conectadas”.</p>
+<p>Caso você esteja instalando o sistema pela primeira vez, você pode pular essa parte e deixar a instalação em modo padrão de “Collections desacopladas”.</p>
+<p>No modo “Collections relacionadas”, pode-se analisar as Collections configuradas no sistema e o relacionamento entre elas, através de mecanismos de “Join” de collections. Além da instalação dos requisitos opcionais, é necessário configurar as collections para que as mesmas possuam campos comuns de relacionamentos entre elas.
+Este modo foi desenvolvido pensando em utilizar uma funcionalidade do Solr para operar em modo de computação paralela. Porém essa funcionalidade ainda possui problemas na versão Solr 6.6.2, sem previsão de finalização destas funcionalidades.
+Mais especificamente, as funcionalidades de computação paralela utilizam o mecanismo de Streaming Expressions.
+Todavia, o modo “Collections relacionadas” funciona relativamente bem, com o relacionamento de collections de alguns milhões de dados.</p>
+<div class="section" id="requisitos-opcionais">
+<span id="requisitos-opcionais"></span><h4>Requisitos opcionais:<a class="headerlink" href="#requisitos-opcionais" title="Link permanente para este título">¶</a></h4>
+<ul class="simple">
+<li>Celery</li>
+<li>RabbitMQ</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="estrutura-de-dados">
+<span id="estrutura-de-dados"></span><h2>Estrutura de dados<a class="headerlink" href="#estrutura-de-dados" title="Link permanente para este título">¶</a></h2>
+<p>O buscador trabalhar com estruturas de dados diversas, em diferentes camadas do sistema.
+Segue abaixo a definição de cada uma delas.</p>
+<div class="section" id="grafo">
+<span id="grafo"></span><h3>Grafo<a class="headerlink" href="#grafo" title="Link permanente para este título">¶</a></h3>
+<p>A estrutura de grafos é definida no arquivo conf.py, e determina o relacionamento entre as  diferentes collections. Uma collection pode estar relacionada a zero ou mais collections.</p>
+</div>
+<div class="section" id="arvore">
+<span id="arvore"></span><h3>Árvore<a class="headerlink" href="#arvore" title="Link permanente para este título">¶</a></h3>
+<p>Ao criar uma pesquisa uma estrutura de árvore é inicializada. Essa estrutura é armazenada na sessão Django do usuário.
+Essa estrutura é controlada na view em alguns pontos da aplicação.
+A classe NavigateCollection oferece os métodos de manipulação da árvore de navegação.
+O Grafo define como as differentes collections se relacionam.
+Uma pesquisa é formada pela navegação entre as diferentes collections, e essa pesquisa é que forma a árvore de navegação.</p>
+</div>
+<div class="section" id="vertice">
+<span id="vertice"></span><h3>Vértice<a class="headerlink" href="#vertice" title="Link permanente para este título">¶</a></h3>
+<p>Um vértice da árvore é um nó da árvore de navegação. Esse objeto está na árvore de navegação, na sessão do usuário no Django.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="config.html" class="btn btn-neutral float-right" title="Configuração" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../intro/util.html" class="btn btn-neutral" title="Utilização" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
