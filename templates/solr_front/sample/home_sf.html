@@ -51,6 +51,12 @@ Para criar a página do seu buscador copie este arquivo com o 'home_&lt;nome da 
   <h2>Começar uma nova busca</h2>
   <p>Selecione a base de dados que você quer analisar</p>
 
+  <div class="col-md-4">
+    <h3>ENEM</h3>
+    <p><a class="btn btn-secondary" href="{% url 'params_id' collection='enem'  id=0 template=template %}"  role="button">Amostra de dados - Base de dados do ENEM</a></p>
+  </div>
+
+  {% comment %}
   <ul>
     {%for collection, meta_collection in collections.iteritems%}
       <li><a href="{% url 'params_id' collection=collection  id=0 template=template%}">Collection {{meta_collection.label}}</a></li>
@@ -69,7 +75,7 @@ Para criar a página do seu buscador copie este arquivo com o 'home_&lt;nome da 
       <li><a href="{% url 'home_collection' collection=collection template=template%}">Collection {{meta_collection.label}}</a></li>
     {%endfor%}
   </ul>
-
+  {% endcomment %}
 {% endif %}
 
 

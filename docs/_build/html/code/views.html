@@ -1,0 +1,873 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Views &mdash; Documentação Solr Font 0.1</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Índice"
+              href="../genindex.html"/>
+        <link rel="search" title="Pesquisar" href="../search.html"/>
+    <link rel="top" title="Documentação Solr Font 0.1" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Solr Font
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/util.html">Utilização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Instalação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/config.html">Configuração</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../infra/infra.html">Infraestrutura</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/coll_rela.html">Collections relacionadas</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Solr Font</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Views</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/code/views.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="views">
+<h1>Views<a class="headerlink" href="#views" title="Link permanente para este título">¶</a></h1>
+<blockquote>
+<div><span class="target" id="module-solr_front.views"></span><dl class="class">
+<dt id="solr_front.views.AddVerticeView">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">AddVerticeView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#AddVerticeView"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.AddVerticeView" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recebe a collection de destino e um hash_querybuilder.
+Instancia um objeto da classe StreamingExpressions para indexar essa collection
+de destino com os dados do hash_querybuilder.
+Ao final, redireciona o usuario para busca na collection de destino.</p>
+<dl class="attribute">
+<dt id="solr_front.views.AddVerticeView.base_name">
+<code class="descname">base_name</code><em class="property"> = 'base_sf.html'</em><a class="headerlink" href="#solr_front.views.AddVerticeView.base_name" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.AddVerticeView.dispatch">
+<code class="descname">dispatch</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#AddVerticeView.dispatch"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.AddVerticeView.dispatch" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.AddVerticeView.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#AddVerticeView.get"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.AddVerticeView.get" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.AddVerticeView.get_success_url">
+<code class="descname">get_success_url</code><span class="sig-paren">(</span><em>collection</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#AddVerticeView.get_success_url"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.AddVerticeView.get_success_url" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.AjaxCeleryStatusView">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">AjaxCeleryStatusView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#AjaxCeleryStatusView"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.AjaxCeleryStatusView" title="Link permanente para esta definição">¶</a></dt>
+<dd><dl class="method">
+<dt id="solr_front.views.AjaxCeleryStatusView.dispatch">
+<code class="descname">dispatch</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#AjaxCeleryStatusView.dispatch"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.AjaxCeleryStatusView.dispatch" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.AjaxVerticeEditFieldView">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">AjaxVerticeEditFieldView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#AjaxVerticeEditFieldView"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.AjaxVerticeEditFieldView" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recebe os requests ajax para editar o campo de um vertice.
+O pai (EntryPointView) trata o request, recupera resultados no Solr e retorna para o frontend.</p>
+<dl class="method">
+<dt id="solr_front.views.AjaxVerticeEditFieldView.dispatch">
+<code class="descname">dispatch</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#AjaxVerticeEditFieldView.dispatch"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.AjaxVerticeEditFieldView.dispatch" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.AutoComplete">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">AutoComplete</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#AutoComplete"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.AutoComplete" title="Link permanente para esta definição">¶</a></dt>
+<dd><dl class="method">
+<dt id="solr_front.views.AutoComplete.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#AutoComplete.post"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.AutoComplete.post" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.CleanSession">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">CleanSession</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#CleanSession"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.CleanSession" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Limpa a sessao do usuario</p>
+<dl class="method">
+<dt id="solr_front.views.CleanSession.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#CleanSession.get"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.CleanSession.get" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.EntryPointView">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">EntryPointView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#EntryPointView"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.EntryPointView" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Classe pai de SearchView, RelatedCollection, #Collection2View e VinculadosView
+Recupera todos os valores do request, trata os dados do json enviados pelo front e
+converte para o formato do Solr.</p>
+<dl class="attribute">
+<dt id="solr_front.views.EntryPointView.base_name">
+<code class="descname">base_name</code><em class="property"> = 'base_sf.html'</em><a class="headerlink" href="#solr_front.views.EntryPointView.base_name" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.EntryPointView.consolida_totalizador">
+<code class="descname">consolida_totalizador</code><span class="sig-paren">(</span><em>solr_json</em>, <em>generic_json</em>, <em>totalizador</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#EntryPointView.consolida_totalizador"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.EntryPointView.consolida_totalizador" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Metodo utilizado nas classes TotalizadorView e RelatedCollection</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="solr_front.views.EntryPointView.dict_operators_1">
+<code class="descname">dict_operators_1</code><em class="property"> = {'is_empty': '-%s:[&quot;&quot; TO *]', 'is_not_empty': '%s:[&quot;&quot; TO *]'}</em><a class="headerlink" href="#solr_front.views.EntryPointView.dict_operators_1" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="solr_front.views.EntryPointView.dict_operators_2">
+<code class="descname">dict_operators_2</code><em class="property"> = {'contains': '%s:%s', 'equal': '%s:%s', 'greater_or_equal': '%s:[%s TO *]', 'less_or_equal': '%s:[* TO %s]', 'not_contains': '-%s:%s', 'not_equal': '-%s:%s'}</em><a class="headerlink" href="#solr_front.views.EntryPointView.dict_operators_2" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="solr_front.views.EntryPointView.dict_operators_3">
+<code class="descname">dict_operators_3</code><em class="property"> = {'between': '%s:[%s TO %s]'}</em><a class="headerlink" href="#solr_front.views.EntryPointView.dict_operators_3" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.EntryPointView.dict_to_solr">
+<code class="descname">dict_to_solr</code><span class="sig-paren">(</span><em>dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#EntryPointView.dict_to_solr"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.EntryPointView.dict_to_solr" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Converte as regras recebidas do frontend em operacoes do Solr.
+Os dicionarios «dict_operators» traduzem os operadores do front em operacoes
+do Solr. Cada operador do dict tem a estrutura correta com placeholders
+que recebem os argumentos e entrega a expressao do Solr pronta.
+Sao 3 dicts, um que espera um argumento, um que espera dois argumentos e
+um que espera 3 argumentos.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.EntryPointView.dispatch">
+<code class="descname">dispatch</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#EntryPointView.dispatch"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.EntryPointView.dispatch" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="solr_front.views.EntryPointView.model">
+<code class="descname">model</code><a class="headerlink" href="#solr_front.views.EntryPointView.model" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>pseudónimo de <code class="xref py py-class docutils literal"><span class="pre">Pesquisa</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.EntryPointView.rec_json">
+<code class="descname">rec_json</code><span class="sig-paren">(</span><em>fq</em>, <em>rules</em>, <em>condition</em>, <em>ultimo</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#EntryPointView.rec_json"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.EntryPointView.rec_json" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recebe json do front com os filtros e converte em um unico parametro fq.
+Essa funcao eh recursiva para interpretar recursivamente a arvore de filtros
+(arquivo json enviado pelo frontend).
+A variavel fq eh concatenada sucessivamente para montar uma expressao logica
+(filtragem a ser passada para o Solr).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.EntryPointView.split_value">
+<code class="descname">split_value</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#EntryPointView.split_value"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.EntryPointView.split_value" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.EntryPointView.update_vertice">
+<code class="descname">update_vertice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#EntryPointView.update_vertice"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.EntryPointView.update_vertice" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.ExportDataView">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">ExportDataView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#ExportDataView"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.ExportDataView" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Create Report
+If no join is required due to search on the first level only,
+session object has the search query to get data and export.
+If data requested to export comes from a joint search, it is necessary
+to get de join query from database in order to export data.</p>
+<dl class="method">
+<dt id="solr_front.views.ExportDataView.dict_values_to_string">
+<code class="descname">dict_values_to_string</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#ExportDataView.dict_values_to_string"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.ExportDataView.dict_values_to_string" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.ExportDataView.dispatch">
+<code class="descname">dispatch</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#ExportDataView.dispatch"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.ExportDataView.dispatch" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.ExportDataView.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#ExportDataView.get"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.ExportDataView.get" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.ExportDataView.list_tuple_to_dict">
+<code class="descname">list_tuple_to_dict</code><span class="sig-paren">(</span><em>list_tuple</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#ExportDataView.list_tuple_to_dict"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.ExportDataView.list_tuple_to_dict" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.ExportDataView.makeCsv">
+<code class="descname">makeCsv</code><span class="sig-paren">(</span><em>se</em>, <em>nome</em>, <em>email</em>, <em>para</em>, <em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#ExportDataView.makeCsv"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.ExportDataView.makeCsv" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.ExportDataView.makeDataFrame">
+<code class="descname">makeDataFrame</code><span class="sig-paren">(</span><em>se</em>, <em>nome</em>, <em>email</em>, <em>para</em>, <em>msg</em>, <em>formato</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#ExportDataView.makeDataFrame"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.ExportDataView.makeDataFrame" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.ExportDataView.pos_process">
+<code class="descname">pos_process</code><span class="sig-paren">(</span><em>data</em>, <em>list_fields_extraction</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#ExportDataView.pos_process"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.ExportDataView.pos_process" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Metodo utiliza configuração do fields_extraction para extrair valores de data e tratalos com a função especificada</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.HomeBuscador">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">HomeBuscador</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#HomeBuscador"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.HomeBuscador" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Home inicial do buscador, que sempre verifica se jah tem pesquisa na sessao.</p>
+<dl class="method">
+<dt id="solr_front.views.HomeBuscador.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#HomeBuscador.get"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.HomeBuscador.get" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.HomeCollection">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">HomeCollection</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#HomeCollection"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.HomeCollection" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Home page da collection.
+Para informacoes a respeito da collection na visao da collection no Grapho,
+nao da instancia de uma busca.
+Utilizar por exemplo como pagina de ajuda, como ela se relaciona com outras
+collectios etc.</p>
+<dl class="method">
+<dt id="solr_front.views.HomeCollection.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#HomeCollection.get"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.HomeCollection.get" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.LoginRequiredMixin">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">LoginRequiredMixin</code><a class="reference internal" href="../_modules/solr_front/views.html#LoginRequiredMixin"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.LoginRequiredMixin" title="Link permanente para esta definição">¶</a></dt>
+<dd><dl class="classmethod">
+<dt id="solr_front.views.LoginRequiredMixin.as_view">
+<em class="property">classmethod </em><code class="descname">as_view</code><span class="sig-paren">(</span><em>**initkwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#LoginRequiredMixin.as_view"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.LoginRequiredMixin.as_view" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.MultidimensionalChartView">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">MultidimensionalChartView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#MultidimensionalChartView"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.MultidimensionalChartView" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Multidimensional charts endpoint.
+Bubble??</p>
+<dl class="method">
+<dt id="solr_front.views.MultidimensionalChartView.json_response">
+<code class="descname">json_response</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#MultidimensionalChartView.json_response"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.MultidimensionalChartView.json_response" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.MultidimensionalTableView">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">MultidimensionalTableView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#MultidimensionalTableView"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.MultidimensionalTableView" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Multidimensional charts endpoint</p>
+<dl class="method">
+<dt id="solr_front.views.MultidimensionalTableView.json_response">
+<code class="descname">json_response</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#MultidimensionalTableView.json_response"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.MultidimensionalTableView.json_response" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.NavigateCollection">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">NavigateCollection</code><span class="sig-paren">(</span><em>request</em>, <em>collection</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#NavigateCollection"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.NavigateCollection" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Manipula a montagem de um caminho no grapho.
+Esta view eh acessada qdo o usuario solicita a visualizacao dos subconjuntos
+de dados de uma segunda collection
+Armazena na sessao.</p>
+<dl class="method">
+<dt id="solr_front.views.NavigateCollection.add_vertice">
+<code class="descname">add_vertice</code><span class="sig-paren">(</span><em>collection</em>, <em>pai_id</em>, <em>selected_facets</em>, <em>hash_querybuilder</em>, <em>initial_search</em>, <em>pedido=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#NavigateCollection.add_vertice"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.NavigateCollection.add_vertice" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Se existe grapho recupera o vertice atual e adiciona um filho.
+Se nao, cria vertice.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.NavigateCollection.count_vertices">
+<code class="descname">count_vertices</code><span class="sig-paren">(</span><em>vertices</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#NavigateCollection.count_vertices"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.NavigateCollection.count_vertices" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Conta a quantidade de vertices recursivamente</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.NavigateCollection.get_navigation_tree">
+<code class="descname">get_navigation_tree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#NavigateCollection.get_navigation_tree"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.NavigateCollection.get_navigation_tree" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Retorna arvore de navegacao</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.NavigateCollection.get_vertice">
+<code class="descname">get_vertice</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#NavigateCollection.get_vertice"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.NavigateCollection.get_vertice" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Localiza recursivamente um vertice especifico</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.NavigateCollection.remove_tree">
+<code class="descname">remove_tree</code><span class="sig-paren">(</span><em>tree</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#NavigateCollection.remove_tree"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.NavigateCollection.remove_tree" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.NavigateCollection.remove_vertice">
+<code class="descname">remove_vertice</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#NavigateCollection.remove_vertice"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.NavigateCollection.remove_vertice" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.NavigateCollection.update_vertice">
+<code class="descname">update_vertice</code><span class="sig-paren">(</span><em>body_json</em>, <em>hash_querybuilder</em>, <em>id</em>, <em>fq</em>, <em>selected_facets</em>, <em>initial_search</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#NavigateCollection.update_vertice"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.NavigateCollection.update_vertice" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.NavigateCollection.update_vertice_field">
+<code class="descname">update_vertice_field</code><span class="sig-paren">(</span><em>field</em>, <em>value</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#NavigateCollection.update_vertice_field"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.NavigateCollection.update_vertice_field" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.ParamsView">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">ParamsView</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#ParamsView"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.ParamsView" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Carrega a pagina inicial da pesquisa de uma determinada collection</p>
+<dl class="attribute">
+<dt id="solr_front.views.ParamsView.base_name">
+<code class="descname">base_name</code><em class="property"> = 'base_sf.html'</em><a class="headerlink" href="#solr_front.views.ParamsView.base_name" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.ParamsView.dispatch">
+<code class="descname">dispatch</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#ParamsView.dispatch"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.ParamsView.dispatch" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recebe uma collectino e respectivo id.
+Caso não exista este vertice na pesquisa (objeto navigation da sessao), cria.
+Se existir, retorna pagina desse vertice.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.ParamsView.get_context_data">
+<code class="descname">get_context_data</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#ParamsView.get_context_data"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.ParamsView.get_context_data" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.ParamsView.get_totalizadores_rel">
+<code class="descname">get_totalizadores_rel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#ParamsView.get_totalizadores_rel"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.ParamsView.get_totalizadores_rel" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recupera os totalizadores das collections relacionadas</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.RelatedCollection">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">RelatedCollection</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#RelatedCollection"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.RelatedCollection" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Captura os dados agregados de todas as collections relacionadas no grapho
+da collection principal
+Herda collection do EntryPoint e chama a classe StreamingExpressions, que acessa o
+conf.py com o Grapho e recupera os dados agregados do vertices relacionados.
+Essa View serve duas URLS. A primeira recupera os dados agregados de todas as
+collections do grapho, a segunda recupera somente da collection relacionada solicitada.</p>
+<dl class="method">
+<dt id="solr_front.views.RelatedCollection.json_response">
+<code class="descname">json_response</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#RelatedCollection.json_response"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.RelatedCollection.json_response" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.SearchView">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">SearchView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SearchView"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SearchView" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Ajax get_data chama essa view.
+Recebe os requests de busca aa partir do querybuilder e dos facets.
+O pai (EntryPointView) trata o request, recupera resultados no Solr e retorna para o frontend.
+Atualmente ela filtra o tipo de request, situacao, cx_pesquisa, json_facet.
+Fazer uma URL e uma view para cada.</p>
+<dl class="method">
+<dt id="solr_front.views.SearchView.celery_check">
+<code class="descname">celery_check</code><span class="sig-paren">(</span><em>vertice</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SearchView.celery_check"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SearchView.celery_check" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SearchView.geraJson">
+<code class="descname">geraJson</code><span class="sig-paren">(</span><em>pivot=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SearchView.geraJson"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SearchView.geraJson" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SearchView.get_solr_json">
+<code class="descname">get_solr_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SearchView.get_solr_json"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SearchView.get_solr_json" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SearchView.json_response">
+<code class="descname">json_response</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SearchView.json_response"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SearchView.json_response" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Check if vertice has children.
+If true, former query cant be changed. If parents is changed
+the state of the seach tree will be inconsistent.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SearchView.limpa_label">
+<code class="descname">limpa_label</code><span class="sig-paren">(</span><em>label</em>, <em>parents=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SearchView.limpa_label"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SearchView.limpa_label" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.SolrQueries">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">SolrQueries</code><span class="sig-paren">(</span><em>collection</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Encapsula as buscas no Solr</p>
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.create_hash_querybuilder">
+<code class="descname">create_hash_querybuilder</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.create_hash_querybuilder"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.create_hash_querybuilder" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Cada busca do querybuilder e os filtros do facet (incluir os facets) teem um
+hash, que eh um campo dinamico criado na collection relacionada.
+Por exemplo, ao buscar publicacoes de processos filtrados, as publicacoes
+passam a ter esse campo, para que esse subconjunto seja identificado e possa
+ser trabalhdo (filtrado).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.do_reindex">
+<code class="descname">do_reindex</code><span class="sig-paren">(</span><em>se</em>, <em>collection_destino</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.do_reindex"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.do_reindex" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.executaStreamingExpression">
+<code class="descname">executaStreamingExpression</code><span class="sig-paren">(</span><em>se</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.executaStreamingExpression"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.executaStreamingExpression" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Executes a standard Streaming Expression</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.facets2fq_post">
+<code class="descname">facets2fq_post</code><span class="sig-paren">(</span><em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.facets2fq_post"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.facets2fq_post" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Verificar se eh tudo o que precisa para recuperar os facets do front
+e converter em um unico fq para o Solr.</p>
+<p>!!!! Ver se dah para apgar o metodo acima</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.facets2query">
+<code class="descname">facets2query</code><span class="sig-paren">(</span><em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.facets2query"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.facets2query" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Estrutura do Solr antigo, sem o Facets JSON. Solr 4.9.
+Monta uma string para busca de facet via URL e uma string para busca via StreamingExpressions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_content">
+<code class="descname">get_content</code><span class="sig-paren">(</span><em>content_type</em>, <em>fq</em>, <em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_content"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_content" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_content_boxplot_json_facet">
+<code class="descname">get_content_boxplot_json_facet</code><span class="sig-paren">(</span><em>content_type</em>, <em>fq</em>, <em>levels_list</em>, <em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_content_boxplot_json_facet"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_content_boxplot_json_facet" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recupera dados facetados no Solr e retorna dois objetos para o front end
+para geracao do grafico d3js boxplot.
+<a class="reference external" href="http://yonik.com/percentiles-for-solr-faceting/">http://yonik.com/percentiles-for-solr-faceting/</a></p>
+<p>!!! Acertar o threshold…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_content_bubble_json_facet">
+<code class="descname">get_content_bubble_json_facet</code><span class="sig-paren">(</span><em>content_type</em>, <em>fq</em>, <em>levels_list</em>, <em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_content_bubble_json_facet"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_content_bubble_json_facet" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recupera dados facetados no Solr e retorna dois objetos para o front end
+para geracao do grafico d3js Bubble.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_content_json_facet">
+<code class="descname">get_content_json_facet</code><span class="sig-paren">(</span><em>content_type</em>, <em>fq</em>, <em>json_facet</em>, <em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_content_json_facet"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_content_json_facet" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Metodo chamado pelo Ajax para montar o grafico multinivel.
+Utilizar a estrutura de facet multinivel do Solr.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_content_pivot_table_json_facet">
+<code class="descname">get_content_pivot_table_json_facet</code><span class="sig-paren">(</span><em>content_type</em>, <em>fq</em>, <em>levels_list</em>, <em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_content_pivot_table_json_facet"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_content_pivot_table_json_facet" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recupera dados facetados no Solr e retorna dois objetos para o front end
+para geracao da tabela OLAP.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_content_sankey_json_facet">
+<code class="descname">get_content_sankey_json_facet</code><span class="sig-paren">(</span><em>content_type</em>, <em>fq</em>, <em>levels_list</em>, <em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_content_sankey_json_facet"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_content_sankey_json_facet" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recupera dados facetados no Solr e retorna dois objetos para o front end
+para geracao do grafico d3js Sankey.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_content_wordcloud_json_facet">
+<code class="descname">get_content_wordcloud_json_facet</code><span class="sig-paren">(</span><em>content_type</em>, <em>fq</em>, <em>single_facet</em>, <em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_content_wordcloud_json_facet"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_content_wordcloud_json_facet" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recupera dados facetados no Solr de um unico campo, e retorna para geracao do grafico wordcloud.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_facet_4_autocomplete">
+<code class="descname">get_facet_4_autocomplete</code><span class="sig-paren">(</span><em>request_data</em>, <em>facet=''</em>, <em>selected_facets=[]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_facet_4_autocomplete"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_facet_4_autocomplete" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recupera o facet de um elemento solicitado pelo autocomplete
+json.facet nao tem a opcao de facet.contains. Precisa usar o metodo get.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_facets_json_api">
+<code class="descname">get_facets_json_api</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_facets_json_api"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_facets_json_api" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Gera string de facet para pegar o resultado facetado na API JSON</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_facets_json_api_avg">
+<code class="descname">get_facets_json_api_avg</code><span class="sig-paren">(</span><em>avg_field</em>, <em>fq</em>, <em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_facets_json_api_avg"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_facets_json_api_avg" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Retorna a media dos valores numericos de um facet</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_facets_json_api_sum">
+<code class="descname">get_facets_json_api_sum</code><span class="sig-paren">(</span><em>sum_field</em>, <em>fq</em>, <em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_facets_json_api_sum"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_facets_json_api_sum" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Soma todos os valores de um determinado facet</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_facets_json_api_unique">
+<code class="descname">get_facets_json_api_unique</code><span class="sig-paren">(</span><em>unique_field</em>, <em>fq</em>, <em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_facets_json_api_unique"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_facets_json_api_unique" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recupera a qt de valores unicos para um determinado facet</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_or_create_related_collection_db">
+<code class="descname">get_or_create_related_collection_db</code><span class="sig-paren">(</span><em>collection</em>, <em>streaming_expression</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_or_create_related_collection_db"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_or_create_related_collection_db" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Verifica se contagem (count e top) das collections relacionadas
+estao armazenadas no DB.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Sim - retorna para o template mostrar</li>
+<li>Nao - contabiliza novamente, armazena e retorna para o template.</li>
+</ol>
+</div></blockquote>
+<dl class="docutils">
+<dt>Se nao estiver no banco:</dt>
+<dd>Contabiliza, armazena e retorna para o template.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.get_totalizador">
+<code class="descname">get_totalizador</code><span class="sig-paren">(</span><em>content_type</em>, <em>fq</em>, <em>sf</em>, <em>docs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.get_totalizador"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.get_totalizador" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.solr_response_error">
+<code class="descname">solr_response_error</code><span class="sig-paren">(</span><em>method</em>, <em>response</em>, <em>solr_url</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.solr_response_error"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.solr_response_error" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Method used to throw and log Solr response errors.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.sorlGenericConnection">
+<code class="descname">sorlGenericConnection</code><span class="sig-paren">(</span><em>select</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.sorlGenericConnection"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.sorlGenericConnection" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Executa url do Solr a partir do raiz</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.sorlJsonQuery">
+<code class="descname">sorlJsonQuery</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.sorlJsonQuery"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.sorlJsonQuery" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Executa url json do Solr</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.SolrQueries.update_atomico">
+<code class="descname">update_atomico</code><span class="sig-paren">(</span><em>url</em>, <em>collection2</em>, <em>campo_dinamico_busca</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#SolrQueries.update_atomico"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.SolrQueries.update_atomico" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>&#64;param: url Chamada para o Solr via StreamingExpressions para recuperar o id dos objetos que
+serao indexados (funil).
+&#64;param: collection2 Collection que serah reindexada (funil)
+&#64;param: campo_dinamico_busca Nao estah usando
+Faz update atomico da collection solicitada
+Recebe uma lista e manda de uma vez para o Solr, que cuida fazer o update
+no documento, criando ou excluindo o campo enviando no «jsons_ids».</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.StreamingExpressions">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">StreamingExpressions</code><span class="sig-paren">(</span><em>collection</em>, <em>solr_queries</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#StreamingExpressions"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.StreamingExpressions" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Esta classe monta Streaming Expressions somente. Ela nao executa requests
+no Solr. Quem faz isso eh a classe SolrQueries.</p>
+<dl class="method">
+<dt id="solr_front.views.StreamingExpressions.get_count_joined">
+<code class="descname">get_count_joined</code><span class="sig-paren">(</span><em>related_collection</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#StreamingExpressions.get_count_joined"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.StreamingExpressions.get_count_joined" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recupera o valor total de registros joins de duas collections</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.StreamingExpressions.get_join">
+<code class="descname">get_join</code><span class="sig-paren">(</span><em>fq</em>, <em>selected_facets</em>, <em>facets_col2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#StreamingExpressions.get_join"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.StreamingExpressions.get_join" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Monta a expressao de Join para cada vertice do noh raiz.
+O Join eh a base para se recuperar dados e informacoes agregadas de duas
+collections ligadas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.StreamingExpressions.get_search">
+<code class="descname">get_search</code><span class="sig-paren">(</span><em>collection</em>, <em>fq</em>, <em>selected_facets</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#StreamingExpressions.get_search"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.StreamingExpressions.get_search" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Monta a expressao de search para um vertice
+Por ora usando para o vertice raiz na exportacao de dados.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.StreamingExpressions.get_top_joined">
+<code class="descname">get_top_joined</code><span class="sig-paren">(</span><em>related_collection</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#StreamingExpressions.get_top_joined"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.StreamingExpressions.get_top_joined" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recupera os ultimos n registros do join de duas collections</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.TotalizadorView">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">TotalizadorView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#TotalizadorView"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.TotalizadorView" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Recupera a collection para mostrar as respectivas totalizacoes.
+Essa view mostra apenas totalizacoes da propria collection. A totalizacao de relacionados
+eh recuperada na view RelatedCollection.</p>
+<dl class="method">
+<dt id="solr_front.views.TotalizadorView.check_data_type">
+<code class="descname">check_data_type</code><span class="sig-paren">(</span><em>totalizador</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#TotalizadorView.check_data_type"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.TotalizadorView.check_data_type" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Get defined string as a data type and converts to the refered function
+defined here somewhere.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.views.TotalizadorView.json_response">
+<code class="descname">json_response</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#TotalizadorView.json_response"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.TotalizadorView.json_response" title="Link permanente para esta definição">¶</a></dt>
+<dd><blockquote>
+<div>Os totalizadores tem entradas diferentes mas retornos iguais. Exemplo de retorno:</div></blockquote>
+<p>{“docs”: [], “numFound”: 4260, “order”: 1, “label”: “Auxílios - Em andamento”}</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.views.UnidimensionalChartView">
+<em class="property">class </em><code class="descclassname">solr_front.views.</code><code class="descname">UnidimensionalChartView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#UnidimensionalChartView"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.UnidimensionalChartView" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>For a unique facet field query</p>
+<dl class="method">
+<dt id="solr_front.views.UnidimensionalChartView.json_response">
+<code class="descname">json_response</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#UnidimensionalChartView.json_response"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.UnidimensionalChartView.json_response" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="solr_front.views.currency">
+<code class="descclassname">solr_front.views.</code><code class="descname">currency</code><span class="sig-paren">(</span><em>totalizador</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#currency"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.currency" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="solr_front.views.find_template">
+<code class="descclassname">solr_front.views.</code><code class="descname">find_template</code><span class="sig-paren">(</span><em>template</em>, <em>folder=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/views.html#find_template"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.views.find_template" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>&#64;params: template - template name. May include a folder with the name,
+if the template is not at the root folder.</p>
+</dd></dl>
+
+</div></blockquote>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

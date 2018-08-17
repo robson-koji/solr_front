@@ -23,7 +23,7 @@ function montaTotal(data){
 
     var resultado_number = '<h3 class="title_secondary">Encontramos </h3> '+
                             '<div class="results">'+
-                                ' <p> ' + data['response']['numFound'] + '<span> documentos em </span>' + collection_label +
+                                ' <p> ' + data['response']['numFound'].toLocaleString() + '<span> documentos em </span>' + collection_label +
                             '</div>'
     // limpa resposta anterior se houver
     $('#resultado_number').html('')
@@ -147,7 +147,7 @@ function getData(busca_realizada_str){
           }
           if (omite_secoes.indexOf('boxplot') === -1){
             recuperaBoxPlotChart(busca_realizada)
-          }          
+          }
           $(".group_half_pie_chart").empty()
           geraCharts(data.facet_counts.hierarquico)
         }
@@ -410,6 +410,7 @@ function getTotalizadores(){
            obj = $.extend(obj, data['sum'])
            obj = $.extend(obj, data['avg'])
            obj = $.extend(obj, data['facet'] )
+             obj = $.extend(obj, data['median'] )
 
            // renderiza objeto caso existir dados nele
            constroiComponentTotalizadores(obj)
@@ -549,7 +550,15 @@ function constroiComponentTotalizadores(obj){
 
         if(contains(facet['type'],'main')){
 
-          // debugger;
+
+          if (facet['data_type'] == "currency"){
+            facet['numFound'] = Number(facet['numFound']).toLocaleString("pt-BR", { style: "currency" , currency:"BRL"});
+          }
+          else{
+            facet['numFound'] = Number(facet['numFound']).toLocaleString(undefined, { maximumFractionDigits: 1 })
+          }
+
+
         g.add(new TotaisComponent({
           'total':facet['numFound'],
           'label':facet['label']},

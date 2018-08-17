@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Models &mdash; Documentação Solr Font 0.1</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Índice"
+              href="../genindex.html"/>
+        <link rel="search" title="Pesquisar" href="../search.html"/>
+    <link rel="top" title="Documentação Solr Font 0.1" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Solr Font
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/util.html">Utilização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Instalação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/config.html">Configuração</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../infra/infra.html">Infraestrutura</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/coll_rela.html">Collections relacionadas</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Solr Font</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/code/models.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="models">
+<h1>Models<a class="headerlink" href="#models" title="Link permanente para este título">¶</a></h1>
+<blockquote>
+<div><span class="target" id="module-solr_front.models"></span><dl class="class">
+<dt id="solr_front.models.Pesquisa">
+<em class="property">class </em><code class="descclassname">solr_front.models.</code><code class="descname">Pesquisa</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/models.html#Pesquisa"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.models.Pesquisa" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Classe abstrata necessaria para utilizar o CBV no buscador.
+Na modelagem da parte do usuario e da indexacao, verificar se eh possivel
+excluir essa classe e utilizar outra real.</p>
+<dl class="exception">
+<dt id="solr_front.models.Pesquisa.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#solr_front.models.Pesquisa.DoesNotExist" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="solr_front.models.Pesquisa.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#solr_front.models.Pesquisa.MultipleObjectsReturned" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="solr_front.models.Pesquisa.fields">
+<code class="descname">fields</code><em class="property"> = '__all__'</em><a class="headerlink" href="#solr_front.models.Pesquisa.fields" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="solr_front.models.Pesquisa.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object at 0x462d150&gt;</em><a class="headerlink" href="#solr_front.models.Pesquisa.objects" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="solr_front.models.RelatedCollectionsCheck">
+<em class="property">class </em><code class="descclassname">solr_front.models.</code><code class="descname">RelatedCollectionsCheck</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/models.html#RelatedCollectionsCheck"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.models.RelatedCollectionsCheck" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Armazena o status (data) da contagem das collections relacionadas e
+o status (data) da indexacao da sub-collection relacionada.</p>
+<p>Model utilizado para controlar a frequencia e status de atualizacao das
+informacoes de collections relacioadas.</p>
+<dl class="exception">
+<dt id="solr_front.models.RelatedCollectionsCheck.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#solr_front.models.RelatedCollectionsCheck.DoesNotExist" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="solr_front.models.RelatedCollectionsCheck.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#solr_front.models.RelatedCollectionsCheck.MultipleObjectsReturned" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.models.RelatedCollectionsCheck.get_next_by_created_date">
+<code class="descname">get_next_by_created_date</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#solr_front.models.RelatedCollectionsCheck.get_next_by_created_date" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.models.RelatedCollectionsCheck.get_previous_by_created_date">
+<code class="descname">get_previous_by_created_date</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#solr_front.models.RelatedCollectionsCheck.get_previous_by_created_date" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="solr_front.models.RelatedCollectionsCheck.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object at 0x462d690&gt;</em><a class="headerlink" href="#solr_front.models.RelatedCollectionsCheck.objects" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.models.RelatedCollectionsCheck.recount">
+<code class="descname">recount</code><span class="sig-paren">(</span><em>threshold_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/models.html#RelatedCollectionsCheck.recount"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.models.RelatedCollectionsCheck.recount" title="Link permanente para esta definição">¶</a></dt>
+<dd><p>Retorna se os dados indexados estao validos
+# Passar para o arquivo de configuracao da collection, ou via admin, como
+# configurar a data de expiracao da verificacao do recount.
+# Para o caso da BV que atualiza uma vez por semana aos finais de semana,
+# pega a data da ultima segunda-feira e caso a ultima atualizacao counted_date
+# seja anterior a atualizacao dos dados (ultima segunda-feira), reconta.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="solr_front.models.RelatedCollectionsCheck.reindex">
+<code class="descname">reindex</code><span class="sig-paren">(</span><em>threshold_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/models.html#RelatedCollectionsCheck.reindex"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.models.RelatedCollectionsCheck.reindex" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="solr_front.models.RelatedCollectionsCheck.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/solr_front/models.html#RelatedCollectionsCheck.save"><span class="viewcode-link">[código fonte]</span></a><a class="headerlink" href="#solr_front.models.RelatedCollectionsCheck.save" title="Link permanente para esta definição">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,792 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: components.js | Javascript Docs Solr Front</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 160px; height: 52px">
+        
+            <a href="/buscador/docs" rel="noopener noreferrer" target="_blank">
+                <img src="/static-files/solr_front/img/logo_buscador.jpg" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Javascript Docs Solr Front</a></h1>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Tutorias</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-solr_front__bv_d3.html">solr_front::bv_d3</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:solr_front::bv_d3_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-solr_front__bv_d3.html#~json_d3_glb">json_d3_glb</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-solr_front__bv_d3.html#~AnualChart">AnualChart</a></li><li><a href="module-solr_front__bv_d3.html#~barChart">barChart</a></li><li><a href="module-solr_front__bv_d3.html#~geraCharts">geraCharts</a></li><li><a href="module-solr_front__bv_d3.html#~getRender">getRender</a></li><li><a href="module-solr_front__bv_d3.html#~halfPieChart">halfPieChart</a></li><li><a href="module-solr_front__bv_d3.html#~MensalChart">MensalChart</a></li><li><a href="module-solr_front__bv_d3.html#~pegaLabel">pegaLabel</a></li><li><a href="module-solr_front__bv_d3.html#~temporalChart">temporalChart</a></li></ul></div></li><li><a href="module-solr_front__bv_facet.html">solr_front::bv_facet</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:solr_front::bv_facet_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-solr_front__bv_facet.html#~selectedFacets">selectedFacets</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-solr_front__bv_facet.html#~apresentaFacets">apresentaFacets</a></li><li><a href="module-solr_front__bv_facet.html#~constroiComponentFacetsButtons">constroiComponentFacetsButtons</a></li><li><a href="module-solr_front__bv_facet.html#~geraDropdownfacets">geraDropdownfacets</a></li><li><a href="module-solr_front__bv_facet.html#~incluiTags">incluiTags</a></li><li><a href="module-solr_front__bv_facet.html#~limpaLabelSolr">limpaLabelSolr</a></li><li><a href="module-solr_front__bv_facet.html#~makeDataComponentFacet">makeDataComponentFacet</a></li><li><a href="module-solr_front__bv_facet.html#~removeAllElementSelectedFacets">removeAllElementSelectedFacets</a></li></ul></div></li><li><a href="module-solr_front__bv_querybuilder.html">solr_front::bv_querybuilder</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:solr_front::bv_querybuilder_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-solr_front__bv_querybuilder.html#~instituicao_sede_opt">instituicao_sede_opt</a></li><li><a href="module-solr_front__bv_querybuilder.html#~selecionados">selecionados</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-solr_front__bv_querybuilder.html#~ajax_solr">ajax_solr</a></li><li><a href="module-solr_front__bv_querybuilder.html#~geraRoot">geraRoot</a></li><li><a href="module-solr_front__bv_querybuilder.html#~getBuscaRealizada">getBuscaRealizada</a></li><li><a href="module-solr_front__bv_querybuilder.html#~injectAutocompleteTag">injectAutocompleteTag</a></li><li><a href="module-solr_front__bv_querybuilder.html#~reverse_filter">reverse_filter</a></li></ul></div></li><li><a href="module-solr_front__functions.html">solr_front::functions</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:solr_front::functions_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-solr_front__functions.html#~apresentaPublicacaoes">apresentaPublicacaoes</a></li><li><a href="module-solr_front__functions.html#~collectionsRelacionadas">collectionsRelacionadas</a></li><li><a href="module-solr_front__functions.html#~constroiComponentDocumentos">constroiComponentDocumentos</a></li><li><a href="module-solr_front__functions.html#~constroiComponentTotalizadores">constroiComponentTotalizadores</a></li><li><a href="module-solr_front__functions.html#~constroiComponentTotalizadoresRelacionados">constroiComponentTotalizadoresRelacionados</a></li><li><a href="module-solr_front__functions.html#~criaSelectPivotTable">criaSelectPivotTable</a></li><li><a href="module-solr_front__functions.html#~criaSelectSankeyChart">criaSelectSankeyChart</a></li><li><a href="module-solr_front__functions.html#~define_busca">define_busca</a></li><li><a href="module-solr_front__functions.html#~getData">getData</a></li><li><a href="module-solr_front__functions.html#~getFakeData">getFakeData</a></li><li><a href="module-solr_front__functions.html#~getInitialSearch">getInitialSearch</a></li><li><a href="module-solr_front__functions.html#~getTotalizadores">getTotalizadores</a></li><li><a href="module-solr_front__functions.html#~montaTotal">montaTotal</a></li></ul></div></li><li><a href="module-solr_front__main.html">solr_front::main</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:solr_front::main_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-solr_front__main.html#~jsonPrettyPrint">jsonPrettyPrint</a></li></ul></div></li><li><a href="module-solr_front__utils.html">solr_front::utils</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:solr_front::utils_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-solr_front__utils.html#~contains">contains</a></li><li><a href="module-solr_front__utils.html#~extractLast">extractLast</a></li><li><a href="module-solr_front__utils.html#~htmlToElement">htmlToElement</a></li><li><a href="module-solr_front__utils.html#~shuffle">shuffle</a></li><li><a href="module-solr_front__utils.html#~split">split</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#Component">Component</a></li><li><a href="global.html#DocsComponent">DocsComponent</a></li><li><a href="global.html#DropdownFormComponentExec">DropdownFormComponentExec</a></li><li><a href="global.html#FacetComponentExec">FacetComponentExec</a></li><li><a href="global.html#TotaisComponent">TotaisComponent</a></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+
+/*
+*
+*
+* Definicao da classe Grupo de Componentes, que agrupa componentes.
+*
+*
+*/
+function GroupComponent(){
+  this.instances = []
+}
+
+GroupComponent.prototype.add = function(obj){
+  this.instances.push(obj)
+}
+
+GroupComponent.prototype.filterByOrderData = function(key, reverse){
+  $('#'+key).find('.test').sort(function (a, b) {
+     return $(a).attr('data-percentage') - $(b).attr('data-percentage');
+  })
+  .appendTo('.testWrapper');
+}
+
+GroupComponent.prototype.ArrayObjectOrder= function(list, field, reverse){
+  fields = field.split('.')
+  var ordem = list.sort( function(a,b){
+    var ac = a.contexto[0]
+    var bc = b.contexto[0]
+
+    if(fields.length > 0){
+      for(var i =0; i &lt; fields.length; i++){
+        ac = ac[fields[i]] || ''
+        bc = bc[fields[i]] || ''
+      }
+      var an = ac,
+      bn = bc;
+      }else{
+        var an = a[field],
+        bn = b[field];
+      }
+
+      if( an > bn){
+        return 1;
+      }
+
+      if (an &lt; bn){
+        return -1;
+      }
+      return 0;
+  })
+  return ordem
+}
+
+GroupComponent.prototype.renderExec = function(clean, byorder){
+   $('#loader_facets').css('display', 'flex');
+  var clear = clean || false
+  var byorder = byorder || false
+  if(clear){
+    this.instances[0].cleanContainer()
+  }
+
+  if(byorder){
+    var instances_ordem = this.ArrayObjectOrder(this.instances, byorder)
+    for(var i =0; i &lt; instances_ordem.length; i++){
+      instances_ordem[i].exec()
+    }
+  }else{
+    for(var i =0; i &lt; this.instances.length; i++){
+      this.instances[i].exec()
+    }
+  }
+}
+
+
+GroupComponent.prototype.renderAll = function(clean){
+  if (clean == true){
+    for(var i =0; i &lt; this.instances.length; i++){
+      if(typeof this.instances[i].anexo != 'undefined'){
+        var container = document.getElementById(this.instances[i].anexo)
+        container.innerHTML = ''
+      }
+    }
+  }
+
+  for(var i =0; i &lt; this.instances.length; i++){
+    if(typeof this.instances[i].anexo != 'undefined' ){
+      var container = document.getElementById(this.instances[i].anexo)
+      container.innerHTML += this.instances[i].render()
+    }
+  }
+  this.instances = []
+}
+
+
+
+
+
+
+/**
+*
+*
+* Definicao de classe dos Componentes
+* Cada tipo de comonente extende esta classe.
+*
+*
+**/
+function Component(contexto, anexo, ordem) {
+    //construtor da classe
+    //Dicionario (objeto) contendo chave valor para as variaveis usadas no template
+    this.contexto = contexto;
+
+    // id do container que armazena o componente
+    this.anexo = anexo;
+
+    ordem = ordem ? ordem : false
+    this.ordem = ordem
+}
+
+// metodo destroi instancia
+Component.prototype.destroy = function () {
+  delete this
+}
+
+Component.prototype.template = function(){
+  // Interface deve ser definida na subclasse contendo o html e variaveis de contexto usadas
+  // deve retornar uma string html
+}
+
+//metodo retorna html do componente
+Component.prototype.render = function(){
+  return this.template()
+}
+
+Component.prototype.equals = function(other) {
+ return other.contexto == this.contexto &amp;&amp; other.anexo == this.anexo;
+};
+// anexa todos os componentes da classe em seus respectivos containers
+
+
+
+
+
+
+
+
+/**
+* Criacao do componente de Totais
+*/
+function TotaisComponent(contexto, anexo){
+  Component.call(this, contexto, anexo);
+}
+
+// herda de Component
+TotaisComponent.prototype = new Component();
+TotaisComponent.prototype.constructor = TotaisComponent// ajusta apontamento para classe correta
+
+
+TotaisComponent.prototype.template = function(){
+  if(this.contexto['total']){
+
+    return '&lt;div class="card has-value col-md-4"> \
+      &lt;div class="card__value"> \
+        &lt;p>'+this.contexto['total']+'&lt;/p> \
+      &lt;/div> \
+      &lt;p class="card__desc"> \
+        '+ this.contexto['label'] +'\
+      &lt;/p> \
+    &lt;/div>';
+
+  }else{
+
+    return '&lt;div class="card"> \
+      &lt;div class="card__value"> \
+        &lt;p>0&lt;/p> \
+      &lt;/div> \
+      &lt;p class="card__desc"> \
+        '+ this.contexto['label'] +' \
+      &lt;/p> \
+    &lt;/div>'
+
+  }
+}
+
+
+
+
+
+
+/**
+* Criacao do componente Doc
+*/
+function DocsComponent(contexto, anexo){
+  Component.call(this, contexto, anexo);
+}
+
+// herda de Component
+DocsComponent.prototype = new Component();
+DocsComponent.prototype.constructor = DocsComponent// ajusta apontamento para classe correta
+
+
+DocsComponent.prototype.template = function(){
+  var id_html = this.contexto['label'].replace(/ /g, '_')+'_id'
+  var print = false
+  var links = ''
+  var height = ''
+  for(var i = 0; i &lt; this.contexto['links'].length; i++){
+
+    // debugger;
+    if (this.contexto['links'][i].url === ''){
+      print = true
+      links += this.contexto['links'][i]['titulo'] + '&lt;hr>'
+    }
+    else if(typeof this.contexto['links'][i].url != 'undefined') {
+      print = true
+      links += '&lt;a href="' + this.contexto['links'][i]['url']+ '" target="_blank">' + this.contexto['links'][i]['titulo'] + '&lt;/a>&lt;hr>'
+
+      // Para os conteudos de processos estah com valor hardcoded.
+      // Rever isso.
+      if (this['contexto']['colunas'] == 6){
+        height = '300px'
+      }
+    }
+  }
+  if(print){
+    var subtitulo = this.contexto['situacao'] || '';
+
+    return '&lt;div class="col-md-' + this.contexto['colunas'] + '" style="height:' + height + '">\
+    &lt;h2 class="title_primary">'+this.contexto['label']+'&lt;/h2> \
+    &lt;div class="col-md-11 has-col" id="todos_documentos">\
+      &lt;div class="content_section__header">\
+        &lt;h3 class="title_secondary">'+subtitulo +'&lt;/h3>\
+        &lt;div class="info_qtd" id="'+id_html+'_qt">\
+        '+this.contexto['total']+'&lt;/div> \
+      &lt;/div> \
+      &lt;ul id="'+id_html+'"> \
+      '+  links +  '\
+      &lt;/ul>&lt;/div>&lt;/div>'
+
+    /*
+    return '&lt;div class="col-md-6" style="height:300px">\
+    &lt;h2 class="title_primary">'+this.contexto['label']+'&lt;/h2> \
+  &lt;div class="col-md-11 has-col" id="todos_documentos">\
+    &lt;div class="content_section__header">\
+      &lt;h3 class="title_secondary">'+subtitulo +'&lt;/h3>\
+      &lt;div class="info_qtd" id="'+id_html+'_qt">\
+      '+this.contexto['total']+'&lt;/div> \
+    &lt;/div> \
+    &lt;ul id="'+id_html+'"> \
+    '+  links +  '\
+    &lt;/ul>&lt;/div>&lt;/div>'
+    */
+  }
+  else{
+    return ' '
+  }
+
+
+
+}
+
+
+
+/**
+* Componente do tipo Exec.
+* Deve ser executado para gerar o componente ao invez de renderizado
+**/
+function FacetComponentExec(contexto, anexo, ordem){
+  Component.call(this, contexto, anexo, ordem);
+}
+
+// herda de Component
+FacetComponentExec.prototype = new Component();
+FacetComponentExec.prototype.constructor = FacetComponentExec// ajusta apontamento para classe correta
+
+
+FacetComponentExec.prototype.html = function(id, label, order){
+
+  order = order || 0
+
+  html = '\
+  &lt;style>.list-group-item {\
+    padding: 3px 5px;\
+    border: 1px solid #ddd; &lt;/style>\
+  &lt;!-- botão --> \
+   &lt;a href="#'+id+'" role="button" data-target="#'+ id +'" data-order="'+order+'"class="btn btn-tag" data-toggle="modal"> &lt;i class="fa fa-check" hidden>&lt;/i> '+label+' &lt;i class="contador">&lt;/i> &lt;/a>' +
+
+  ' &lt;!-- modal -->\
+   &lt;div id="'+id+'" class="modal" data-easein="swoopIn" tabindex="-1" role="dialog" aria-labelledby="'+id+'ModalLabel" aria-hidden="false">\
+     &lt;div class="modal-dialog">\
+       &lt;div class="modal-content">\
+         &lt;div class="modal-header">\
+           &lt;button type="button" class="close" data-dismiss="modal" aria-hidden="true">×&lt;/button>\
+           &lt;h4 class="modal-title" id="'+id+'ModalLabel">'+label+'&lt;/h4>'+
+         '&lt;/div>\
+         &lt;div class="modal-body" style="max-height: 70vh; overflow-y: auto;">\
+           &lt;div id="tree_'+id+'" class="facet_list">&lt;/div>'+
+         '&lt;/div>'+
+         '&lt;div class="modal-footer">'+
+            '&lt;button class="btn btn-default form_facet_submit" id="btn-uncheck-all_' + id + '" data-target="tree_'+id+'" data-dismiss="modal" aria-hidden="true">Limpar Filtros&lt;/button>'+
+            '&lt;button class="btn btn-default form_facet_submit" id="div_id' + id + '" data-dismiss="modal" aria-hidden="true">Filtrar&lt;/button>'+
+            '&lt;button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar&lt;/button>'+
+         '&lt;/div>&lt;/div>&lt;/div>&lt;/div>';
+
+   return html
+
+}
+FacetComponentExec.prototype.cleanContainer = function(){
+  $('#'+this.anexo).html('')
+}
+
+FacetComponentExec.prototype.limparselecaoNo = function(id){
+  var selecao = $(id).treeview('getEnabled');
+  for (var i =0; i &lt; selecao.length; i++){
+    var facet = selecao[i]
+    var chave = facet.tag[0].split(':')[0]
+    // define a posição index do elemento
+    // var index = selectedFacets[chave].indexOf(facet.tag[0].split(':')[1])
+    // deleta item encontrado
+    removeAllElementSelectedFacets(chave)
+    break
+  }
+}
+
+
+FacetComponentExec.prototype.exec = function(){
+  // variaveis necessarias no contexto
+  // array[{
+  // label
+  // situacao
+  // data
+ //}, lista de facets selecionados]
+  $('#loader_facets').hide()
+  var id_html = this.contexto[0]['id']
+  if( this.contexto[0].count > 0){
+    // caso existir definição de agrupamento
+    if (typeof this.contexto[0].groupBy != 'undefined'){
+      // se elemento com id ja existe dentro do alvo anexo
+      if( $('#'+this.anexo).find('#'+this.contexto[0].groupBy.id).length ){
+        //anexa elemento no grupo
+        $('#'+this.anexo+ ' #'+this.contexto[0].groupBy.id).append(this.html(id_html, this.contexto[0]['label'], this.contexto[0]['order'] ))
+        $('#'+this.anexo+ ' #'+this.contexto[0].groupBy.id).ordenaElementByAtribute('a', 'data-order')
+      }
+      //caso negativo inclui elemento no alvo anexo
+      else {
+        //inclui grupo
+        var ordenamento = this.contexto[0].groupBy.order || 0
+        $('#'+this.anexo).append('&lt;fieldset data-order='+ordenamento+' >&lt;legend>'+this.contexto[0].groupBy.label +'&lt;/legend> &lt;div class="groupBy" id="'+this.contexto[0].groupBy.id+'">&lt;/div>&lt;/fieldset>')
+        //anexa elemento no grupo
+        $('#'+this.anexo+ ' #'+this.contexto[0].groupBy.id).append(this.html(id_html, this.contexto[0]['label'], this.contexto[0]['order'] ))
+        $('#'+this.anexo+ ' #'+this.contexto[0].groupBy.id).ordenaElementByAtribute('a', 'data-order')
+      }
+    }else{
+      $('#'+this.anexo).append(this.html(id_html, this.contexto[0]['label'], this.contexto[0]['order'] ))
+      $('#'+this.anexo+ ' #'+this.contexto[0].groupBy.id).ordenaElementByAtribute('a', 'data-order')
+    }
+
+    var itens = [makeFacetObjectTree(this.contexto[0], this.contexto[1], this,ordem =this.ordem)] || []
+
+    if( itens.length > 0){
+      $('#tree_'+id_html).treeview({
+        data: itens,
+        levels: 2,
+        showCheckbox: true,
+        multiSelect: true, // permite selecionar multiplos valores
+        highlightSelected: false, // remove coloração do selected
+      });
+
+      // /quando existir seleção de algum nó
+      $('#tree_'+id_html).on('nodeSelected', function(event, data){
+        // aqui deve existir metodo que checa nó ao
+        // selecionaar quando nó não possui filhos
+        $('#tree_'+id_html).treeview('checkNode', [ data.nodeId,  { silent: false } ]) ;
+      });
+
+        //quando existir seleção de algum nó
+      $('#tree_'+id_html).on('nodeUnselected', function(event, data){
+        // aqui deve existir metodo que checa nó ao
+        // deselecionar quando nó não possui filhos
+        $('#tree_'+id_html).treeview('uncheckNode', [ data.nodeId,  { silent: false} ]) ;
+      });
+
+      // //quando caixa do nó for checada
+      $('#tree_'+id_html).on('nodeChecked', function(event, data){
+        if(data.nodeId == 0){
+          addElementInSelectedFacets(data.tag[0].split(':')[0], '*')
+          $('#tree_'+id_html).treeview('checkAll', { silent: false})
+          }else{
+            addElementInSelectedFacets(data.tag[0].split(':')[0], data.tag[0].split(':')[1])
+            if(typeof data.nodes != 'undefined'){
+              for(var i = 0; i &lt; data.nodes.length; i++){
+                $('#tree_'+id_html).treeview('checkNode', [ data.nodes[i].nodeId,  { silent: false } ]) ;
+                addElementInSelectedFacets(data.nodes[i].tag[0].split(':')[0], data.nodes[i]  .tag[0].split(':')[1])
+              }
+            }
+          }
+      });
+
+      //quando caixa do nó for deschecada
+      $('#tree_'+id_html).on('nodeUnchecked', function(event, data){
+          if(data.nodeId == 0){
+            // removeElementInSelectedFacets(data.tag[0].split(':')[0], '*')
+            removeAllElementSelectedFacets(data.tag[0].split(':')[0])
+            //ativa ignoreChildren para aliviar a carga de processamento na recursividade do evento
+            $('#tree_'+id_html).treeview('uncheckAll', { silent: true, ignoreChildren: true })
+          }else{
+            var paiNode =  $('#tree_'+id_html).treeview('getParent', [data.nodeId])
+            if(typeof data.nodes != 'undefined'){
+              for(var i=0; i &lt; data.nodes.length; i++){
+                  $('#tree_'+id_html).treeview('uncheckNode', [data.nodes[i].nodeId, {selent: true}])
+                  removeElementInSelectedFacets(data.nodes[i].tag[0].split(':')[0], data.nodes[i].tag[0].split(':')[1])
+              }
+            }
+            removeElementInSelectedFacets(data.tag[0].split(':')[0], data.tag[0].split(':')[1])
+            if(typeof paiNode.nodeId != undefined){
+              if(paiNode.state.checked ){
+                // laço necessario para deselecionar pais sem reexecutar evento e causar seleções indesejadas
+                  while(typeof paiNode.parentId != 'undefined' || paiNode.nodeId == 0){
+                    $('#tree_'+id_html).treeview('uncheckNode', [paiNode.nodeId, { silent: true }])
+                    removeElementInSelectedFacets(paiNode.tag[0].split(':')[0], paiNode.tag[0].split(':')[1])
+                    paiNode =  $('#tree_'+id_html).treeview('getParent', [paiNode.nodeId])
+                  }
+              }
+            }
+          }
+      });
+    }
+
+    // lida com botões do componente
+    var classe = this
+
+    $('button[id^=btn-uncheck-all_'+id_html+']').click(function(){
+       classe.limparselecaoNo('#'+this.dataset.target) ;
+       getData();
+    })
+
+      // Trata evento de clique do botao de submite no modal dos facets
+    $('#div_id' + id_html).click(function(){
+        // Chama o servidor para recuperar os dados.
+        getData();
+    })
+
+      // caso elemento ainda não existir inclui
+      if($('#'+classe.anexo+' #menu').length == 0){
+        $('#'+classe.anexo).prepend('&lt;div id="menu" style="display:inline-flex">&lt;/div>')
+      }
+
+      if( this.checked == true){
+        if($('#'+classe.anexo+' #menu #limpaAllFiltros').length == 0){
+          $('#'+classe.anexo+' #menu').append('\
+          &lt;button id="limpaAllFiltros" class="btn btn-info" style="margin-left:10px">\
+          &lt;i class="fa fa-erase">&lt;/i>\
+          Limpa todos os Filtros\
+          &lt;/button>')
+        }
+        /*
+        Limpa todos os facets,
+        exceto se indicar que eh funil de uma collection anterior
+        */
+        $('#'+classe.anexo+' #menu #limpaAllFiltros').on('click', function(){
+          Object.keys(selectedFacets).forEach(function(key){
+            // Indica que eh facet de funil
+            // '/cross_collection_/y' causa problema em IE
+            if (! key.match(RegExp("cross_collection_","i"))){
+              delete selectedFacets[key]
+            }
+          });
+          getData();
+        })
+      }
+
+
+      // adiciona menu de ordenação
+      if($('#'+classe.anexo+' #menu #ordena').length == 0){
+        
+        $('#'+classe.anexo+' #menu').append('\
+        &lt;span id="ordena" style="margin-left:10px;">\
+        &lt;button id="Alfabetica" class="btn btn-default" data-order=[\"+text\"] onclick="order_facet(this, [\'+text\'])" data-toggle="popover" title="Ordena facets" data-trigger="hover" data-placement="top" data-content="por ordem Alfabética">\
+        &lt;i class="glyphicon glyphicon-sort-by-alphabet">&lt;/i>\
+        &lt;/button>\
+        &lt;button id="Alfabetica-alt" class="btn btn-default" data-order=[\"-text\"] onclick="order_facet(this, [\'-text\'])" data-toggle="popover" title="Ordena facets" data-trigger="hover" data-placement="top" data-content="por ordem Alfabética inversa">\
+        &lt;i class="glyphicon glyphicon-sort-by-alphabet-alt">&lt;/i>\
+        &lt;/button>\
+        &lt;button id="Numerica" class="btn btn-default" data-order=[\"+count\"] onclick="order_facet(this, [\'+count\'])" data-toggle="popover" title="Ordena facets" data-trigger="hover" data-placement="top" data-content="por quantidade">\
+        &lt;i class="glyphicon glyphicon-sort-by-order">&lt;/i>\
+        &lt;/button>\
+        &lt;button id="Numerica-alt" class="btn btn-default" data-order=[\"-count\"] onclick="order_facet(this, [\'-count\'])" data-toggle="popover" title="Ordena facets" data-trigger="hover" data-placement="top" data-content="por quantidade inversa">\
+        &lt;i class="glyphicon glyphicon-sort-by-order-alt">&lt;/i>\
+        &lt;/button>\
+        &lt;/span>')
+
+        if (typeof colore_botao != 'undefined'){
+          $('#'+colore_botao).addClass('btn-success')
+        }
+        $('[data-toggle="popover"]').popover();
+
+
+      }
+
+
+  }
+}
+
+/* monta unidade de objeto usado no componente de facet
+recursivamente usado para construir arvore de facets */
+function makeFacetObjectTree(item, selecteds, element, ordem){
+
+    ordem = ordem || false
+    if(typeof item != 'undefined'){
+      var itens = item['itens'] || []
+      var label = item['label']  || ''
+      var tag = ''
+      if(  item['id'] != element.contexto[0].id){
+        tag = element.contexto[0].id +':' + item['id']
+      }else{
+        tag = element.contexto[0].id +':*'
+      }
+
+      var obj = {}
+      if (typeof item.count != 'undefined'){
+        if(tag.split(':')[1] != '*'){
+          label = label + ' ('+item.count+')'
+        }
+      }
+
+      obj['text'] = label
+      obj['count'] = item.count &amp;&amp; typeof item.count != 'function' ? item.count : 0
+      obj['tag'] = [tag]
+      obj['selectable'] = true
+      obj['color'] = "#000"
+
+      var contador = {}
+      contador[element.contexto[0].id] = 0
+
+      if( typeof selecteds == 'undefined'){
+        selecteds = []
+      }
+
+      /**se estiver dentro da seleção deve ser checado**/
+      // codigo exempl
+
+      if($.inArray(tag, selecteds) >= 0){
+        if(typeof element != 'undefined'){
+          // nao faz nada
+        }
+
+        contador[element.contexto[0].id] += 1
+
+        //pega botão do facet
+        $('a[href^="#'+ element.contexto[0]['id'] +'"')
+        .addClass('active')
+        .find('i').show()
+
+        // dados possiveis em state
+          // checked: true,
+         // disabled: true,
+         // expanded: true,
+         // selected: true
+
+        // usado para verificação externa
+        element.checked = true;
+        //
+        // //checa e expande elemento
+        obj['state'] = {expanded: true, checked: true}
+
+      }
+
+      for(var i = 0; i &lt; itens.length; i++){
+
+        if ( typeof obj['nodes'] == 'undefined'){
+          obj['nodes'] = []
+        }
+
+        var unit = itens[i]
+
+        var _obj = makeFacetObjectTree(unit, selecteds, element, ordem )
+
+        obj.nodes.push(_obj)
+
+        // so faz a ordenação depois que todos os elementos estiverem incluidos no obj
+        if(obj.nodes.length >= item['itens'].length){
+            // ordena elementos filhos alfabeticamente usando campo texto do obj
+
+            if(ordem){
+              // lista do parametro de ordenamento
+              ordenamento = ordem
+            }else{
+              // ordenamento padrão
+              ordenamento = ['-count', '+text']
+            }
+
+            // chama a função convertendo array em objeto Argument usando metodo apply
+            obj.nodes = obj.nodes.sortBy.apply(obj.nodes, ordenamento)
+       }
+      }
+
+      return obj
+    }
+}
+
+
+/**
+* Componente do tipo Exec
+* Deve ser executado para gerar o componente ao invez de renderizado
+**/
+function DropdownFormComponentExec(contexto, anexo, ordem){
+  Component.call(this, contexto, anexo, ordem);
+}
+
+// herda de Component
+DropdownFormComponentExec.prototype = new Component();
+DropdownFormComponentExec.prototype.constructor = DropdownFormComponentExec// ajusta apontamento para classe correta
+
+
+DropdownFormComponentExec.prototype.template = function(id, click_interface, fields){
+// componente Botão dropdwon com conteudo editavel
+
+    id =  id || ''
+    fields = fields || []
+
+    if (typeof click_interface != 'undefined'){
+      var element = $(click_interface)
+      $(element).attr('id', 'dropdown'+id )
+      $(element).attr('data-toggle', 'dropdown')
+      $(element).attr('aria-haspopup', 'true')
+      $(element).attr('aria-expanded', 'false')
+      click_interface = $(element).prop('outerHTML')
+
+    }else{
+      click_interface = '&lt;i class="glyphicon glyphicon-info-sign dropdown-toggle" id="dropdown'+id+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size:18px; color:white">&lt;/i>'
+    }
+
+    html = '&lt;span id="'+id+'" class="dropdown"> '+ click_interface +'\
+        &lt;div class="dropdown-menu" aria-labelledby="dropdown'+id+'" style="min-width:250px;" >\
+        &lt;div class dropdown-content" style="margin:15px">\
+        &lt;form class="px-4 py-3" >'
+
+        for (var i = 0; i &lt; fields.length; i++){
+          html += '&lt;div class="form-group">\
+                    &lt;label for="">'+fields[i]['label']+'&lt;/label>\
+                    &lt;a href="#" id="dp-field_'+fields[i]['id']+'" data-name="'+fields[i]['label']+'" data-params={csrfmiddlewaretoken:"'+csrf+'"}  data-mode="'+fields[i]['mode']+'" data-type="'+fields[i]['type']+'"  data-pk ="'+fields[i]['pk']+'" data-url="'+fields[i]['url_ajax']+'" >'+fields[i]['initial_data']+'&lt;/a>\
+                  &lt;/div>'
+        }
+
+    html += '&lt;/form>\
+            &lt;/div>\
+            &lt;/span>'
+
+    return html
+}
+
+DropdownFormComponentExec.prototype.cleanContainer = function(){
+  $('#'+this.anexo).html('')
+}
+
+DropdownFormComponentExec.prototype.exec = function(){
+
+  // variaveis necessarias no contexto
+  // {
+  // id : string
+  // click_interface : string(html)
+  // fields : array[{
+  //  id
+  //  label
+  //  type (
+  //     text
+  //     textarea
+  //     select
+  //     date
+  //     datetime
+  //     dateui
+  //     combodate
+  //     html5types
+  //     checklist
+  //     wysihtml5
+  //     typeahead
+  //     typeaheadjs
+  //     select2
+  //  )
+  //  initial_data
+  //  url_ajax
+  //  mode (inline or popup)
+  // }]
+  // }
+
+
+
+    $('#'+this.anexo).append(this.template(this.contexto['id'], this.contexto['click_interface'], this.contexto['fields'] ))
+
+    //ativa todos os fileds para edição
+    for(var i =0; i &lt; this.contexto['fields'].length; i++){
+      $('#dp-field_'+this.contexto['fields'][i]['id']).editable({
+        success : function ( response , newValue ) {
+          console.log(response)
+          if ( response.status == 'error' ) return response.msg ; // msg será mostrado em formato editável
+          vertice = response.vertice
+          navigation_tree = response.navigation_tree
+          // redesenha grafico de navegação
+          create_svg_navigate(navigation_tree)
+        }
+      })
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="/static-files/solr_front/img/logo_buscador.jpg" style="width: 160px; height: 52px">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

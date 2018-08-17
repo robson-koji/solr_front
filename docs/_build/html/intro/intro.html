@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introdução &mdash; Documentação Solr Font 0.1</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Índice"
+              href="../genindex.html"/>
+        <link rel="search" title="Pesquisar" href="../search.html"/>
+    <link rel="top" title="Documentação Solr Font 0.1" href="../index.html"/>
+        <link rel="next" title="Utilização" href="util.html"/>
+        <link rel="prev" title="Documentação Solr Front" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Solr Font
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introdução</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#nomenclatura">Nomenclatura</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sistema-subsistema">Sistema/subsistema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subsistema-solr-front">Subsistema Solr Front</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#solr-search-engine">Solr Search Engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#front-end-javascript">Front end Javascript</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-django">Python/Django</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="util.html">Utilização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Instalação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/config.html">Configuração</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../infra/infra.html">Infraestrutura</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coll_rela.html">Collections relacionadas</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Solr Font</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Introdução</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/intro/intro.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introducao">
+<span id="introducao"></span><h1>Introdução<a class="headerlink" href="#introducao" title="Link permanente para este título">¶</a></h1>
+<p>Este sistema é um portal web, genericamente chamado de Solr Front, ou ainda de Buscador Analítico. O Solr Front/Buscador é uma ferramenta de análise de dados multipropósito, onde  dados de quaisquer natureza podem ser carregados, visualizados e analisados.</p>
+<p>Para que uma base de dados possa ser analisada no sistema, é necessário realziar dois processos:</p>
+<ul class="simple">
+<li>ETL (extração, transformação e carga)</li>
+<li>Configuração da coleção de dados.</li>
+</ul>
+<p>Estes dois processos serão descritos ao longo neste documento.</p>
+<div class="section" id="nomenclatura">
+<span id="nomenclatura"></span><h2>Nomenclatura<a class="headerlink" href="#nomenclatura" title="Link permanente para este título">¶</a></h2>
+<p>Este sistema é genericamente chamado de Buscador Analítico ou ainda de Solr Front.
+Buscador Analítico porque o objetivo é realizar buscas e efetuar análises em bases de dados de grandes volumes.
+Solr Front porque o backend do sistema utiliza o sistema Solr, e agrega uma camada de front-end para o mesmo. Solr é um mecanismo de buscas utilizado em aplicações críticas de grande porte</p>
+<p>As denominações utilizadas neste documento, Coleção de dados e Collection se referem a bases de dados genéricas. Uma Collection é uma base de dados carregada no Buscador Analítico.</p>
+</div>
+<div class="section" id="sistema-subsistema">
+<span id="sistema-subsistema"></span><h2>Sistema/subsistema<a class="headerlink" href="#sistema-subsistema" title="Link permanente para este título">¶</a></h2>
+<p>O sistema Solr Front / Buscador Analítico é uma aplicação web com dois subsistemas envolvidos, que serão descritos mais abaixo.</p>
+<p>Além do subsistema web, há um outro subsistema de carga de dados, genericamente chamado de ETL, do inglês Extract Transform Load (Extração Transformação Carregamento). Como o Solr Front é basicamente um sistema de busca e análise de dados, a maneira como os dados são organizados é fundamental, e essa organização se dá através dos processos de ETL.</p>
+</div>
+<div class="section" id="subsistema-solr-front">
+<span id="subsistema-solr-front"></span><h2>Subsistema Solr Front<a class="headerlink" href="#subsistema-solr-front" title="Link permanente para este título">¶</a></h2>
+<p>A arquitetura deste sistema envolve a utilização de 4 grandes componentes:</p>
+<div class="section" id="solr-search-engine">
+<span id="solr-search-engine"></span><h3>Solr Search Engine<a class="headerlink" href="#solr-search-engine" title="Link permanente para este título">¶</a></h3>
+<p>Solr é uma plataforma de pesquisa de código aberto , escrita em Java, do projeto Apache Lucene. Seus principais recursos incluem pesquisa de texto completo, indexação em tempo real, clustering dinâmico, integração de banco de dados como NoSQL e gerenciamento de documentos ricos (HTML, Word, PDF). - Origem: Wikipédia, a enciclopédia livre.</p>
+</div>
+<div class="section" id="front-end-javascript">
+<span id="front-end-javascript"></span><h3>Front end Javascript<a class="headerlink" href="#front-end-javascript" title="Link permanente para este título">¶</a></h3>
+<p>A camada de apresentação, que é a interface que o usuário efetivamente acessa, utiliza Javascript e alguns frameworks como Jquery, d3js etc, para montar a página HTML, filtros, componente de busca, gráficos etc.</p>
+</div>
+<div class="section" id="python-django">
+<span id="python-django"></span><h3>Python/Django<a class="headerlink" href="#python-django" title="Link permanente para este título">¶</a></h3>
+<p>A aplicação web Python/Django atua como um middleware entre as requisições do front end e o Solr Front.
+Um banco de dados relacional é utilizado para armazenar algumas consultas no buscador, para controle de atualização de dados.
+É previsto o desenvolvimento de um componente de colaboração, onde um usuário cadastrado no sistema possa compartilhar as suas buscas, publicamente, ou com outros usuários cadastrados.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="util.html" class="btn btn-neutral float-right" title="Utilização" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="Documentação Solr Front" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

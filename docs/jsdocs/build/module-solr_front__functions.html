@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Module: solr_front::functions | Javascript Docs Solr Front</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 160px; height: 52px">
+        
+            <a href="/buscador/docs" rel="noopener noreferrer" target="_blank">
+                <img src="/static-files/solr_front/img/logo_buscador.jpg" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Javascript Docs Solr Front</a></h1>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Tutorias</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-solr_front__bv_d3.html">solr_front::bv_d3</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:solr_front::bv_d3_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-solr_front__bv_d3.html#~json_d3_glb">json_d3_glb</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-solr_front__bv_d3.html#~AnualChart">AnualChart</a></li><li><a href="module-solr_front__bv_d3.html#~barChart">barChart</a></li><li><a href="module-solr_front__bv_d3.html#~geraCharts">geraCharts</a></li><li><a href="module-solr_front__bv_d3.html#~getRender">getRender</a></li><li><a href="module-solr_front__bv_d3.html#~halfPieChart">halfPieChart</a></li><li><a href="module-solr_front__bv_d3.html#~MensalChart">MensalChart</a></li><li><a href="module-solr_front__bv_d3.html#~pegaLabel">pegaLabel</a></li><li><a href="module-solr_front__bv_d3.html#~temporalChart">temporalChart</a></li></ul></div></li><li><a href="module-solr_front__bv_facet.html">solr_front::bv_facet</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:solr_front::bv_facet_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-solr_front__bv_facet.html#~selectedFacets">selectedFacets</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-solr_front__bv_facet.html#~apresentaFacets">apresentaFacets</a></li><li><a href="module-solr_front__bv_facet.html#~constroiComponentFacetsButtons">constroiComponentFacetsButtons</a></li><li><a href="module-solr_front__bv_facet.html#~geraDropdownfacets">geraDropdownfacets</a></li><li><a href="module-solr_front__bv_facet.html#~incluiTags">incluiTags</a></li><li><a href="module-solr_front__bv_facet.html#~limpaLabelSolr">limpaLabelSolr</a></li><li><a href="module-solr_front__bv_facet.html#~makeDataComponentFacet">makeDataComponentFacet</a></li><li><a href="module-solr_front__bv_facet.html#~removeAllElementSelectedFacets">removeAllElementSelectedFacets</a></li></ul></div></li><li><a href="module-solr_front__bv_querybuilder.html">solr_front::bv_querybuilder</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:solr_front::bv_querybuilder_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-solr_front__bv_querybuilder.html#~instituicao_sede_opt">instituicao_sede_opt</a></li><li><a href="module-solr_front__bv_querybuilder.html#~selecionados">selecionados</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-solr_front__bv_querybuilder.html#~ajax_solr">ajax_solr</a></li><li><a href="module-solr_front__bv_querybuilder.html#~geraRoot">geraRoot</a></li><li><a href="module-solr_front__bv_querybuilder.html#~getBuscaRealizada">getBuscaRealizada</a></li><li><a href="module-solr_front__bv_querybuilder.html#~injectAutocompleteTag">injectAutocompleteTag</a></li><li><a href="module-solr_front__bv_querybuilder.html#~reverse_filter">reverse_filter</a></li></ul></div></li><li><a href="module-solr_front__functions.html">solr_front::functions</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:solr_front::functions_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-solr_front__functions.html#~apresentaPublicacaoes">apresentaPublicacaoes</a></li><li><a href="module-solr_front__functions.html#~collectionsRelacionadas">collectionsRelacionadas</a></li><li><a href="module-solr_front__functions.html#~constroiComponentDocumentos">constroiComponentDocumentos</a></li><li><a href="module-solr_front__functions.html#~constroiComponentTotalizadores">constroiComponentTotalizadores</a></li><li><a href="module-solr_front__functions.html#~constroiComponentTotalizadoresRelacionados">constroiComponentTotalizadoresRelacionados</a></li><li><a href="module-solr_front__functions.html#~criaSelectPivotTable">criaSelectPivotTable</a></li><li><a href="module-solr_front__functions.html#~criaSelectSankeyChart">criaSelectSankeyChart</a></li><li><a href="module-solr_front__functions.html#~define_busca">define_busca</a></li><li><a href="module-solr_front__functions.html#~getData">getData</a></li><li><a href="module-solr_front__functions.html#~getFakeData">getFakeData</a></li><li><a href="module-solr_front__functions.html#~getInitialSearch">getInitialSearch</a></li><li><a href="module-solr_front__functions.html#~getTotalizadores">getTotalizadores</a></li><li><a href="module-solr_front__functions.html#~montaTotal">montaTotal</a></li></ul></div></li><li><a href="module-solr_front__main.html">solr_front::main</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:solr_front::main_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-solr_front__main.html#~jsonPrettyPrint">jsonPrettyPrint</a></li></ul></div></li><li><a href="module-solr_front__utils.html">solr_front::utils</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:solr_front::utils_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-solr_front__utils.html#~contains">contains</a></li><li><a href="module-solr_front__utils.html#~extractLast">extractLast</a></li><li><a href="module-solr_front__utils.html#~htmlToElement">htmlToElement</a></li><li><a href="module-solr_front__utils.html#~shuffle">shuffle</a></li><li><a href="module-solr_front__utils.html#~split">split</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#Component">Component</a></li><li><a href="global.html#DocsComponent">DocsComponent</a></li><li><a href="global.html#DropdownFormComponentExec">DropdownFormComponentExec</a></li><li><a href="global.html#FacetComponentExec">FacetComponentExec</a></li><li><a href="global.html#TotaisComponent">TotaisComponent</a></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>solr_front::functions</h2>
+        
+            
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+                <div class="description"><p>Funções da aplicação</p>
+<h4>Existem 4 chamadas ajax</h4><ul>
+<li><p>1 para carregar o autocomplete do querybuilder.</p>
+</li>
+<li><p>1 para a busca principal</p>
+</li>
+<li><p>1 para a caixa de pesquisa</p>
+</li>
+<li><p>1 para o grafico multifacet</p>
+</li>
+</ul></div>
+            
+
+            
+                
+
+<dt>
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+                
+
+<dt>
+    
+        <h4 class="name" id="~apresentaPublicacaoes">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>apresentaPublicacaoes<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line360">line 360</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Mostra as ultimas 20 publicacoes.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~collectionsRelacionadas">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>collectionsRelacionadas<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line254">line 254</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Recupera dados agregados de collections relacionadas</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~constroiComponentDocumentos">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>constroiComponentDocumentos<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line602">line 602</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>gera componente que contem links de auxilios e bolsas
+listados e categorizados</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~constroiComponentTotalizadores">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>constroiComponentTotalizadores<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line537">line 537</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>gera componentes de blocos com totais</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~constroiComponentTotalizadoresRelacionados">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>constroiComponentTotalizadoresRelacionados<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line578">line 578</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>gera componente com blocos de totais de docuemntos relacionados</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~criaSelectPivotTable">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>criaSelectPivotTable<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line471">line 471</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Monta os Select fields da tabela pivo</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~criaSelectSankeyChart">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>criaSelectSankeyChart<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line429">line 429</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Monta os Select fields do grafico Sankey</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~define_busca">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>define_busca<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line521">line 521</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>gera variavel de busca utilizada na função GetData</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~getData">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>getData<span class="signature">(busca_realizada_str)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line87">line 87</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Faz a principal chamada Ajax no servidor.
+Qdo essa fnc eh chamada ela pode receber dados estaticos na inicializacao
+e carregar todos projetos e bolsas. Ainda pode receber estaticos para teste.</p>
+<p>Se nao receber dados estaticos, a funcao recupera no Querybuilder a busca realizada
+e faz request no servidor.</p>
+<p>No sucesso chama a montagem da pagina atraves de funcoes especificas, comecando
+pelo esqueleto e incluindo os demais elementos.
+Os respectivos elements sao realizados outros  ajax para recuperar os dados
+da cx de pesquisa e para o grafico interativo.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>busca_realizada_str</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>String de busca realizada no queryBuilder</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~getFakeData">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>getFakeData<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line513">line 513</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Realiza busca vazia</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~getInitialSearch">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>getInitialSearch<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line230">line 230</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Define dados estaticos para uma busca de todas as bolsas e auxilios.
+Utilizado na carga inicial da pagina.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~getTotalizadores">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>getTotalizadores<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line378">line 378</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Gera blocos totalizadores no front</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~montaTotal">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>montaTotal<span class="signature">(data)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="functions.js.html">functions.js</a></code>,
+                <code><a href="functions.js.html#line22">line 22</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Funcao principal de renderizacao da pagina.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">JSON</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Json contendo facets</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="/static-files/solr_front/img/logo_buscador.jpg" style="width: 160px; height: 52px">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = 'module:solr_front::functions_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>
