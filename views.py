@@ -750,6 +750,12 @@ class SolrQueries(LoginRequiredMixin, View):
         data = [('q', '*:*'), ('fl', ','), ('fq', fq), ('json.facet', avg)] + selected_facets
         return data
 
+    def get_facets_json_api_median(self, median_field, fq, selected_facets):
+        """ Retorna a media dos valores numericos de um facet """
+        median = '{median:"percentile(' + median_field + ',50)"}'
+        data = [('q', '*:*'), ('fl', ','), ('fq', fq), ('json.facet', median)] + selected_facets
+        return data
+
     def get_facets_json_api_unique(self, unique_field, fq, selected_facets):
         """ Recupera a qt de valores unicos para um determinado facet """
         se = 'null(unique(search(%s, qt="/export", q=*:*, fl="%s", sort="%s asc", %s),over="%s"),)'
@@ -1373,6 +1379,8 @@ class EntryPointView(LoginRequiredMixin, View):
             generic_json['colunas'] = totalizador['colunas']
         if 'type' in totalizador:
             generic_json['type'] = totalizador['type']
+        if 'data_type' in totalizador:
+            generic_json['data_type'] = totalizador['data_type']
 
         solr_json[totalizador['order']] = generic_json
         return solr_json
@@ -1736,6 +1744,10 @@ class RelatedCollection(EntryPointView):
         self.update_vertice()
         return {'count': count, 'top': top, 'related_content': related_content}
 
+def currency(totalizador):
+    return ("%.2f" % round(totalizador,2))
+
+
 
 class TotalizadorView(EntryPointView):
     """
@@ -1761,7 +1773,7 @@ class TotalizadorView(EntryPointView):
         {'docs': [], 'numFound': 4260, 'order': 1, 'label': 'Aux\xc3\xadlios - Em andamento'}
         """
         totalizadores = COLLECTIONS[self.collection]['OUTCOMES']
-        solr_json = {'facet': {}, 'sum': {}, 'unique': {}, 'avg': {}}
+        solr_json = {'facet': {}, 'sum': {}, 'unique': {}, 'avg': {}, 'median':{}}
         for totalizador in totalizadores:
             data_type_fn = self.check_data_type(totalizador)
 
@@ -1786,13 +1798,13 @@ class TotalizadorView(EntryPointView):
                 try:
                     totalizador_dict = {}
                     totalizador_dict['numFound'] = self.solr_queries.sorlJsonQuery(data)['facets']['sum']
-                    totalizador_dict['numFound'] = totalizador_dict['numFound']
                 except GetSolarDataException:
                     raise
 
                 if data_type_fn:
                     totalizador_dict['numFound'] = data_type_fn(totalizador_dict['numFound'])
                 solr_json['sum'] = self.consolida_totalizador(solr_json['sum'], totalizador_dict, totalizador)
+
 
             elif 'unique' in totalizador:
                 try:
@@ -1818,6 +1830,20 @@ class TotalizadorView(EntryPointView):
                 if data_type_fn:
                     totalizador_dict['numFound'] = data_type_fn(totalizador_dict['numFound'])
                 solr_json['avg'] = self.consolida_totalizador(solr_json['avg'], totalizador_dict, totalizador)
+
+            elif 'median' in totalizador:
+                try:
+                    data = self.solr_queries.get_facets_json_api_median(totalizador['median'], self.fq,
+                                                                     self.json_selected_facets)
+                    totalizador_dict = {}
+                    totalizador_dict['numFound'] = self.solr_queries.sorlJsonQuery(data)['facets']['median']
+                    totalizador_dict['numFound'] = totalizador_dict['numFound']
+                except GetSolarDataException:
+                    raise
+
+                if data_type_fn:
+                    totalizador_dict['numFound'] = data_type_fn(totalizador_dict['numFound'])
+                solr_json['median'] = self.consolida_totalizador(solr_json['median'], totalizador_dict, totalizador)
 
         return solr_json
 

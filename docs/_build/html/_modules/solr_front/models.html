@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>solr_front.models &mdash; Documentação Solr Font 0.1</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Índice"
+              href="../../genindex.html"/>
+        <link rel="search" title="Pesquisar" href="../../search.html"/>
+    <link rel="top" title="Documentação Solr Font 0.1" href="../../index.html"/>
+        <link rel="up" title="Código do módulo" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Solr Font
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro/intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro/util.html">Utilização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/install.html">Instalação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/config.html">Configuração</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../infra/infra.html">Infraestrutura</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro/coll_rela.html">Collections relacionadas</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Solr Font</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Código do módulo</a> &raquo;</li>
+        
+      <li>solr_front.models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Código fonte de solr_front.models</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="k">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="k">import</span> <span class="n">relativedelta</span><span class="p">,</span> <span class="n">MO</span>
+
+
+
+
+<div class="viewcode-block" id="Pesquisa"><a class="viewcode-back" href="../../code/models.html#solr_front.models.Pesquisa">[documentos]</a><span class="k">class</span> <span class="nc">Pesquisa</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classe abstrata necessaria para utilizar o CBV no buscador.</span>
+<span class="sd">    Na modelagem da parte do usuario e da indexacao, verificar se eh possivel</span>
+<span class="sd">    excluir essa classe e utilizar outra real.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># fields = []</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;__all__&quot;</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="RelatedCollectionsCheck"><a class="viewcode-back" href="../../code/models.html#solr_front.models.RelatedCollectionsCheck">[documentos]</a><span class="k">class</span> <span class="nc">RelatedCollectionsCheck</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Armazena o status (data) da contagem das collections relacionadas e</span>
+<span class="sd">    o status (data) da indexacao da sub-collection relacionada.</span>
+
+<span class="sd">    Model utilizado para controlar a frequencia e status de atualizacao das</span>
+<span class="sd">    informacoes de collections relacioadas.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hash_querybuilder</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="s1">u&#39;HashQuerybuilder&#39;</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help_text</span><span class="o">=</span><span class="s1">&#39;Hash do texto da busca do querybuilder, apos o Join com a respectiva collection relacionada.&#39;</span> <span class="p">)</span>
+    <span class="n">join</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="s1">u&#39;Join entre as collections da busca realizada&#39;</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+    <span class="n">qt_col1</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="s1">u&#39;Quantidade do join na coluna 1&#39;</span><span class="p">,</span><span class="n">help_text</span><span class="o">=</span><span class="s1">&#39;&#39;</span> <span class="p">)</span>
+    <span class="n">qt_col2</span> <span class="o">=</span>  <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="s1">u&#39;Quantidade do join na coluna 2&#39;</span><span class="p">,</span><span class="n">help_text</span><span class="o">=</span><span class="s1">&#39;&#39;</span> <span class="p">)</span>
+    <span class="c1"># top_col1 =</span>
+    <span class="c1"># top_col2 =</span>
+    <span class="n">created_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="s1">u&#39;Data de criação da busca&#39;</span><span class="p">)</span>
+    <span class="n">counted_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="s1">u&#39;Última contagem da busca relacionada&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">indexed_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="s1">u&#39;Última indexação da sub-collection&#39;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="RelatedCollectionsCheck.recount"><a class="viewcode-back" href="../../code/models.html#solr_front.models.RelatedCollectionsCheck.recount">[documentos]</a>    <span class="k">def</span> <span class="nf">recount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retorna se os dados indexados estao validos</span>
+<span class="sd">        # Passar para o arquivo de configuracao da collection, ou via admin, como</span>
+<span class="sd">        # configurar a data de expiracao da verificacao do recount.</span>
+<span class="sd">        # Para o caso da BV que atualiza uma vez por semana aos finais de semana,</span>
+<span class="sd">        # pega a data da ultima segunda-feira e caso a ultima atualizacao counted_date</span>
+<span class="sd">        # seja anterior a atualizacao dos dados (ultima segunda-feira), reconta.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Caso problema de inconsistencia no campo counted_data. (problemas em dev)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counted_date</span> <span class="p">,</span> <span class="n">datetime</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+
+        <span class="c1"># Utilizando esse threshold_date para a BV</span>
+        <span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+        <span class="n">last_monday</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">weekday</span><span class="o">=</span><span class="n">MO</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">threshold_date</span><span class="p">:</span> <span class="n">threshold_date</span> <span class="o">=</span> <span class="n">last_monday</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">counted_date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">threshold_date</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+        
+
+<div class="viewcode-block" id="RelatedCollectionsCheck.reindex"><a class="viewcode-back" href="../../code/models.html#solr_front.models.RelatedCollectionsCheck.reindex">[documentos]</a>    <span class="k">def</span> <span class="nf">reindex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Caso problema de inconsistencia no campo indexed_date. (problemas em dev)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indexed_date</span> <span class="p">,</span> <span class="n">datetime</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># Utilizando esse threshold_date para a BV</span>
+        <span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+        <span class="n">last_monday</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">weekday</span><span class="o">=</span><span class="n">MO</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">threshold_date</span><span class="p">:</span> <span class="n">threshold_date</span> <span class="o">=</span> <span class="n">last_monday</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexed_date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">threshold_date</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="RelatedCollectionsCheck.save"><a class="viewcode-back" href="../../code/models.html#solr_front.models.RelatedCollectionsCheck.save">[documentos]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">counted_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">created_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">RelatedCollectionsCheck</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

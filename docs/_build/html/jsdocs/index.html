@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Documentação JavaScript do projeto Solr Front &mdash; Documentação Solr Font 0.1</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Índice"
+              href="../genindex.html"/>
+        <link rel="search" title="Pesquisar" href="../search.html"/>
+    <link rel="top" title="Documentação Solr Font 0.1" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Solr Font
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/util.html">Utilização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Instalação</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/config.html">Configuração</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../infra/infra.html">Infraestrutura</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/coll_rela.html">Collections relacionadas</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Solr Font</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li><strong>Documentação JavaScript do projeto Solr Front</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/jsdocs/index.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="documentacao-javascript-do-projeto-solr-front">
+<span id="documentacao-javascript-do-projeto-solr-front"></span><h1><strong>Documentação JavaScript do projeto Solr Front</strong><a class="headerlink" href="#documentacao-javascript-do-projeto-solr-front" title="Link permanente para este título">¶</a></h1>
+<div class="section" id="sobre">
+<span id="sobre"></span><h2>Sobre<a class="headerlink" href="#sobre" title="Link permanente para este título">¶</a></h2>
+<p>Esta documentação é gerada com a utilização do pacote Jsdoc 3. Para sua instalação use o comando, como root do sistema, <code class="docutils literal"><span class="pre">npm</span> <span class="pre">install</span> <span class="pre">-g</span> <span class="pre">jsdoc</span></code></p>
+<div class="section" id="dependencias">
+<span id="dependencias"></span><h3>Dependencias<a class="headerlink" href="#dependencias" title="Link permanente para este título">¶</a></h3>
+<ul class="simple">
+<li>Node 4.8 ou superior</li>
+<li>Jsdoc 3
+- Template minami
+- Template tui-jsdoc-template</li>
+</ul>
+</div>
+</div>
+<div class="section" id="templates">
+<span id="templates"></span><h2>Templates<a class="headerlink" href="#templates" title="Link permanente para este título">¶</a></h2>
+<p>Para utilização dos templates presentes no arquivo de configuração <code class="docutils literal"><span class="pre">conf.js</span></code> instale os seguintes pacotes como root:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">npm</span> <span class="pre">install</span> <span class="pre">-g</span> <span class="pre">minami</span></code></li>
+</ul>
+<p><a class="reference external" href="https://github.com/nijikokun/minami">o projeto pode ser conferido aqui</a></p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">npm</span> <span class="pre">install</span> <span class="pre">-D</span> <span class="pre">-g</span> <span class="pre">tui-jsdoc-template</span></code></li>
+</ul>
+<p><a class="reference external" href="https://github.com/nhnent/tui.jsdoc-template">o projeto pode ser conferido aqui</a></p>
+<p>Qualquer outro novo template instalado via npm, deve ser instalado globalmente <code class="docutils literal"><span class="pre">-g</span></code> como root do sistema e incluir no arquivo de configuração o path do node_modules, global que é <code class="docutils literal"><span class="pre">/usr/lib/node_modules/{{nome</span> <span class="pre">do</span> <span class="pre">template}}/</span></code></p>
+</div>
+<div class="section" id="como-gerar-a-documentacao">
+<span id="como-gerar-a-documentacao"></span><h2>Como gerar a documentação<a class="headerlink" href="#como-gerar-a-documentacao" title="Link permanente para este título">¶</a></h2>
+<p>Para gerar a documentação use o comando <code class="docutils literal"><span class="pre">jsdoc</span> <span class="pre">-c</span> <span class="pre">jsdocs/conf.js</span></code> a partir do diretorio raiz do projeto. Os diretorios build e tutoriais devem ser ciados manualmente dentro da pasta docs/jsdocs/*</p>
+<p><em>Dica:</em>
+<em>Para evitar erros na compilção no momento de geração da documentação, certifique-se que na configuração o ultimo item de uma lista nunca tenha virgula.</em></p>
+</div>
+<div class="section" id="como-documentar">
+<span id="como-documentar"></span><h2>Como documentar<a class="headerlink" href="#como-documentar" title="Link permanente para este título">¶</a></h2>
+<p>É necessário incluir o app django que deseja documentar na configuração conf.js</p>
+<p><strong>Exemplo</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="p">{</span>
+
+  <span class="s2">&quot;include&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;solr_front&quot;</span><span class="p">,</span> <span class="s2">&quot;outro app&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>E então deve-se incluir em cada arquivo js do app, a tag <code class="docutils literal"><span class="pre">/*&#64;module</span> <span class="pre">AppName::FileName*/</span></code></p>
+<p>Por fim utilize o formato de documentação Jsdoc em cada classe ou função que deseje documentar, para
+maiores informações sobre o formato de documentação acesse, <a class="reference external" href="http://usejsdoc.org/howto-es2015-classes.html">ES 2015 class</a>, <a class="reference external" href="http://usejsdoc.org/howto-es2015-modules.html">ES 2015 Modules</a>, <a class="reference external" href="http://usejsdoc.org/howto-commonjs-modules.html">CommonJS Modules</a> e <a class="reference external" href="http://usejsdoc.org/howto-amd-modules.html">AMD Modules</a></p>
+</div>
+<div class="section" id="tutoriais">
+<span id="tutoriais"></span><h2>Tutoriais<a class="headerlink" href="#tutoriais" title="Link permanente para este título">¶</a></h2>
+<p>Crie e edite arquivos .md no diretório <code class="docutils literal"><span class="pre">jsdocs/tutoriais</span></code>, os arquivos seram automaticamente incluidos na geração de documentação.</p>
+<p>Para incluir link para tutorial diretamente em uma classe ou função, utilize a Tag <code class="docutils literal"><span class="pre">/*&#64;tutorial</span> <span class="pre">nomeArquivoSemExtensão</span> <span class="pre">*/</span></code>  mais informações em <a class="reference external" href="http://usejsdoc.org/tags-inline-tutorial.html">&#64;useJSDoc</a></p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

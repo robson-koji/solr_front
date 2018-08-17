@@ -1,0 +1,325 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Configuração &mdash; Documentação Solr Font 0.1</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Índice"
+              href="../genindex.html"/>
+        <link rel="search" title="Pesquisar" href="../search.html"/>
+    <link rel="top" title="Documentação Solr Font 0.1" href="../index.html"/>
+        <link rel="next" title="Infraestrutura" href="../infra/infra.html"/>
+        <link rel="prev" title="Instalação" href="install.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Solr Font
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro/intro.html">Introdução</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/util.html">Utilização</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Instalação</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuração</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#estrutura-do-grafo-e-das-collections">Estrutura do Grafo e das collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#arquivos">Arquivos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#django">Django</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#urls">Urls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#templates">Templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#arquivos">Arquivos</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#settings-py">settings.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#installed-apps">INSTALLED_APPS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#template-context-processors">TEMPLATE_CONTEXT_PROCESSORS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#logging">Logging</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../infra/infra.html">Infraestrutura</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/coll_rela.html">Collections relacionadas</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Solr Font</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Configuração</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/install/config.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="configuracao">
+<span id="configuracao"></span><h1>Configuração<a class="headerlink" href="#configuracao" title="Link permanente para este título">¶</a></h1>
+<div class="section" id="estrutura-do-grafo-e-das-collections">
+<span id="estrutura-do-grafo-e-das-collections"></span><h2>Estrutura do Grafo e das collections<a class="headerlink" href="#estrutura-do-grafo-e-das-collections" title="Link permanente para este título">¶</a></h2>
+<p>A estrutura de dados do buscador é um grafo, e a mesma é configurada em um arquivo formato JSON &lt;solr_front_conf.json&gt;.
+O grafo é um conjunto de collections e cada collection também é configurada em um arquivo JSON. O arquivo de configuração tem o nome da collection mais a extenssão json. Por exemplo &lt;nome_da_collection&gt;.json. Os arquivos de configuração das collections ficam na pasta collection na mesma hierarquia que o arquivo de configuração da estrutura do buscador &lt;solr_front_cont.json&gt;.
+Quando o app solr_front é inicializado (init.py), o mesmo procura pelos arquivos de configuração em um diretório. Existem três maneiras de configurar onde esses arquivos ficam armazenados:</p>
+<ol class="simple">
+<li>settings.py
+A primeira delas é configura a variável SORL_FRONT_CONFIG_PATH no settings.py do projeto Django.</li>
+<li>Pasta /solr_front/conf/custom/
+Caso não exista a configuração acima, o sistema procurará os arquivos nessa pasta. Pode-se fazer um link simbólico dessa pasta para uma determinada pasta no files system, porém esse link é sobrescrito toda vez que a aplicação for atualizada.</li>
+<li>Pasta /solr_front/conf/sample/
+Caso nenhuma das duas tentativas acima funcione, o buscador irá utilizar a configuração default que vem no sistema.</li>
+</ol>
+</div>
+<div class="section" id="arquivos">
+<span id="arquivos"></span><h2>Arquivos<a class="headerlink" href="#arquivos" title="Link permanente para este título">¶</a></h2>
+<ul class="simple">
+<li>solr_front_conf.json
+Este arquivo lista as collections que serão utilizado no Buscador. A estrutura que relaciona as collections é um Grafo.</li>
+<li><collection>.py
+Este arquivo tem todas as configurações de cada collection, como por exemplo mas não só:
+Lista de Facets
+Configurações dos gráficos apresentados
+Configuração de títulos, labels, etc.</li>
+</ul>
+</div>
+<div class="section" id="django">
+<span id="django"></span><h2>Django<a class="headerlink" href="#django" title="Link permanente para este título">¶</a></h2>
+<div class="section" id="urls">
+<span id="urls"></span><h3>Urls<a class="headerlink" href="#urls" title="Link permanente para este título">¶</a></h3>
+<p>É necessário a configuração da url que aponta para o buscador no projeto Django, obrigatório a definição do parâmetro ‘template’ nesta url.</p>
+<p>Exemplo:</p>
+<p><code class="docutils literal"><span class="pre">(r'^/solr_front/(?P&lt;template&gt;\w+)/',</span> <span class="pre">include(solr_front_urls)),</span></code></p>
+</div>
+<div class="section" id="templates">
+<span id="templates"></span><h3>Templates<a class="headerlink" href="#templates" title="Link permanente para este título">¶</a></h3>
+<p>O sistema de localização dos templates do buscador funciona de maneira parecida que a localização dos arquivos de configuração. Porém não há configurações no settings.py. Os templates são localizados na pasta templates do app solr_front.</p>
+<ol class="simple">
+<li>Pasta /solr_front/templates/solr_front/custom/
+O sistema procurará a pasta passada no parâmetro de url ‘template’ os templates, caso não encontrar a pasta ele irá buscar os arquivos na raiz da pasta custom. Pode-se fazer um link simbólico dessa pasta para uma determinada pasta no files system. Esse link não deverá ser sobrescrito porque está no .gitignore, mas caso seja removido basta recriar o apontamento para a pasta desejada.</li>
+<li>Pasta /solr_front/templates/solr_front/sample/
+Caso a tentativa acima não funcione, o buscador irá utilizar os templates default que vem no sistema.</li>
+</ol>
+<p><img alt="Use Case" src="../_images/templates_atividades.png" /></p>
+<p>** Diagrama de atividades do carregamento dos templates **</p>
+</div>
+<div class="section" id="arquivos">
+<span id="id1"></span><h3>Arquivos<a class="headerlink" href="#arquivos" title="Link permanente para este título">¶</a></h3>
+<p>Listar os arquivos de template</p>
+</div>
+</div>
+<div class="section" id="settings-py">
+<span id="settings-py"></span><h2>settings.py<a class="headerlink" href="#settings-py" title="Link permanente para este título">¶</a></h2>
+<div class="section" id="installed-apps">
+<span id="installed-apps"></span><h3>INSTALLED_APPS<a class="headerlink" href="#installed-apps" title="Link permanente para este título">¶</a></h3>
+<p>Incluir o app “solr_front”</p>
+</div>
+<div class="section" id="template-context-processors">
+<span id="template-context-processors"></span><h3>TEMPLATE_CONTEXT_PROCESSORS<a class="headerlink" href="#template-context-processors" title="Link permanente para este título">¶</a></h3>
+<p>Incluir os dois processadores de contexto do buscador:</p>
+<ul class="simple">
+<li>“solr_front.context_processors.get_navigate_fields”</li>
+<li>“solr_front.context_processors.navigation_tree”</li>
+</ul>
+</div>
+</div>
+<div class="section" id="logging">
+<span id="logging"></span><h2>Logging<a class="headerlink" href="#logging" title="Link permanente para este título">¶</a></h2>
+<p>O app Django solr_front usa o mecanismo padrão de log do Django.</p>
+<p>A aplicação utiliza a handler “solr_front”. Caso você tenha uma infraestrutura de log, simplesmente adicione o handler que todos os eventos “logáveis”, erros etc serão logados.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../infra/infra.html" class="btn btn-neutral float-right" title="Infraestrutura" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install.html" class="btn btn-neutral" title="Instalação" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
