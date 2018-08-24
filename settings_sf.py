@@ -1,6 +1,5 @@
 from django.conf import settings
 
-
 #
 USE_CELERY = False
 
@@ -9,6 +8,10 @@ SORL_FRONT_CONFIG_PATH = None
 
 # URL to Solr backend
 SOLR_URL = ''
+
+
+DOWNLOAD_FILES = ''
+
 
 try:
     from local_settings import *

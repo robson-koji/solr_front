@@ -12,24 +12,6 @@ from solr_front import settings_sf
 
 
 
-"""
-Para importar os arquivos relativos ao projeto.
-settings.py e arquivos de configuracao do celery.
-
-PROJECT_PATH = os.path.normpath(os.path.dirname(os.path.dirname(__file__)))
-PROJECT_NAME = os.path.basename(PROJECT_PATH)
-
-def custom_import(name):
-    components = name.split('.')
-    mod = __import__(components[0])
-    for comp in components[1:]:
-        mod = getattr(mod, comp)
-    return mod
-
-settings = custom_import(PROJECT_NAME + '.settings')
-app = custom_import(PROJECT_NAME + '.celery.app')
-"""
-
 from django.conf import settings
 # from bv.celery import app
 from celery import shared_task
@@ -88,53 +70,41 @@ def update_atomico(url, collection2, campo_dinamico_busca, hash_querybuilder):
 
 
 @shared_task
-def makeCsv(data_list, nome, email, para, msg, fields):
+def makeCsv(se, collection, nome, email, para, msg, column_names=''):
+    """ This function is used when a pre-indexed report field exists """
 
+    # Get data on Solr.
+    se = se.replace('%', '%25')
+    solr_url = settings_sf.SOLR_URL + collection + '/stream?expr=' + se
+    response = requests.get(solr_url)
+    data_list = response.json()['result-set']['docs']
 
-    # Check last element of the list of objects to ensure read all documents.
-    if not 'EOF' in data_list[-1]:
-        pass
+    if not 'EOF' in data_list[-1] :
+        raise exception
     else:
-        del data_list[-1] # Remove EOF element.
+        del data_list[-1]
 
+    # Handle filesystem to store csv file and write de file
+    rel_path = os.path.relpath(settings_sf.DOWNLOAD_FILES)
+    arquivo_csv = str(uuid.uuid4())+'.csv'
+    abspath_arquivo_csv = os.path.join(settings_sf.DOWNLOAD_FILES, arquivo_csv)
+    url_csv = os.path.join(settings_sf.DOWNLOAD_FILES_URL, arquivo_csv)
+    with open(abspath_arquivo_csv, 'w+') as csv_file:
+        csv_file.write(u'\ufeff'.encode('utf8'))
+        if column_names:
+            csv_file.write(";".join(cn.encode('utf-8') for cn in column_names) + '\n')
+        for dl in data_list:
+            csv_file.write(dl['csv'].encode('utf-8'))
+            csv_file.write('\n')
 
-        # Para isso funcionar, os outros elementos nao podem ter mais chaves que o inicial.
-        if fields:
-            keys = fields
-        else:
-            keys = data_list[0].keys()
-
-        rel_path = os.path.relpath(settings.EXPORTACAO_CSV_PATH, settings.MEDIA_ROOT)
-
-        # gera nome do arquivo usando uuid
-        arquivo_csv = str(uuid.uuid4())+'.csv'
-
-        url_csv = os.path.join(settings.MEDIA_URL, rel_path, arquivo_csv)
-
-        abspath_arquivo_csv = os.path.join(settings.EXPORTACAO_CSV_PATH, arquivo_csv)
-
-        csv.register_dialect('excel-export', delimiter=';', quoting=csv.QUOTE_NONE, escapechar='\\')
-
-        with open(abspath_arquivo_csv, 'wb') as csv_file:
-            dict_writer = csv.DictWriter(csv_file, keys, dialect='excel-export')
-            dict_writer.writeheader()
-            for data_dict in data_list:
-                # import pdb; pdb.set_trace()
-                dict_writer.writerow(data_dict)
-
-
-        # send mail
-        assunto = u'Exportação em Excel (CSV)'
-        corpo = nome + u' (' + email + u') ' +u'enviou um arquivo em Excel (CSV) com os resultados de sua pesquisa'+u'.\n\n'
-
-        corpo += u'Clique no link para baixar o arquivo em Excel (CSV)'+u':\n' + url_csv + u'\n\n'+u'O arquivo ficará disponível por 02 dias'+u'.\n\n'
-        if msg:
-            corpo += u'Comentários'+u': ' + msg + u'\n\n'
-        corpo += u'TESTE'
-        corpo = corpo.encode('utf-8')
-
-
-        send_mail(assunto, corpo, 'send@email.teste', [para])
+    # Assembly and send email.
+    assunto = u'Exportação em Excel (CSV)'
+    corpo = nome + u' (' + email + u') ' +u'enviou um arquivo em Excel (CSV) com os resultados de sua pesquisa'+u'.\n\n'
+    corpo += u'Clique no link para baixar o arquivo em Excel (CSV)'+u':\n' + url_csv + u'\n\n'+u'O arquivo ficará disponível por 02 dias'+u'.\n\n'
+    if msg:
+        corpo += u'Comentários'+u': ' + msg + u'\n\n'
+    corpo = corpo.encode('utf-8')
+    send_mail(assunto, corpo, settings_sf.MAIL_SENDER, [para])
 
 
 @shared_task

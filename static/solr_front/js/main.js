@@ -55,6 +55,8 @@ $(document).ready(function(){
             $('#modal_navigation_tree').modal("show"); //Open Modal
         }else if(opval=="exp_csv"){ //Compare it and if true
             $('#exp_csv').modal("show"); //Open Modal
+            $('#send_report').show()
+
         }
         else{
           window.location.href = opval;
