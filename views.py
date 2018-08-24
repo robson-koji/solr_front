@@ -2162,13 +2162,17 @@ class ExportDataView(View):
         form = ExportForm(request.GET)
 
         if form.is_valid():
+            # There exists a report field, with all values set.
+            if 'report_field' in COLLECTIONS[self.vertice['collection']]['EXPORT_DATA'] and COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['report_field']:
+                self.makeCsv(se, form.cleaned_data['name'], form.cleaned_data['email_from'],
+                                   form.cleaned_data['email_to'], form.cleaned_data['comentario'])
 
-            self.makeDataFrame(se, form.cleaned_data['name'], form.cleaned_data['email_from'],
-                               form.cleaned_data['email_to'], form.cleaned_data['comentario'],
-                               form.cleaned_data['formato'])
+            else:
+                self.makeDataFrame(se, form.cleaned_data['name'], form.cleaned_data['email_from'],
+                                   form.cleaned_data['email_to'], form.cleaned_data['comentario'])
 
-            # Return information about the status of report
-            # User will receive e-mail with link to download the report.
+                # Return information about the status of report
+                # User will receive e-mail with link to download the report.
             data = {'message': 'Seu pedido está em processamento e será enviado por e-mail.', 'status': 200}
 
         else:
@@ -2226,7 +2230,7 @@ class ExportDataView(View):
         elif final_dict:
             return final_dict
 
-    def makeDataFrame(self, se, nome, email, para, msg, formato):
+    def makeDataFrame(self, se, nome, email, para, msg, formato='csv'):
 
         if 'export_fields' in COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']:
             fields = COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['export_fields']
@@ -2256,7 +2260,8 @@ class ExportDataView(View):
 
             # converte para dataframe
             if settings_sf.USE_CELERY:
-                makeData_celery.delay(data_list, nome, email, para, msg, fields, formato)
+                # makeData_celery.delay(data_list, nome, email, para, msg, fields, formato)
+                makeData_celery(data_list, nome, email, para, msg, fields, 'csv')
             else:
                 return HttpResponse('Celery not found. You have to have Celery installed  to use this feature.',
                                     content_type='text/plain')
@@ -2267,52 +2272,24 @@ class ExportDataView(View):
         else:
             raise ValueError("export_fields nao foi definido na configuracao desta collection")
 
+
     def makeCsv(self, se, nome, email, para, msg):
-        try:
-            data_list = self.solr_queries.executaStreamingExpression(se)['result-set']['docs']
-        except GetSolarDataException:
-            return HttpResponseServerError()
+        report_field = COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['report_field']
+        se = se.replace('fl="id"', 'fl="' + report_field + '"')
+        se = se.replace(', sort="id asc"', ', sort="' + report_field + ' asc"')
+        column_names = COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['column_names']
+
 
         if settings_sf.USE_CELERY:
-            makeCsv_celery.delay(data_list, nome, email, para, msg)
+            #makeCsv_celery.delay(se, self.collection, nome, email, para, msg, column_names)
+            makeCsv_celery(se, self.collection, nome, email, para, msg, column_names)
+
         else:
-            return HttpResponse('Celery not found. You have to have Celery installed to use this feature.',
+            return HttpResponse('Celery not found. You have to have Celery installed to have this feature.',
                                 content_type='text/plain')
-            # makeCsv_celery(data_list, nome, email, para, msg)
 
-        if 'export_fields' in COLLECTIONS[self.vertice['collection']]:
-            fields = COLLECTIONS[self.vertice['collection']]['export_fields']
 
-            if 'export_sort_by' in COLLECTIONS[self.vertice['collection']]:
-                sort = COLLECTIONS[self.vertice['collection']]['export_sort_by']
-            else:
-                sort = fields[0] + ' asc'
 
-            se = se.replace(', sort="id asc"', ', sort="' + sort + '"')
-            se = se.replace('fl="id"', 'fl="' + ', '.join(fields) + '"')
-
-            if self.limite_itens_export:
-                try:
-                    data_list = self.solr_queries.executaStreamingExpression(se)['result-set']['docs'][
-                                :self.limite_itens_export]
-                except GetSolarDataException:
-                    return HttpResponseServerError()
-            else:
-                try:
-                    data_list = self.solr_queries.executaStreamingExpression(se)['result-set']['docs']
-                except GetSolarDataException:
-                    return HttpResponseServerError()
-
-            data_list = self.dict_values_to_string(data_list)
-
-            if settings_sf.USE_CELERY:
-                makeCsv_celery.delay(data_list, nome, email, para, msg, fields)
-            else:
-                return HttpResponse('Celery not found. You have to have Celery installed to have this feature.',
-                                    content_type='text/plain')
-
-        else:
-            raise ValueError("export_fields nao foi definido na configuracao desta collection")
 
     def pos_process(self, data, list_fields_extraction):
         """Metodo utiliza configuração do fields_extraction para extrair valores de data e tratalos com a função especificada"""

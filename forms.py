@@ -43,7 +43,7 @@ class ExportForm(forms.Form):
     email_from = forms.EmailField(label='Seu email',widget=forms.TextInput(attrs={'class':'form-control'}))
     email_to = forms.CharField(label='Para (Email)', help_text="Exemplo: nome@exemplo.com. Caso queira incluir mais de uma pessoa, separe os endereços de e-mail por vírgulas.", max_length=2000,widget=forms.TextInput(attrs={'class':'form-control'}))
     comentario = forms.CharField(required=False, label='Comentário', max_length=15000, widget=forms.Textarea(attrs={'rows':4, 'class':'form-control' ,'placeholder': 'Digite algum mensagem no email email enviado'}))
-    formato = forms.ChoiceField(
-        required=True,
-        choices=FORMAT_CHOICES,
-    )
+    # formato = forms.ChoiceField(
+    #     required=True,
+    #     choices=FORMAT_CHOICES,
+    # )
