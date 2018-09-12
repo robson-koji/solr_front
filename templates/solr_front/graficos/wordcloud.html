@@ -2,25 +2,40 @@
 
 
 <div class="graficos_interativos" class="grid">
-  <h2 class="title_primary"> </h2>
-  Selecione o campo para formar a nuvem de palavras:
+    <h2 class="title_primary">Nuvem de Palavras</h2>
+    <p>
+      Clique em uma palavra para filtrar a pesquisa com a palavra clicada.<br>
+      Pode-se selecionar mais de uma palavra para filtrar o resultado da pesquisa.
+    </p>
+    <p>&nbsp;</p>
+
+    Selecione o campo para formar a nuvem de palavras:
       <select class="wordcloud_options" id="nivel_1">
-        {% for sc in wordcloud_chart.options  %}
-          {% if sc.value == wordcloud_chart.default_single_facet.value %}
-            <option value={{ sc.value }} selected>{{ sc.label }}</option>
-          {% else %}
-            <option value={{ sc.value }}>{{ sc.label }}</option>
-          {% endif %}
-        {% endfor %}
+          {% for sc in wordcloud_chart.options %}
+              {% if sc.value == wordcloud_chart.default_single_facet.value %}
+                  <option value={{ sc.value }} selected>{{ sc.label }}</option>
+              {% else %}
+                  <option value={{ sc.value }}>{{ sc.label }}</option>
+              {% endif %}
+          {% endfor %}
       </select>
-  <div class="content_section__actions row">
-    <div class="content_section__grafico">
-      <div id='wordcloud' style="height: 500px"></div>
+    
+    <div class="ajax-loaders">
+        <img src="{% static 'solr_front/img/ajax-loader.gif' %}" alt=""/>
     </div>
-  </div>
+    <div id="botao_reset_wc" style="display:inline-flex"></div>
+    <div class="content_section__actions row">
+        <div class="content_section__grafico">
+            <div id='wordcloud' style="height: 500px"></div>
+            <div id='wordcloud_selected_words'>
+              <p><b>Palavras selecionadas:</b>
+              <span id="palavras_selecionadas"></span>
+            </p>
+            </div>
+        </div>
+    </div>
 
 </div>
-
 
 </body>
 </html>

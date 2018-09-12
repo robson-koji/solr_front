@@ -1,4 +1,4 @@
-import unittest
+# import unittest
 
 from django.test.runner import DiscoverRunner
 from django.test import TestCase
@@ -9,15 +9,17 @@ from django.conf import settings
 
 
 
-class HomePageTestCase(unittest.TestCase):
+class HomePageTestCase(TestCase):
+    # fixtures = ['geral.json','portal.json']
     def setUp(self):
+
         settings.DEBUG = True
         settings.TEST_RUNNER = 'tests.tests_with_no_db.NoDbTestRunner'
         self.client = Client()
 
         # When set kwargs['template'] = 'any' the system wont find the template folder
         # and will use the default template.
-        self.home_url = reverse('home_sf', kwargs={'template':'any'})
+        self.home_url = reverse('home_sf', kwargs={'template':'open_data'})
 
     def test_details(self):
         response = self.client.get(self.home_url)
@@ -25,15 +27,16 @@ class HomePageTestCase(unittest.TestCase):
 
 
 
-class SearchTestCase(unittest.TestCase):
+class SearchTestCase(TestCase):
+    # fixtures = ['geral.json','portal.json']
     def setUp(self):
         settings.DEBUG = True
         settings.TEST_RUNNER = 'tests.tests_with_no_db.NoDbTestRunner'
-        self.client = Client()
+        self.client = Client()#(SERVER_NAME="shedar.fapesp.br:9001")
 
         # When set kwargs['template'] = 'any' the system wont find the template folder
         # and will use the default template.
-        self.entrypoint_url = reverse('params_id', kwargs={'collection':'graph_auxilios', 'id':'123456', 'template':'any'})
+        self.entrypoint_url = reverse('params_id', kwargs={'collection':'graph_auxilios', 'id':'123456', 'template':'bva'})
 
     def test_params(self):
         response = self.client.get(self.entrypoint_url, follow=True)
@@ -42,7 +45,7 @@ class SearchTestCase(unittest.TestCase):
 
 
 
-class InitialCongigurationsTestCase(unittest.TestCase):
+class InitialCongigurationsTestCase(TestCase):
     from solr_front.views import SolrFrontStructure
     sfs_object = SolrFrontStructure()
 
@@ -57,6 +60,6 @@ class InitialCongigurationsTestCase(unittest.TestCase):
         from solr_front.views import ConfigurationError
         self.assertTrue(self.sfs_object.graph_valid())
 
-
-if __name__ == '__main__':
-    unittest.main()
+#
+# if __name__ == '__main__':
+#     unittest.main()

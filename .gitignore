@@ -9,7 +9,7 @@ templates/solr_front/custom/*
 __pycache__/
 *.py[cod]
 *$py.class
-
+*.pyc
 
 # C extensions
 *.so
@@ -118,3 +118,6 @@ venv.bak/
 *.iml
 out
 gen
+
+
+*.bkp

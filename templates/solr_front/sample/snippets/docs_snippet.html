@@ -1,0 +1,40 @@
+{% include "solr_front/sample/snippets/options.html" %}
+{% include "solr_front/sample/snippets/pagination.html" %}
+{% for doc in docs %}
+<div class="resultado_compacto">
+  {{doc|safe}}
+</div>
+<hr>
+{% endfor %}
+
+{% include "solr_front/sample/snippets/pagination.html" %}
+
+
+<style media="screen">
+  .resultado_compacto{
+    background-color: white;
+    padding: 5px 20px 10px 20px;
+  }
+  table tbody .rotulo {
+    font-weight: bold;
+    text-align: right;
+    min-width: 200px ;
+    padding-right: 5px !important;
+  }
+
+
+</style>
+
+<script type="text/javascript">
+
+    $('select[name="sorting"]').change(function(){
+        
+      paginator( {{paginas.current_page}}, sorting=$(this).val(), rows='{{paginas.rows}}' )
+
+    })
+
+    $('select[name="max-rows"]').change(function(){
+      paginator( {{paginas.current_page}}, sorting='{{paginas.sort}}', rows=$(this).val() )
+    })
+
+</script>

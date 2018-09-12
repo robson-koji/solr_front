@@ -10,6 +10,7 @@ from django.views.generic.detail import DetailView
 from django.template.loader import get_template
 from django.template import TemplateDoesNotExist
 from django.core.urlresolvers import reverse
+from  django.template import loader as loaderTemplate
 from django.template import RequestContext
 from django.contrib import messages
 from django.conf import settings
@@ -533,6 +534,11 @@ class SolrQueries(LoginRequiredMixin, View):
         solr_url = self.server_stream_url + se
 
         response = requests.get(solr_url)
+
+        if '"EXCEPTION":' in response.content:
+            self.solr_response_error('executaStreamingExpression', response, solr_url)
+
+
         if response.status_code != 200:
             self.solr_response_error('executaStreamingExpression', response, solr_url)
 
@@ -639,7 +645,7 @@ class SolrQueries(LoginRequiredMixin, View):
         # Retorna dict com facets para a querystring e para a streaming_expression.
         return ({'qs_selected_facets': fq_qstring, 'se_selected_facets': se_fqs})
 
-    def facets2fq_post(self, selected_facets):
+    def facets2fq_post(self, selected_facets, bo_options=' OR '):
         """
         Verificar se eh tudo o que precisa para recuperar os facets do front
         e converter em um unico fq para o Solr.
@@ -655,9 +661,9 @@ class SolrQueries(LoginRequiredMixin, View):
             for item in value:
                 # double quotes bumps Solr.
                 item = item.replace('"', '\\"')
-                facets += '"' + item + '" OR '
+                facets += '"' + item + '"{}'.format(bo_options)
 
-            facets = facets.rstrip(' OR ')
+            facets = facets.rstrip(bo_options)
             facets = '{!tag=' + key + '_tag}' + key + ':' + facets + ')'
 
             if item == '*':
@@ -906,10 +912,37 @@ class SolrQueries(LoginRequiredMixin, View):
 
         # Se necessario, fazer o escape de todos os caracterese que
         solr_url = solr_url.replace('%', '%25')
-
         response = requests.post(solr_url, data=data)
         if response.status_code != 200:
             self.solr_response_error('get_content', response, solr_url)
+        return response.json()
+
+    def get_content_snippet(self, **kwargs):
+        #lista de tuplas para passar parametros
+        parametros_toSolr = []
+        #lista contendo os parametros default quando nao existir os mesmos no kwargs
+        parametros_default = [
+            ('q','*:*'),
+            ('df',"text"),
+         ]
+        for param in parametros_default:
+            if not param[0] in kwargs or not kwargs[param[0]]:
+                parametros_toSolr.append(param)
+        for key, param in kwargs.iteritems():
+            if not key  == 'selected_facets':
+                parametros_toSolr.append((key, param))
+            else:
+                parametros_toSolr += param
+        parametros_toSolr = parametros_toSolr
+
+        solr_url = self.solr_connection + kwargs['content_type'] + '/query'
+        # Se necessario, fazer o escape de todos os caracterese que
+        solr_url = solr_url.replace('%', '%25')
+        response = requests.post(solr_url, data=parametros_toSolr)
+
+        if response.status_code != 200:
+            self.solr_response_error('get_content', response, solr_url)
+
         return response.json()
 
     def get_totalizador(self, content_type, fq, sf, docs):
@@ -970,7 +1003,10 @@ class SolrQueries(LoginRequiredMixin, View):
         data = [('q', '*:*'), ('rows', '0'), ('fl', '*'), ('fq', fq), ('json.facet', str(json_facet))] + selected_facets
         # data = [('q', '-'+levels_list[1]['nivel_2']+':0'), ('rows', '0'), ('fl', '*'), ('fq', fq), ('json.facet', str(json_facet))] + selected_facets
 
+        # import pdb; pdb.set_trace()
         response = requests.get(solr_url, data=data)
+
+
         if response.status_code != 200:
             self.solr_response_error('get_content_boxplot_json_facet', response, solr_url)
 
@@ -1307,30 +1343,37 @@ class EntryPointView(LoginRequiredMixin, View):
         Sao 3 dicts, um que espera um argumento, um que espera dois argumentos e
         um que espera 3 argumentos.
         """
+        if ":::" in dict['value']:
+            dict['value'] = dict['value'].split(":::")
+
         if not dict['value']:
             return self.dict_operators_1[dict['operator']] % (dict['field'])
 
-        # Por enquanto somente para data
         elif isinstance(dict['value'], list):
-            # return self.dict_operators_3[dict['operator']] % (dict['field'], dict['value'][0], dict['value'][1])
-            return 'data_inicio_ano:[%s TO *] AND data_termino_ano:[%s TO *]' % (dict['value'][0], dict['value'][1])
+            values = '('
+            if dict['field'] == 'text':
+                for v in dict['value']:
+                    values += v + ' OR '
+            else:
+                for v in dict['value']:
+                    values += '"' + v + '" OR '
+            values = values.rstrip('OR ')
+            values += ')'
+            query =  self.dict_operators_2[dict['operator']] % (dict['field'], values)
         else:
-
-            # import pdb; pdb.set_trace()
             if not isinstance(dict['value'], basestring):
                 dict['value'] = str(dict['value'])
-
             dict['value'] = dict['value'].replace('\t', '')
 
-            if dict['field'] == 'data_inicio':
-                dict['field'] = 'data_inicio_ano'
-            if dict['field'] == 'data_termino':
-                dict['field'] = 'data_termino_ano'
-
             if dict['field'] == 'text':
-                dict['value'] = dict['value'].replace('"', '')
+                # dict['value'] = dict['value'].replace('"', '')
+                dict['value'] =  '(' + dict['value'] + ')'
 
-            return self.dict_operators_2[dict['operator']] % (dict['field'], self.split_value(dict['value']))
+            query =  self.dict_operators_2[dict['operator']] % (dict['field'], dict['value']) # self.split_value(dict['value']))
+
+        # import pdb; pdb.set_trace()
+        return query
+
 
     def rec_json(self, fq, rules, condition, ultimo):
         """
@@ -1969,7 +2012,8 @@ class HomeBuscador(LoginRequiredMixin, TemplateView):
             return render(request, template_name, {'erro': erro, 'collections': collections, 'template': kwargs[
                 'template']})  # , context_instance=RequestContext(self.request))
         except Exception as e:
-            raise GenericLoggerException(self, e, inspect.stack())
+            raise
+            # raise GenericLoggerException(self, e, inspect.stack())
 
 
 class HomeCollection(LoginRequiredMixin, TemplateView):
@@ -2231,6 +2275,7 @@ class ExportDataView(View):
             return final_dict
 
     def makeDataFrame(self, se, nome, email, para, msg, formato='csv'):
+        column_names = COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['column_names']
 
         if 'export_fields' in COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']:
             fields = COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['export_fields']
@@ -2246,22 +2291,24 @@ class ExportDataView(View):
 
             if 'max_rows' in COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']:
                 try:
-                    data_list = self.solr_queries.executaStreamingExpression(se)['result-set']['docs'][
-                                : COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['max_rows']]
+                    result = self.solr_queries.executaStreamingExpression(se)['result-set']['docs']
+                    data_list = result[: COLLECTIONS[self.vertice['collection']]['EXPORT_DATA']['max_rows']]
+                    data_list.append(result[-1])
                 except GetSolarDataException:
                     return HttpResponseServerError()
             else:
                 try:
-                    data_list = self.solr_queries.executaStreamingExpression(se)['result-set']['docs']
+                    data_list = self.solr_queries.executaStreamingExpression(se)['result-set']['docs'][:-1]
                 except GetSolarDataException:
                     return HttpResponseServerError()
+
 
             data_list = self.dict_values_to_string(data_list)
 
             # converte para dataframe
             if settings_sf.USE_CELERY:
-                # makeData_celery.delay(data_list, nome, email, para, msg, fields, formato)
-                makeData_celery(data_list, nome, email, para, msg, fields, 'csv')
+                makeData_celery.delay(data_list, nome, email, para, msg, fields, 'csv', column_names)
+                #makeData_celery(data_list, nome, email, para, msg, fields, 'csv', column_names)
             else:
                 return HttpResponse('Celery not found. You have to have Celery installed  to use this feature.',
                                     content_type='text/plain')
@@ -2320,3 +2367,139 @@ class ExportDataView(View):
                 dict[key] = value
 
         return dict
+
+
+
+class AjaxDocsWidget(EntryPointView):
+    """ Recebe consultas e retorna resultado html para a chamada Ajax """
+    def json_response(self):
+
+        if 'page' in self.data and not 'docs_snippet' in COLLECTIONS[self.collection]['COLLECTION']['omite_secoes']:
+
+            try:
+                #configuração usada para fazer query no solr
+                fields_conf = ','.join(COLLECTIONS[self.collection]['DOCS_SNIPPET']['fields'])
+                if 'sort' in self.data:
+                    sort = self.data['sort']
+                else:
+                    sort = ''
+
+                if 'rows' in self.data:
+                    rows = self.data['rows']
+                else:
+                    rows = COLLECTIONS[self.collection]['DOCS_SNIPPET']['rows']
+
+
+                context = self.get_json(
+                    fq=self.fq,
+                    start=(int(COLLECTIONS[self.collection]['DOCS_SNIPPET']['rows']) * (int(self.data['page']-1) )),
+                    rows= rows,
+                    selected_facets = self.json_selected_facets,
+                    sort = sort,
+                    content_type=self.collection,
+                    fl= fields_conf
+                )
+
+            except GetSolarDataException:
+                raise
+
+            try:
+                #usar template definido na configuração
+                template_name =  COLLECTIONS[self.collection]['DOCS_SNIPPET']['template']
+
+                self.template = loaderTemplate.get_template(template_name)
+
+                html_dict = {'resultado': self.template.render(context=context, request=self.request) }
+            except:
+                html_dict = {'resultado':None}
+
+
+            return html_dict
+
+
+        else:
+            return {}
+
+    def get_solrquery(self, **kwargs):
+        """Função realiza consulta no solr com os paramentros passados"""
+        solr_queries = SolrQueries(self.collection)
+        return solr_queries.get_content_snippet(**kwargs)
+
+    def get_json(self, **kwargs):
+        data_solr = self.get_solrquery(**kwargs)
+
+        data_final = {}
+
+        if 'response' in data_solr:
+            data_final['total'] = data_solr['response']['numFound']
+            if len(COLLECTIONS[self.collection]['DOCS_SNIPPET']['fields']) == 1:
+                data_final['docs'] = self.without_keyInDocs(data_solr['response']['docs'], COLLECTIONS[self.collection]['DOCS_SNIPPET']['fields'][0])
+            else:
+                data_final['docs'] = data_solr['response']['docs']
+            data_final['start'] =  data_solr['response']['start']
+
+            if 'sort' in data_solr['responseHeader']['params']:
+                data_final['sort'] = data_solr['responseHeader']['params']['sort']
+            if 'rows' in self.data:
+                data_final['rows'] = self.data['rows']
+            elif 'rows' in data_solr['responseHeader']['params']:
+                data_final['rows'] = data_solr['responseHeader']['params']['rows']
+
+            data_final['paginas'] = self.pagination(data_final)
+            data_final['fields'] = COLLECTIONS[self.collection]['DOCS_SNIPPET']['fields']
+            data_final['sort_fields'] = COLLECTIONS[self.collection]['DOCS_SNIPPET']['sort_fields']
+            data_final['rows_options'] = COLLECTIONS[self.collection]['DOCS_SNIPPET']['rows_options']
+        return data_final
+
+    def without_keyInDocs(self, docs, chave):
+        list_docs = []
+        for doc in docs:
+            for key, value in doc.iteritems():
+                if key == chave:
+                    list_docs.append(value)
+
+        return list_docs
+
+
+    def pagination(self, data, offset=6):
+        #trata
+        pagination = {}
+
+        pagination['current_page'] = int(self.data['page'])
+
+        if 'rows' in data:
+            pagination['total_page'] = (int(data['total'])/int(data['rows'])) + (int(data['total'])%int(data['rows']) >0)
+        else:
+            pagination['total_page'] = int(data['total'])/int(COLLECTIONS[self.collection]['DOCS_SNIPPET']['rows'])
+
+
+        pagination['last_page'] = pagination['total_page']
+        pagination['first_page'] = 1
+        pagination['prev'] = int(self.data['page']) - 1
+        pagination['has_prev'] = False
+        pagination['has_next'] = False
+        pagination['next'] = int(self.data['page']) + 1
+        pagination['has_other_pages'] = True
+        if 'sort' in data:
+            pagination['sort'] = data['sort']
+        else:
+            pagination['sort'] = 'score desc'
+        pagination['rows'] = data['rows']
+
+        #cria lista de paginas que iram estar visiveis utilizando o tamanho do offset
+        pagination['lista_paginas'] = []
+        for x in range(offset+1):
+            if (pagination['current_page'] - x) > 0 and x:
+                pagination['has_prev'] = True
+                pagination['lista_paginas'].append(pagination['current_page'] - x)
+
+            if (pagination['current_page'] + x) <= pagination['total_page'] and x:
+                pagination['lista_paginas'].append(pagination['current_page'] + x)
+                pagination['has_next'] = True
+            if not x:
+                pagination['lista_paginas'].append(pagination['current_page'])
+        #ordena paginação
+
+        pagination['lista_paginas'].sort(key=int)
+
+        return pagination
