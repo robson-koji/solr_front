@@ -294,7 +294,27 @@
 		</section>
 		{% endif %}
 
+		<!-- Documentos -->
+		{% if not 'docs_snippet' in omite_secoes %}
+		<section>
+			<div class="container">
+				<div class="title-section">
+					<div class="title-section__icon">
+					</div>
+					<div class="title-section__text" style="display:flex;">
+						<h1 style="margin-right:20px;	">{{collection_label}}</h1>
+						<div class="ajax-docs-loaders" hidden>
+							<img src="/static-files/solr_front/img/ajax-loader.gif" alt="">
+						</div>
+					</div>
+				</div>
+				<div class="content_section " id="documentos">
 
+				</div>
+			</div>
+		</section>
+		{% endif %}
+		
 		{% if not 'related_collections' in omite_secoes %}
 		<section>
 			<div class="container">

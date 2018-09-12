@@ -39,7 +39,7 @@ var default_level_2 = "{{ multilevel_barchart_1.default_level_2 }}"
 		</span>
 	</div>
 
-	<div class="col-md-3">
+	<div class="col-md-5">
     <h4 class="title_secondary">
       Estratificação <small>(detalhamento)</small>
 			<a href="#modalExtratificacao" role="button" data-target="#modalExtratificacao" data-toggle="modal">
@@ -49,16 +49,16 @@ var default_level_2 = "{{ multilevel_barchart_1.default_level_2 }}"
 
     <span  class="span_ordena" id="ordena_barchart_estrat" style="margin-left:10px">
 			<button id="ordena_barchart_anterior" class="btn btn-default" data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Ordena pelo elemento anterior" data-original-title="Ordena os elementos estratificados">
-				<i class="glyphicon glyphicon-menu-left ordena_barchart_ordena"></i>
+				<i class="glyphicon glyphicon-chevron-left	 ordena_barchart_ordena"></i>
 			</button>
 				<button id="ordena_barchart_proximo" class="btn btn-default" data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Ordena pelo próximo elemento" data-original-title="Ordena os elementos estratificados">
-					<i class="glyphicon glyphicon-menu-right ordena_barchart_ordena"></i>
+					<i class="glyphicon glyphicon-chevron-right	 ordena_barchart_ordena"></i>
 				</button>
 		</span>
 
 	</div>
 
-  <div class="col-md-3">
+  <div class="col-md-2">
     <h4 class="title_secondary">
       Normalização
     </h4>
@@ -104,8 +104,14 @@ var default_level_2 = "{{ multilevel_barchart_1.default_level_2 }}"
        <div class="modal-body">
 				 <div id="eixo_x">
            <p>O item aqui selecionado irá extratificar o elemento selecionado no Eixo Y.</p>
+						 <!-- Sometimes the facet may sum values to display on the chart.
+						 It gets the sum field here -->
             {% for mb in  multilevel_barchart_1.y_stratification %}
-              <input type="radio" name="rb_eixo_x" value="{{ mb.value }}">
+							{% if mb.sum %}
+              <input type="radio" name="rb_eixo_x" value="{{ mb.value }}" sum="{{mb.sum}}">
+								{% else %}
+							<input type="radio" name="rb_eixo_x" value="{{ mb.value }}">
+							{% endif %}
               <label for="{{ mb.value }}">{{ mb.label }}</label><br>
             {% endfor %}
          </div>
@@ -183,7 +189,7 @@ width = parentDiv.clientWidth - margins.left - margins.right;
 
 
 var y_state = 'asc'
-var bar_state = 'desc'
+var bar_state = ''
 var normaliza_tgl = false
 
 

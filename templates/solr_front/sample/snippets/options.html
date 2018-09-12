@@ -1,0 +1,34 @@
+<div class="options_docs">
+  <p><b>Ordem: </b></p>
+  <select class="" name="sorting">
+    {% for field in sort_fields  %}
+      {% if field.solr_sort == paginas.sort %}
+        <option selected=true value="{{field.solr_sort}}">{{field.label}}</option>
+      {% else %}
+        <option value="{{field.solr_sort}}">{{field.label}}</option>
+      {% endif %}
+    {% endfor %}
+  </select>
+  <p><b>Quantidade de registros por página: </b></p>
+  <select class="" name="max-rows">
+    {% for row in rows_options  %}
+      {% if row|slugify == paginas.rows %}
+        <option selected=true value="{{row}}">{{row}}</option>
+      {% else %}
+        <option value="{{row}}">{{row}}</option>
+      {% endif %}
+    {% endfor %}
+  </select>
+</div>
+
+<style media="screen">
+  .options_docs{
+    background-color: white;
+    margin: 10px;
+    padding: 10px;
+    display: inline-flex;
+  }
+  .options_docs p {
+    margin-left: 20px;
+  }
+</style>

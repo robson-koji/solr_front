@@ -19,6 +19,9 @@ urls = patterns('',
     # consulta celery tasks
     url(r'^consulta_pedido/$', AjaxCeleryStatusView.as_view(), name='consulta_pedido'),
 
+    # Snippets de documentos
+    url(r'^(?P<collection>\w+)/(?P<id>\d+)/docs_widget/$', AjaxDocsWidget.as_view(), name='docs_widget'),
+
     # Colecao principal
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/$',  never_cache(SearchView.as_view()), name='search'),
     url(r'^(?P<collection>\w+)/(?P<id>\d+)/params/$',  never_cache(ParamsView.as_view()), name='params_id' ),
