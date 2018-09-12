@@ -58,6 +58,7 @@ var boxplot_data = 0
 
 function recuperaBoxPlotChart(busca_realizada_str) {
     // Recupera os valores da busca.
+    $('.ajax-loaders').css("visibility", "visible")
     if (typeof busca_realizada_str != 'string') {
         var result_cp_gd = getBuscaRealizada({});
     }
@@ -83,6 +84,9 @@ function recuperaBoxPlotChart(busca_realizada_str) {
         url: home_sf_rurl + bv_collection + '/' + id_collection + '/multidimensional_chart/boxplot/',
         type: 'post',
         dataType: 'json',
+        // beforeSend: function () {
+        //     $('.ajax-loader').css("visibility", "visible")
+        // },
         headers: {
             "cache-control": "no-cache",
             'X-Requested-With': 'XMLHttpRequest',
@@ -97,6 +101,9 @@ function recuperaBoxPlotChart(busca_realizada_str) {
             console.log(data.result);
             boxplot_data = data.result;
             drawBoxPlotChart(data.result, 7, 75)
+        },
+        complete: function () {
+            $('.ajax-loaders').css("visibility", "hidden");
         }
     });
 }
@@ -105,6 +112,7 @@ function recuperaBoxPlotChart(busca_realizada_str) {
 var wordcloud_data = 0
 
 function recuperaWordCloudChart(busca_realizada_str) {
+    $('.ajax-loaders').css("visibility", "visible")
     // Recupera os valores da busca.
     if (typeof busca_realizada_str != 'string') {
         var result_cp_gd = getBuscaRealizada({});
@@ -113,6 +121,11 @@ function recuperaWordCloudChart(busca_realizada_str) {
         var result_cp_gd = JSON.parse(busca_realizada_str)
     }
     result_cp_gd[bv_collection]['single_facet'] = $(".wordcloud_options").val();
+    $('#limpaAllFiltros_wc').remove();
+    $('.word_ls').remove();
+
+    $('#wordcloud_selected_words').hide()
+    var show_wordcloud_selected_words = false
 
     $.ajax({
         url: home_sf_rurl + bv_collection + '/' + id_collection + '/unidimensional_chart/wordcloud/',
@@ -127,16 +140,82 @@ function recuperaWordCloudChart(busca_realizada_str) {
         },
         data: JSON.stringify(result_cp_gd),
         success: function (data) {
-            console.log(data)
+            // console.log(data)
             // debugger;
 
             d3.wordcloud()
                 .size([500, 300])
                 .fill(d3.scale.ordinal().range(["#884400", "#448800", "#888800", "#444400"]))
                 .words(data['buckets'])
+                .onwordclick(function (d, i) {
+                    //window.location = "https://www.google.co.uk/search?q=" + d.text;
+                    if (selectedFacets_wc[result_cp_gd[bv_collection]['single_facet']] && !selectedFacets_wc[result_cp_gd[bv_collection]['single_facet']].includes(d.text)) {
+                        selectedFacets_wc[result_cp_gd[bv_collection]['single_facet']].push(d.text)
+                    } else{
+                            if(selectedFacets_wc[result_cp_gd[bv_collection]['single_facet']] === undefined){
+                                selectedFacets_wc[result_cp_gd[bv_collection]['single_facet']] = [d.text];
+                            }
+
+                    }
+                    $('.word_ls').remove();
+                    $('#limpaAllFiltros_wc').remove();
+                    getData();
+                })
+
                 // .words(words)
                 .start();
+
+            if (!jQuery.isEmptyObject(selectedFacets_wc)) {
+
+                for (field_key in selectedFacets_wc) {
+                    // selectedFacets[field_key].forEach(i => console.log(i))
+
+                    selectedFacets_wc[field_key].forEach(function (word) {
+                        $('#palavras_selecionadas').append(
+                            '<span class="tag label label-info word_ls" >\n' +
+                            '  <span>' + word + '</span>\n' +
+                            '  <a><i class="remove glyphicon glyphicon-remove-sign glyphicon-white" data-key="' + field_key + '" data-tag ="' + word + '" onclick="deletar_word($(this).data(\'key\'),$(this).data(\'tag\'))"></i></a> \n' +
+                            '</span>')
+
+                    });
+                    show_wordcloud_selected_words = true
+                }
+
+
+                $('#botao_reset_wc').append('\
+          <button id="limpaAllFiltros_wc" class="btn btn-info">\
+          <i class="fa fa-erase"></i>\
+          Limpa Filtro de palavra\
+          </button>')
+                $('#limpaAllFiltros_wc').on('click', function () {
+
+                    Object.keys(selectedFacets_wc).forEach(function (key) {
+                        // Indica que eh facet de funil
+                        // '/cross_collection_/y' causa problema em IE
+                        if (!key.match(RegExp("cross_collection_", "i"))) {
+                            delete selectedFacets_wc[key];
+                            delete selectedFacets[key]
+                        }
+                    });
+
+                    getData();
+                    $('.word_ls').remove();
+                })
+            } else {
+                $('#limpaAllFiltros_wc').remove();
+                $('.word_ls').remove();
+            }
+            if (show_wordcloud_selected_words){
+              $('#wordcloud_selected_words').show()
+            }            
+
+
+        },
+
+        complete: function () {
+            $('.ajax-loaders').css("visibility", "hidden");
         }
+
     });
 }
 
@@ -255,6 +334,8 @@ function recuperaGraficoDuplo(busca_realizada_str) {
     var nivel_1 = $('input[name=rb_eixo_x]:checked').attr('value');
     var nivel_2 = $('input[name=rb_eixo_y]:checked').attr('value');
 
+
+
     // Se nao encontrar os radios, configura manualmente.
     if (!nivel_1) {
         nivel_1 = default_level_1
@@ -280,19 +361,31 @@ function recuperaGraficoDuplo(busca_realizada_str) {
             'type': 'terms',
             'field': nivel_1, // var nivel_1 = 'bolsas_pt';
             'limit': 100,
+            'sort':{'index':'asc'},
             'facet': {
                 nivel_2: {
                     'type': 'terms',
                     'field': nivel_2, // var nivel_2 = 'ano_exact';
-                    'limit': 100
+                    'limit': 100,
+                    'sort':{'index':'asc'},
                 }
             }
         }
     };
+    // debugger;
+
+    /*
+    Sometimes the facet may sum values to display on the chart.
+    It gets the sum field here
+    */
+    var sum = $('input[name=rb_eixo_x]:checked').attr('sum');
+    // debugger;
+    if (typeof sum !== typeof undefined){
+      json_facet['nivel_1']['facet']['nivel_2']['facet'] = {'count':"sum(" + sum + ")"}
+    }
 
     result_cp_gd[bv_collection]['json_facet'] = json_facet;
 
-    // debugger;
 
     /*
     * data - recebe todos os dados do grafico dubplo

@@ -108,13 +108,12 @@ def makeCsv(se, collection, nome, email, para, msg, column_names=''):
 
 
 @shared_task
-def makeData(data_list, nome, email, para, msg, fields, formato):
-
+def makeData(data_list, nome, email, para, msg, fields, formato, column_names):
     data_frame = pandas.DataFrame(data_list)
     #ordena colunas conforme sequencia definida no conf
     data_frame.drop(columns=['EOF', 'RESPONSE_TIME'], inplace=True)
+    # data_frame = data_frame.reindex(columns=fields)
 
-    data_frame = data_frame.reindex(columns=fields)
     # gera nome do arquivo usando uuid
     arquivo_name = str(uuid.uuid4())
 
@@ -125,7 +124,7 @@ def makeData(data_list, nome, email, para, msg, fields, formato):
         data_frame.to_json( os.path.join(settings.EXPORTACAO_CSV_PATH, arquivo_name) )
     elif formato == 'csv':
         arquivo_name += '.csv'
-        data_frame.to_csv( os.path.join(settings.EXPORTACAO_CSV_PATH, arquivo_name) , index = False)
+        data_frame.to_csv( os.path.join(settings.EXPORTACAO_CSV_PATH, arquivo_name), columns=fields, header=column_names, sep=';', encoding='utf-8-sig' , index = False)
     elif formato  == 'excel':
         arquivo_name += '.xls'
         data_frame.to_excel( os.path.join(settings.EXPORTACAO_CSV_PATH, arquivo_name),index = False )
@@ -144,5 +143,4 @@ def makeData(data_list, nome, email, para, msg, fields, formato):
     corpo += u'TESTE'
     corpo = corpo.encode('utf-8')
 
-
-    send_mail(assunto, corpo, 'send@email.teste', [para])
+    send_mail(assunto, corpo, settings_sf.MAIL_SENDER, [para])

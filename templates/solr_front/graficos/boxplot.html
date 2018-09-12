@@ -6,7 +6,7 @@
 <div class="graficos_interativos" class="grid">
     <h2 class="title_primary">BoxPlot</h2>
     <p>Selecione as dimensões que deseja visualizar.</p>
-    <div class="content_section__actions row">
+    <div class="content_section__actions row" id="content_options">
 
         <select class="boxplot_options" id="nivel_1">
             {% for sc in boxplot_chart.options_x %}
@@ -27,10 +27,14 @@
                 {% endif %}
             {% endfor %}
         </select>
-
+        <div class="ajax-loaders">
+            <img src="{% static 'solr_front/img/ajax-loader.gif' %}" alt=""/>
+        </div>
 
     </div>
-    <div class="chart-wrapper" id="chart-distro1"></div>
+    <div class="chart-wrapper" id="chart-distro1">
+
+    </div>
 
     <div class="chart-options">
         <p>Show: </p>

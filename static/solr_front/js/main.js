@@ -151,6 +151,7 @@ $(document).ready(function(){
     $('#limpar_facets').click(function(){
       // console.log('limpar_facets')
       selectedFacets = {}
+      selectedFacets_wc = {}
       getData()
       $('#filtros_aplicados').hide()
     });

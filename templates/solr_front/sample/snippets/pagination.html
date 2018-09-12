@@ -1,0 +1,29 @@
+{% if paginas.lista_paginas|length > 1 %}
+<div class="pagination" style="display:flex; align-items: center; justify-content: center;">
+    {% if paginas.has_prev %}
+      <a style="margin-left:5px;" href="#" onclick="event.preventDefault(); paginator({{paginas.prev}}, sorting='{{paginas.sort}}', rows='{{paginas.rows}}' )">Anterior</a>
+      <p style="margin-left:5px;">...<a href="#" onclick="event.preventDefault(); paginator({{paginas.first_page}}, sorting='{{paginas.sort}}', rows='{{paginas.rows}}' )">Inicio(1)</a>...</p>
+    {% endif %}
+  {% for page in paginas.lista_paginas %}
+    {% if page == paginas.current_page %}
+        <p style="margin-left:5px;">{{page}}</p>
+    {% else %}
+      <a style="margin-left:5px;" href="#" onclick="event.preventDefault(); paginator({{page}}, sorting='{{paginas.sort}}', rows='{{paginas.rows}}' )">{{page}}</a>
+    {% endif %}
+  {% endfor %}
+  {% if paginas.has_next%}
+    <p style="margin-left:5px;">...<a href="#" onclick="event.preventDefault(); paginator({{paginas.last_page}}, sorting='{{paginas.sort}}', rows='{{paginas.rows}}' )">Ultimo({{paginas.last_page}})</a>...</p>
+    <a style="margin-left:5px;" href="#" onclick="event.preventDefault(); paginator({{paginas.next}}, sorting='{{paginas.sort}}', rows='{{paginas.rows}}' )">Proximo</a>
+  {% endif %}
+</div>
+{% endif %}
+<style media="screen">
+
+  p {
+    margin-bottom:0px;
+  }
+  .collapse{
+    overflow-y: auto;
+    max-height: 400px;
+  }
+  </style>

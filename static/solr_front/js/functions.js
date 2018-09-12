@@ -150,6 +150,9 @@ function getData(busca_realizada_str){
           }
           $(".group_half_pie_chart").empty()
           geraCharts(data.facet_counts.hierarquico)
+
+          //pega e apresenta documentos apartir da pagina 1
+          paginator(1)
         }
       },
 
@@ -402,7 +405,7 @@ function getTotalizadores(){
            // console.log(data)
            $('.modal-backdrop').remove()
 
-           constroiComponentDocumentos( data['facet'] )
+           // constroiComponentDocumentos( data['facet'] )
 
            // faz join dos objetos e armazena novo objeto na variavel
 
