@@ -87,6 +87,7 @@ ReportFacets.makeCsv = function(json){
   })
 
   csv.unshift(header) // add header column
+  csv.unshift('"sep=,"')
   csv = csv.join('\r\n')
   return csv
   // debugger;
@@ -151,7 +152,14 @@ $(document).ready(function(){
       csvs = report.getReport()
       for (csv in csvs){
         csv_name = csv + '.csv'
-        zip.file(csv_name, csvs[csv]);
+
+        if (navigator.appVersion.indexOf("Win")!=-1){
+          var csvBinary = windows1252.encode(csvs[csv]);
+          zip.file(csv_name, csvBinary, {binary:true});
+        }
+        else{
+          zip.file(csv_name, csvs[csv]);
+        }
       }
 
       zip.generateAsync({type:"blob"}).then(function (blob) { // 1) generate the zip file

@@ -19,9 +19,8 @@
  * request feito para o servidor.
  * @var {Object}
  */
-var selectedFacets = {};
-var selectedFacets_wc = {};
-var selectedFacets_filtro = {};
+var selectedFacets = {'filtro': {}, 'wordcloud': {}};
+
 
 /**
  * Limpa textos exemplo 00; 04; que veem no inicio da chave dos campos
@@ -109,11 +108,11 @@ function incluiTags(key, chave, label, selectedFacets, key_prefix) {
     key = key_prefix + key;
 
     // Verifica se hah o indice no Json.
-    if (selectedFacets.hasOwnProperty(chave)) {
-        var array_exist = selectedFacets[chave]
+    if (selectedFacets['filtro'].hasOwnProperty(chave)) {
+        var array_exist = selectedFacets['filtro'][chave]
     }
 
-    if (array_exist && ($.inArray(key, selectedFacets[chave]) > -1)) {
+    if (array_exist && ($.inArray(key, selectedFacets['filtro'][chave]) > -1)) {
         console.log('executou incluitags');
         selected_facet = ' selected_facet';
 
@@ -210,9 +209,16 @@ function apresentaFacets(json) {
 /* envia variavel selectedFacets para formato do componente de facets, usado para construir interface nas recargas de pagina*/
 function selectedFacetsToSelection() {
     var selecionados = []
-    for (var i = 0; i < Object.keys(selectedFacets).length; i++) {
-        var parent = Object.keys(selectedFacets)[i]
-        var valor = selectedFacets[Object.keys(selectedFacets)[i]]
+    if (selectedFacets['filtro'] == undefined) {
+        selectedFacets['filtro'] = {}
+    }
+    if (selectedFacets['wordcloud'] == undefined) {
+        selectedFacets['wordcloud'] = {}
+    }
+
+    for (var i = 0; i < Object.keys(selectedFacets['filtro']).length; i++) {
+        var parent = Object.keys(selectedFacets['filtro'])[i]
+        var valor = selectedFacets['filtro'][Object.keys(selectedFacets['filtro'])[i]]
         for (var j = 0; j < valor.length; j++) {
             selecionados.push(parent + ':' + valor[j])
         }
@@ -225,12 +231,20 @@ function selectedFacetsToSelection() {
 
 // adciona elemento unitario em selected facets
 function addElementInSelectedFacets(chave, valor) {
-    if (typeof selectedFacets[chave] != 'undefined' && $.inArray(valor, selectedFacets[chave]) == -1) {
-        selectedFacets[chave].push(valor)
-    } else if (typeof selectedFacets[chave] == 'undefined') {
-        selectedFacets[chave] = [valor]
+    if (typeof selectedFacets['filtro'][chave] != 'undefined' && $.inArray(valor, selectedFacets['filtro'][chave]) == -1) {
+        selectedFacets['filtro'][chave].push(valor)
+    } else if (typeof selectedFacets['filtro'][chave] == 'undefined') {
+        selectedFacets['filtro'][chave] = [valor]
     }
 }
+
+// function addElementInSelectedFacets(chave, valor) {
+//     if (typeof selectedFacets[chave] != 'undefined' && $.inArray(valor, selectedFacets[chave]) == -1) {
+//         selectedFacets[chave].push(valor)
+//     } else if (typeof selectedFacets[chave] == 'undefined') {
+//         selectedFacets[chave] = [valor]
+//     }
+// }
 
 
 /* Extrai objeto contendo hierarquia do facet subdividida*/
@@ -267,12 +281,9 @@ function extractHierarchyFacetString(string) {
     }
 }
 
-
 // algoritimo limpa filhos quando pai se encontra em selectedfacets
-function cleanSelectedFacets() {
-    $.extend(selectedFacets, selectedFacets_wc);
-    $.extend(selectedFacets, selectedFacets_filtro);
-    var aux = jQuery.extend(true, {}, selectedFacets);
+function cleanSelectedFacets(filtro) {
+    var aux = jQuery.extend(true, {}, filtro);
 
     for (var key in aux) {
         var facet = aux[key]
@@ -293,18 +304,31 @@ function cleanSelectedFacets() {
     return aux
 }
 
+function AllCleanSelectedFacets(filtro) {
+    d = {}
+    for (var key in filtro) {
+        if (jQuery.type(filtro[key]) === 'object') {
+            d[key] = cleanSelectedFacets(filtro[key])
+        }
+        else{
+          d[key] = filtro[key]
+        }
+    }
+    return d
+}
+
 
 // adciona elemento unitario em selected facets
 function removeElementInSelectedFacets(chave, valor) {
-    if ($.inArray(valor, selectedFacets[chave]) !== -1) {
-        var busca = selectedFacets[chave].indexOf(valor)
+    if ($.inArray(valor, selectedFacets['filtro'][chave]) !== -1) {
+        var busca = selectedFacets['filtro'][chave].indexOf(valor);
         if (busca >= 0) {
             // console.log('existe na lista')
-            selectedFacets[chave].splice(busca, 1);
+            selectedFacets['filtro'][chave].splice(busca, 1);
 
             //deleta chave caso lista estiver vazia
-            if (selectedFacets[chave].length == 0) {
-                delete selectedFacets[chave]
+            if (selectedFacets['filtro'][chave].length == 0) {
+                delete selectedFacets['filtro'][chave]
             }
         }
     }
@@ -350,8 +374,8 @@ function treeviewToFacets(lista) {
 
 
 function order_facet(element, order_list) {
-    $(element).removeClass('btn-default').addClass("btn-success")
-    colore_botao = $(element).attr('id')
+    $(element).removeClass('btn-default').addClass("btn-success");
+    colore_botao = $(element).attr('id');
     constroiComponentFacetsButtons(from_ajax['hierarquia'], ordem = order_list)
 }
 
@@ -365,17 +389,24 @@ function reset_order_facet() {
  */
 function constroiComponentFacetsButtons(obj) {
 
+
     if (typeof colore_botao != 'undefined') {
         // se filtro já existir recupera a ordenação passando o paramentro no construtor de facets
-        var data_ordem = $('#' + colore_botao).data()
+        var data_ordem = $('#' + colore_botao).data();
         var ordem = data_ordem.order
 
     } else {
         var ordem = false
     }
-    var g = new GroupComponent()
-    ordem = ordem ? ordem : false
-    if (obj) {
+
+    var myNode = document.getElementById('facets');
+    while (myNode.firstChild) {
+        myNode.removeChild(myNode.firstChild);
+    }
+
+    var g = new GroupComponent();
+    ordem = ordem ? ordem : false;
+    if (!jQuery.isEmptyObject(obj)) {
 
         for (var i = 0; i < Object.keys(obj).length; i++) {
 
@@ -388,7 +419,14 @@ function constroiComponentFacetsButtons(obj) {
 
         g.renderExec(clean = true, 'groupBy.order')
 
+
+    } else {
+        $('#facets.content_section__container').append(
+            '<span>Não há filtros disponíveis </span>'
+        );
+        $('#loader_facets').hide()
     }
+
 }
 
 /**
@@ -422,5 +460,5 @@ function makeDataComponentFacet(item, lista_itens) {
  * Remove todos os facets da chave especificada
  */
 function removeAllElementSelectedFacets(chave) {
-    delete selectedFacets[chave]
+    delete selectedFacets['filtro'][chave]
 }

@@ -40,7 +40,8 @@ function recuperaBubbleChart(busca_realizada_str) {
             'X-Requested-With': 'XMLHttpRequest',
             "Content-Type": "application/json; charset=utf-8",
             "Accept": "application/json",
-            'X-CSRFToken': csrf //a varivel csrf provem da pagina html
+            'X-CSRFToken': csrf, //a varivel csrf provem da pagina html
+            'csrfmiddlewaretoken': csrf
         },
         data: JSON.stringify(result_cp_gd),
         success: function (data) {
@@ -70,7 +71,7 @@ function recuperaBoxPlotChart(busca_realizada_str) {
     selects = $(".boxplot_options")
         .map(function () {
             obj = {}
-            obj[this.id] = $(this).val()
+            obj[this.id] = $(this).val();
             json_levels_list.push(obj)
 
         })
@@ -92,15 +93,16 @@ function recuperaBoxPlotChart(busca_realizada_str) {
             'X-Requested-With': 'XMLHttpRequest',
             "Content-Type": "application/json; charset=utf-8",
             "Accept": "application/json",
-            'X-CSRFToken': csrf //a varivel csrf provem da pagina html
+            'X-CSRFToken': csrf, //a varivel csrf provem da pagina html
+            'csrfmiddlewaretoken': csrf
         },
         data: JSON.stringify(result_cp_gd),
         success: function (data) {
             // console.log(data)
             // debugger;
-            console.log(data.result);
+            // console.log(data.result);
             boxplot_data = data.result;
-            drawBoxPlotChart(data.result, 7, 75)
+            drawBoxPlotChart(boxplot_data, 7, 75)
         },
         complete: function () {
             $('.ajax-loaders').css("visibility", "hidden");
@@ -127,6 +129,9 @@ function recuperaWordCloudChart(busca_realizada_str) {
     $('#wordcloud_selected_words').hide()
     var show_wordcloud_selected_words = false
 
+    var parentDiv = $('#wordcloud');
+
+
     $.ajax({
         url: home_sf_rurl + bv_collection + '/' + id_collection + '/unidimensional_chart/wordcloud/',
         type: 'post',
@@ -136,25 +141,25 @@ function recuperaWordCloudChart(busca_realizada_str) {
             'X-Requested-With': 'XMLHttpRequest',
             "Content-Type": "application/json; charset=utf-8",
             "Accept": "application/json",
-            'X-CSRFToken': csrf //a varivel csrf provem da pagina html
+            'X-CSRFToken': csrf, //a varivel csrf provem da pagina html
+            'csrfmiddlewaretoken': csrf
         },
         data: JSON.stringify(result_cp_gd),
         success: function (data) {
-            // console.log(data)
+            console.log(parentDiv.width());
             // debugger;
-
             d3.wordcloud()
-                .size([500, 300])
+                .size([700, 450])
                 .fill(d3.scale.ordinal().range(["#884400", "#448800", "#888800", "#444400"]))
                 .words(data['buckets'])
                 .onwordclick(function (d, i) {
                     //window.location = "https://www.google.co.uk/search?q=" + d.text;
-                    if (selectedFacets_wc[result_cp_gd[bv_collection]['single_facet']] && !selectedFacets_wc[result_cp_gd[bv_collection]['single_facet']].includes(d.text)) {
-                        selectedFacets_wc[result_cp_gd[bv_collection]['single_facet']].push(d.text)
-                    } else{
-                            if(selectedFacets_wc[result_cp_gd[bv_collection]['single_facet']] === undefined){
-                                selectedFacets_wc[result_cp_gd[bv_collection]['single_facet']] = [d.text];
-                            }
+                    if (selectedFacets['wordcloud'][result_cp_gd[bv_collection]['single_facet']] && !selectedFacets['wordcloud'][result_cp_gd[bv_collection]['single_facet']].includes(d.text)) {
+                        selectedFacets['wordcloud'][result_cp_gd[bv_collection]['single_facet']].push(d.text)
+                    } else {
+                        if (selectedFacets['wordcloud'][result_cp_gd[bv_collection]['single_facet']] === undefined) {
+                            selectedFacets['wordcloud'][result_cp_gd[bv_collection]['single_facet']] = [d.text];
+                        }
 
                     }
                     $('.word_ls').remove();
@@ -165,12 +170,12 @@ function recuperaWordCloudChart(busca_realizada_str) {
                 // .words(words)
                 .start();
 
-            if (!jQuery.isEmptyObject(selectedFacets_wc)) {
+            if (!jQuery.isEmptyObject(selectedFacets['wordcloud'])) {
 
-                for (field_key in selectedFacets_wc) {
+                for (field_key in selectedFacets['wordcloud']) {
                     // selectedFacets[field_key].forEach(i => console.log(i))
 
-                    selectedFacets_wc[field_key].forEach(function (word) {
+                    selectedFacets['wordcloud'][field_key].forEach(function (word) {
                         $('#palavras_selecionadas').append(
                             '<span class="tag label label-info word_ls" >\n' +
                             '  <span>' + word + '</span>\n' +
@@ -189,14 +194,15 @@ function recuperaWordCloudChart(busca_realizada_str) {
           </button>')
                 $('#limpaAllFiltros_wc').on('click', function () {
 
-                    Object.keys(selectedFacets_wc).forEach(function (key) {
-                        // Indica que eh facet de funil
-                        // '/cross_collection_/y' causa problema em IE
-                        if (!key.match(RegExp("cross_collection_", "i"))) {
-                            delete selectedFacets_wc[key];
-                            delete selectedFacets[key]
-                        }
-                    });
+                    /* Object.keys(selectedFacets['wordcloud']).forEach(function (key) {
+                         // Indica que eh facet de funil
+                         // '/cross_collection_/y' causa problema em IE
+                         if (!key.match(RegExp("cross_collection_", "i"))) {
+                             selectedFacets['wordcloud'][key] = {};
+
+                         }
+                     });*/
+                    selectedFacets['wordcloud'] = {};
 
                     getData();
                     $('.word_ls').remove();
@@ -205,9 +211,9 @@ function recuperaWordCloudChart(busca_realizada_str) {
                 $('#limpaAllFiltros_wc').remove();
                 $('.word_ls').remove();
             }
-            if (show_wordcloud_selected_words){
-              $('#wordcloud_selected_words').show()
-            }            
+            if (show_wordcloud_selected_words) {
+                $('#wordcloud_selected_words').show()
+            }
 
 
         },
@@ -253,7 +259,8 @@ function recuperaSankeyChart(busca_realizada_str) {
             'X-Requested-With': 'XMLHttpRequest',
             "Content-Type": "application/json; charset=utf-8",
             "Accept": "application/json",
-            'X-CSRFToken': csrf //a varivel csrf provem da pagina html
+            'X-CSRFToken': csrf, //a varivel csrf provem da pagina html
+            'csrfmiddlewaretoken': csrf
         },
         data: JSON.stringify(result_cp_gd),
         success: function (data) {
@@ -295,7 +302,8 @@ function recuperaPivotTable(busca_realizada_str) {
             'X-Requested-With': 'XMLHttpRequest',
             "Content-Type": "application/json; charset=utf-8",
             "Accept": "application/json",
-            'X-CSRFToken': csrf //a varivel csrf provem da pagina html
+            'X-CSRFToken': csrf, //a varivel csrf provem da pagina html
+            'csrfmiddlewaretoken': csrf
         },
         data: JSON.stringify(result_cp_gd),
         success: function (data) {
@@ -335,7 +343,6 @@ function recuperaGraficoDuplo(busca_realizada_str) {
     var nivel_2 = $('input[name=rb_eixo_y]:checked').attr('value');
 
 
-
     // Se nao encontrar os radios, configura manualmente.
     if (!nivel_1) {
         nivel_1 = default_level_1
@@ -361,13 +368,13 @@ function recuperaGraficoDuplo(busca_realizada_str) {
             'type': 'terms',
             'field': nivel_1, // var nivel_1 = 'bolsas_pt';
             'limit': 100,
-            'sort':{'index':'asc'},
+            'sort': {'index': 'asc'},
             'facet': {
                 nivel_2: {
                     'type': 'terms',
                     'field': nivel_2, // var nivel_2 = 'ano_exact';
                     'limit': 100,
-                    'sort':{'index':'asc'},
+                    'sort': {'index': 'asc'},
                 }
             }
         }
@@ -380,8 +387,8 @@ function recuperaGraficoDuplo(busca_realizada_str) {
     */
     var sum = $('input[name=rb_eixo_x]:checked').attr('sum');
     // debugger;
-    if (typeof sum !== typeof undefined){
-      json_facet['nivel_1']['facet']['nivel_2']['facet'] = {'count':"sum(" + sum + ")"}
+    if (typeof sum !== typeof undefined) {
+        json_facet['nivel_1']['facet']['nivel_2']['facet'] = {'count': "sum(" + sum + ")"}
     }
 
     result_cp_gd[bv_collection]['json_facet'] = json_facet;
@@ -458,13 +465,17 @@ function recuperaGraficoDuplo(busca_realizada_str) {
             'X-Requested-With': 'XMLHttpRequest',
             "Content-Type": "application/json; charset=utf-8",
             "Accept": "application/json",
-            'X-CSRFToken': csrf //a varivel csrf provem da pagina html
+            'X-CSRFToken': csrf, //a varivel csrf provem da pagina html
+            'csrfmiddlewaretoken': csrf
         },
         data: JSON.stringify(result_cp_gd),
         success: function (data) {
             json_d3 = json_solr_2_d3(data.facets);
-            useReturnData(json_d3);
-            drawStackChart(json_d3, false, null, null, null, null);
+            if (json_d3.length > 0) {
+                useReturnData(json_d3);
+                drawStackChart(json_d3, false, null, null, null, null);
+            }
+
         }
     });
 
@@ -819,7 +830,7 @@ function halfPieChart(id, label, json) {
     for (f in json['facets']) {
         pct = json['facets'][f]['count'] * 100 / json['count']
         pct = pct.toFixed(2)
-        datasetTotal.push({'label': ' (' + pct + '%) ' + f, value: json['facets'][f]['count']})
+        datasetTotal.push({'label': ' (' + pct + '%) ' + filter_facet_string(f), value: json['facets'][f]['count']})
     }
 
     var blocos = d3.select('.group_half_pie_chart')
@@ -972,6 +983,7 @@ function halfPieChart(id, label, json) {
             .attr("font-family", "roboto")
             .attr("font-size", "8px")
             .text(function (d) {
+                // console.log('legenda do pie',d);
                 return d;
             });
 
@@ -1078,7 +1090,7 @@ function barChart(id, label, json) {
 
     for (facet in json['facets']) {
         refaz_data[idx] = {
-            'label': json['facets'][facet]['label'],
+            'label': filter_facet_string(json['facets'][facet]['label']),
             'valor': json['facets'][facet]['count']
         }
         idx++;

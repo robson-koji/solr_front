@@ -93,6 +93,9 @@ function drawBubbleChart(data, slide_min, slide_max){
 
     // console.log(data)
     $('#svg_bubblechart').empty()
+    if(data.length==0){
+        return
+    }
 
     var svg;
     var xscale;

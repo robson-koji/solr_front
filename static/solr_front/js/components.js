@@ -68,6 +68,52 @@ GroupComponent.prototype.renderExec = function (clean, byorder) {
             this.instances[i].exec()
         }
     }
+
+    if (!jQuery.isEmptyObject(selectedFacets['filtro'])) {
+        $('#fieldFiltros').remove();
+        $('#facets.content_section__container').append('<fieldset id="fieldFiltros"><legend>Filtros selecionados</legend> <div class="groupBy" id="selectedFiltros"></div></fieldset>')
+        cleanFilters = cleanSelectedFacets(selectedFacets['filtro']);
+        for (keynum in cleanFilters) {
+            cleanFilters[keynum].forEach(function (word) {
+                    if (word === "*") {
+                        palavra = $('span#'+keynum).text();
+                        $('.groupBy#selectedFiltros').append(
+                            '<span class=\"tag label label-info filter_ls\" id=\"' + filter_facet_string(word) + '\" >\n' +
+                            '  <span>' + filter_facet_string(palavra) + '</span>\n' +
+                            '  <a><i class=\"remove glyphicon glyphicon-remove-sign glyphicon-white\"  data-key=\"' + keynum + '\" data-tag= \'' + word + '\' onclick=\"deletar_filtro($(this).data(\'key\'),$(this).data(\'tag\'))\"></i></a> \n' +
+                            '</span>')
+                    } else {
+                        $('.groupBy#selectedFiltros').append(
+                            '<span class=\"tag label label-info filter_ls\" id=\"' + filter_facet_string(word) + '\" >\n' +
+                            '  <span>' + filter_facet_string(word) + '</span>\n' +
+                            '  <a><i class=\"remove glyphicon glyphicon-remove-sign glyphicon-white\"  data-key=\"' + keynum + '\" data-tag= \'' + word + '\' onclick=\"deletar_filtro($(this).data(\'key\'),$(this).data(\'tag\'))\"></i></a> \n' +
+                            '</span>')
+
+                    }
+
+
+                }
+            )
+        }
+
+
+        /*        for (field_key in selectedFacets['filtro']) {
+                    // selectedFacets[field_key].forEach(i => console.log(i))
+                    selectedFacets['filtro'][field_key].forEach(function (word) {
+
+                        console.log($('[id="' + filter_facet_string(word) + '"]').length)
+                        $('.groupBy#selectedFiltros').append(
+                            '<span class=\"tag label label-info filter_ls\" id=\"' + filter_facet_string(word) + '\" >\n' +
+                            '  <span>' + filter_facet_string(word) + '</span>\n' +
+                            '  <a><i class=\"remove glyphicon glyphicon-remove-sign glyphicon-white\"  data-key=\"' + field_key + '\" data-tag= \'' + word + '\' onclick=\"deletar_filtro($(this).data(\'key\'),$(this).data(\'tag\'))\"></i></a> \n' +
+                            '</span>')
+
+
+                    })
+
+
+                }*/
+    }
 }
 
 
@@ -173,6 +219,84 @@ TotaisComponent.prototype.template = function () {
 
 
 /**
+ * Criacao do componente de Tabelas
+ */
+function TableComponent(contexto, anexo) {
+    Component.call(this, contexto, anexo);
+}
+
+// herda de Component
+TableComponent.prototype = new Component();
+TableComponent.prototype.constructor = TableComponent// ajusta apontamento para classe correta
+
+
+var check_number_currency = function (data_type, value) {
+    if (typeof value != "number") {
+        return value
+    }
+
+    if (data_type == "currency") {
+        value = Number(value).toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+        });
+    }
+    else {
+        value = Number(value).toLocaleString(undefined, {maximumFractionDigits: 1})
+    }
+    return value
+}
+
+
+TableComponent.prototype.template = function () {
+    if (this.contexto.content.length > 0) {
+
+        var i;
+        var div_table = '<table class="table table-striped">'
+
+        // Set table header
+        if (this.contexto.headers.length > 0) {
+            var div_table_header = '<thead><tr>'
+            for (i = 0; i < this.contexto.headers.length; i++) {
+                div_table_header += '<th class="text-center">' + this.contexto.headers[i][1] + '</th>'
+            }
+            div_table += '</tr></thead>' + div_table_header
+        }
+
+        // Set table body
+        div_table += '<tbody>'
+        for (i = 0; i < this.contexto.content.length; i++) {
+
+            div_table += '<tr>'
+            for (j = 0; j < this.contexto.headers.length; j++) {
+                id = this.contexto.headers[j][0]
+                if (typeof this.contexto.content[i][id] == 'undefined') {
+                    continue
+                }
+
+                // Set alignment
+                var td_class = ''
+                alignment = this.contexto.headers[j][3]
+                // if (alignment == 'right'){td_class = 'class="text-right"'}
+                td_class = 'class="text-' + alignment + '"'
+
+                // Check money or number
+                data_type = this.contexto.headers[j][2]
+                value = check_number_currency(data_type, this.contexto.content[i][id])
+
+                // Assembly div
+                div_table += '<td ' + td_class + '>' + value + '</td>'
+            }
+            div_table += '</tr>'
+        }
+        div_table += '</tbody></table>'
+        return div_table
+
+    }
+}
+
+
+/**
  * Criacao do componente Doc
  */
 function DocsComponent(contexto, anexo) {
@@ -266,7 +390,7 @@ FacetComponentExec.prototype.html = function (id, label, order) {
     padding: 3px 5px;\
     border: 1px solid #ddd; </style>\
   <!-- botão --> \
-   <a href="#' + id + '" role="button" data-target="#' + id + '" data-order="' + order + '"class="btn btn-tag" data-toggle="modal"> <i class="fa fa-check" hidden></i> ' + label + ' <i class="contador"></i> </a>' +
+   <a href="#' + id + '" role="button" data-target="#' + id + '" data-order="' + order + '"class="btn btn-tag" data-toggle="modal"> <i class="fa fa-check" hidden></i> ' + '<span id ='+id+'>'+ label + '</span>'+' <i class="contador"></i> </a>' +
 
         ' <!-- modal -->\
          <div id="' + id + '" class="modal" data-easein="swoopIn" tabindex="-1" role="dialog" aria-labelledby="' + id + 'ModalLabel" aria-hidden="false">\
@@ -341,7 +465,7 @@ FacetComponentExec.prototype.exec = function () {
         this.has_num_order = false;
 
         //remove numero de ordem dos labels se houver
-        if (/^\d+$/.test(this.contexto[0]['itens'][0]['label'].split(';')[0])) {
+        if (/^\d+$/.test(this.contexto[0]['itens'][0]['label'].split(';')[0]) && (this.contexto[0]['itens'][0]['label'].split(';').length > 1)) {
             this.has_num_order = true;
 
         }
@@ -416,6 +540,7 @@ FacetComponentExec.prototype.exec = function () {
                     }
                 }
             });
+
         }
 
         // lida com botões do componente
@@ -438,26 +563,24 @@ FacetComponentExec.prototype.exec = function () {
         }
 
 
-
-
         // adiciona menu de ordenação
         if ($('#' + classe.anexo + ' #menu #ordena').length == 0) {
 
             $('#' + classe.anexo + ' #menu').append('\
         <span id="ordena" style="margin-left:10px;">\
-        <button id="Alfabetica" class="btn btn-default" data-order=[\"+text\"] onclick="order_facet(this, [\'+text\'])" data-toggle="popover" title="Ordena facets" data-trigger="hover" data-placement="top" data-content="por ordem Alfabética">\
+        <button id="Alfabetica" class="btn btn-default" data-order=[\"+text\"] onclick="order_facet(this, [\'+text\'])" data-toggle="popover" title="Ordenar resultados" data-trigger="hover" data-placement="top" data-content="por ordem Alfabética">\
         <i class="glyphicon glyphicon-sort-by-alphabet"></i>\
         </button>\
-        <button id="Alfabetica-alt" class="btn btn-default" data-order=[\"-text\"] onclick="order_facet(this, [\'-text\'])" data-toggle="popover" title="Ordena facets" data-trigger="hover" data-placement="top" data-content="por ordem Alfabética inversa">\
+        <button id="Alfabetica-alt" class="btn btn-default" data-order=[\"-text\"] onclick="order_facet(this, [\'-text\'])" data-toggle="popover" title="Ordenar resultados" data-trigger="hover" data-placement="top" data-content="por ordem Alfabética inversa">\
         <i class="glyphicon glyphicon-sort-by-alphabet-alt"></i>\
         </button>\
-        <button id="Numerica" class="btn btn-default" data-order=[\"+count\"] onclick="order_facet(this, [\'+count\'])" data-toggle="popover" title="Ordena facets" data-trigger="hover" data-placement="top" data-content="por quantidade">\
+        <button id="Numerica" class="btn btn-default" data-order=[\"+count\"] onclick="order_facet(this, [\'+count\'])" data-toggle="popover" title="Ordenar resultados" data-trigger="hover" data-placement="top" data-content="por quantidade">\
         <i class="glyphicon glyphicon-sort-by-order"></i>\
         </button>\
-        <button id="Numerica-alt" class="btn btn-default" data-order=[\"-count\"] onclick="order_facet(this, [\'-count\'])" data-toggle="popover" title="Ordena facets" data-trigger="hover" data-placement="top" data-content="por quantidade inversa">\
+        <button id="Numerica-alt" class="btn btn-default" data-order=[\"-count\"] onclick="order_facet(this, [\'-count\'])" data-toggle="popover" title="Ordenar resultados" data-trigger="hover" data-placement="top" data-content="por quantidade inversa">\
         <i class="glyphicon glyphicon-sort-by-order-alt"></i>\
         </button>\
-        <button id="Reset" class="btn btn-default"  onclick="reset_order_facet()" data-toggle="popover" title="Ordena facets" data-trigger="hover" data-placement="top" data-content="por configuração padrão">\
+        <button id="Reset" class="btn btn-default"  onclick="reset_order_facet()" data-toggle="popover" title="Ordenar resultados" data-trigger="hover" data-placement="top" data-content="por configuração padrão">\
         <i class="glyphicon glyphicon-refresh"></i>\
         </button>\
         </span>')
@@ -471,7 +594,7 @@ FacetComponentExec.prototype.exec = function () {
         }
 
 
-        if (this.checked == true || !jQuery.isEmptyObject(selectedFacets)) {
+        if (this.checked == true || !jQuery.isEmptyObject(selectedFacets['filtro']) || !jQuery.isEmptyObject(selectedFacets['wordcloud'])) {
             if ($('#' + classe.anexo + ' #menu #limpaAllFiltros').length == 0) {
                 $('#' + classe.anexo + ' #menu').append('\
           <button id="limpaAllFiltros" class="btn btn-info" style="margin-left:10px">\
@@ -479,20 +602,23 @@ FacetComponentExec.prototype.exec = function () {
           Limpa todos os Filtros\
           </button>')
             }
+
             /*
             Limpa todos os facets,
             exceto se indicar que eh funil de uma collection anterior
             */
             $('#' + classe.anexo + ' #menu #limpaAllFiltros').off('click').on('click', function () {
 
-                Object.keys(selectedFacets).forEach(function (key) {
-                    // Indica que eh facet de funil
-                    // '/cross_collection_/y' causa problema em IE
-                    if (!key.match(RegExp("cross_collection_", "i"))) {
-                        delete selectedFacets[key];
-                        delete selectedFacets_wc[key];
-                    }
-                });
+                // Object.keys(selectedFacets).forEach(function (key) {
+                //     // Indica que eh facet de funil
+                //     // '/cross_collection_/y' causa problema em IE
+                //     if (!key.match(RegExp("cross_collection_", "i"))) {
+                //          selectedFacets[key];
+                //          selectedFacets_wc[key];
+                //     }
+                // });
+                selectedFacets['filtro'] = {}
+                selectedFacets['wordcloud'] = {}
                 getData();
             })
         }
@@ -600,11 +726,14 @@ function makeFacetObjectTree(item, selecteds, element, ordem, has_num_order) {
                 }
 
                 // chama a função convertendo array em objeto Argument usando metodo apply
-                obj.nodes = obj.nodes.sortBy.apply(obj.nodes, ordenamento)
-                if(num_order){
-                    for (var ix = 0; ix < obj.nodes.length; ix++){
+                obj.nodes = obj.nodes.sortBy.apply(obj.nodes, ordenamento);
+                if (num_order) {
+                    for (var ix = 0; ix < obj.nodes.length; ix++) {
                         obj.nodes[ix]['text'] = obj.nodes[ix]['text'].split(';')[1]
                     }
+                }
+                if (num_order && (ordem.toString() === '+text' ||ordem.toString() === '-text')){
+                    obj.nodes = obj.nodes.sortBy.apply(obj.nodes, ordenamento);
                 }
             }
         }

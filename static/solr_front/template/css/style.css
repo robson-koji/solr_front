@@ -142,6 +142,20 @@ button.btn.btn-tag.active,a.btn.btn-tag.active {
 
 .title-section .title-section__icon {
     width: 32px;
+    background-image: url(../img/minus.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 24px;
+    background-color: #6ea5b9;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%
+}
+
+
+.title-section .title-section__icon.collapsed{
+    width: 32px;
     background-image: url(../img/plus.png);
     background-repeat: no-repeat;
     background-position: center;
