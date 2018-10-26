@@ -236,20 +236,19 @@ function GetBrowserInfo() {
 
 //Funcao para deletar item especifico do array selectedFacets_wc
 function deletar_word(keytodel, wordtodel) {
-    if (selectedFacets_wc[keytodel].length == 1) {
-        delete selectedFacets_wc[keytodel];
-        delete selectedFacets[keytodel];
+    if (selectedFacets['wordcloud'][keytodel].length == 1) {
+        delete selectedFacets['wordcloud'][keytodel];
         $('.word_ls').remove();
         getData();
         return
 
     }
-    if (selectedFacets_wc[keytodel].length > 1) {
-        for (var i = 0; i < selectedFacets_wc[keytodel].length; i++) {
+    if (selectedFacets['wordcloud'][keytodel].length > 1) {
+        for (var i = 0; i < selectedFacets['wordcloud'][keytodel].length; i++) {
 
-            if (selectedFacets_wc[keytodel][i] === wordtodel) {
-                if (selectedFacets_wc[keytodel].length > 1) {
-                    selectedFacets_wc[keytodel].splice(i, 1);
+            if (selectedFacets['wordcloud'][keytodel][i] === wordtodel) {
+                if (selectedFacets['wordcloud'][keytodel].length > 1) {
+                    selectedFacets['wordcloud'][keytodel].splice(i, 1);
                     //selectedFacets[keytodel].splice(i, 1);
                     $('.word_ls').remove();
                     getData();
@@ -264,34 +263,102 @@ function deletar_word(keytodel, wordtodel) {
 
 }
 
-// Função recupera documentos do solr especificando a pagina
-function paginator(page, sorting, rows){
-  $('.ajax-docs-loaders').show()
-  $('#documentos').html('')
-  pesquisa = getBuscaRealizada({})
-  pesquisa[bv_collection]['page'] = page
-  if(typeof sorting != undefined){
-    pesquisa[bv_collection]['sort'] = sorting
-  }
-  if(typeof rows != undefined){
-    pesquisa[bv_collection]['rows'] = rows
-  }
+function deletar_filtro(keytodel, wordtodel) {
+    if (selectedFacets['filtro'][keytodel].length === 1 || wordtodel==='*') {
+        delete selectedFacets['filtro'][keytodel];
+        $('.filter_ls').remove();
+        getData();
+        return
 
-  $.ajax({
-    type: "POST",
-    url: home_sf_rurl + bv_collection + '/' + id_collection +"/docs_widget/",
-    data: JSON.stringify(pesquisa),
-    success: function(data){
-         $('#documentos').html(data['resultado']);
-         $('#documentos').change();
-        $('.ajax-docs-loaders').hide()
-    },
-    dataType: 'json',                                                                                                                                                                                               headers: {
-              "cache-control": "no-cache",
-              'X-Requested-With': 'XMLHttpRequest',
-              "Content-Type": "application/json; charset=utf-8",
-              "Accept": "application/json",
-              'X-CSRFToken': csrf //a varivel csrf provem da pagina html
-          },
-  });
+    }
+    if (selectedFacets['filtro'][keytodel].length > 1) {
+        if (jQuery.type(wordtodel) == 'string') {
+            var regex = new RegExp('^' + escapeRegExp(wordtodel))
+            selectedFacets['filtro'][keytodel] = removeMatching(selectedFacets['filtro'][keytodel], regex)
+        } else {
+            selectedFacets['filtro'][keytodel] = jQuery.grep(selectedFacets['filtro'][keytodel], function (value,i) {
+                console.log(value)
+                return value.toString() != wordtodel.toString();
+            });
+        }
+
+        if (selectedFacets['filtro'][keytodel].length === 0) {
+            delete selectedFacets['filtro'][keytodel]
+        }
+        $('.filter_ls').remove();
+        getData();
+        return
+        /*        for (var i = 0; i < selectedFacets['filtro'][keytodel].length; i++) {
+
+                    if (selectedFacets['filtro'][keytodel][i] === wordtodel) {
+                        if (selectedFacets['filtro'][keytodel].length > 1) {
+                            selectedFacets['filtro'][keytodel].splice(i, 1);
+                            //selectedFacets[keytodel].splice(i, 1);
+                            $('.filter_ls').remove();
+                            getData();
+                            return
+                        }
+
+                    }
+                }*/
+
+
+    }
+
+
+}
+
+function filter_facet_string(palavra) {
+    palavra = palavra.toString();
+    lista = palavra.split('|');
+    if (lista.length > 1) {
+        if (/^\d\d$/.test(lista[0].split(';')[0])) {
+            return lista[1].split(';')[1]
+        } else {
+            return lista[1]
+
+        }
+    } else {
+        if (/^\d\d$/.test(palavra.split(';')[0]) && (palavra.split(';').length > 1)) {
+            return palavra.split(';')[1]
+        } else {
+            return palavra
+        }
+
+    }
+
+}
+
+
+// Função recupera documentos do solr especificando a pagina
+function paginator(page, sorting, rows) {
+    $('.ajax-docs-loaders').show()
+    $('#documentos').html('')
+    pesquisa = getBuscaRealizada({})
+    pesquisa[bv_collection]['page'] = page
+    if (typeof sorting != undefined) {
+        pesquisa[bv_collection]['sort'] = sorting
+    }
+    if (typeof rows != undefined) {
+        pesquisa[bv_collection]['rows'] = rows
+    }
+
+    $.ajax({
+        type: "POST",
+        url: home_sf_rurl + bv_collection + '/' + id_collection + "/docs_widget/",
+        data: JSON.stringify(pesquisa),
+        success: function (data) {
+            $('#documentos').html(data['resultado']);
+            $('#documentos').change();
+            $('.ajax-docs-loaders').hide()
+        },
+        dataType: 'json', headers: {
+            "cache-control": "no-cache",
+            'X-Requested-With': 'XMLHttpRequest',
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json",
+            'X-CSRFToken': csrf, //a varivel csrf provem da pagina html
+            'csrfmiddlewaretoken': csrf
+        },
+    });
 }

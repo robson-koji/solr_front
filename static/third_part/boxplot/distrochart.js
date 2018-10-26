@@ -33,7 +33,7 @@ function makeDistroChart(settings) {
         axisLables: null,
         yTicks: 1,
         scale: 'linear',
-        //chartSize: {width: 1800, height: 1450},
+        // chartSize: {width: 1800, height: 1450},
         margin: {top: 15, right: 45, bottom: 120, left: 50},
         constrainExtremes: false,
         chartAlignment: 'horizontal',
@@ -140,17 +140,18 @@ function makeDistroChart(settings) {
      * @returns {Function} A function that provides the values for the tooltip
      */
     function tooltipHover(groupName, metrics) {
-        var tooltipString = "Group: " + groupName;
+        var tooltipString = "Grupo: " + groupName;
         //tooltipString += "<br\>Max: " + formatAsFloat(metrics.max, 0.1);
         tooltipString += "<br\>Q3: " + formatAsFloat(metrics.quartile3);
         tooltipString += "<br\>Mediana: " + formatAsFloat(metrics.median);
         tooltipString += "<br\>Média: " + formatAsFloat(metrics.mean);
         tooltipString += "<br\>Q1: " + formatAsFloat(metrics.quartile1);
         //tooltipString += "<br\>Min: " + formatAsFloat(metrics.min);
-        tooltipString += "<br\>Count: " + formatAsFloat(metrics.count);
+        tooltipString += "<br\>Contagem: " + formatAsFloat(metrics.count);
+        // tooltipString += "</div>";
         return function () {
-            chart.objs.tooltip.transition().duration(200).style("opacity", 0.9);
-            chart.objs.tooltip.html(tooltipString)
+            chart.objs.tooltips.transition().duration(200).style("opacity", 0.9);
+            chart.objs.tooltips.html(tooltipString)
         };
     }
 
@@ -172,7 +173,7 @@ function makeDistroChart(settings) {
                 lowerInnerFence: null,
                 lowerOuterFence: null,
                 min: null,
-                count : null
+                count: null
             };
             //console.log(values);
             //metrics.min = values[0].min;
@@ -237,7 +238,6 @@ function makeDistroChart(settings) {
                 chart.groupObjs[current_x].values = [current_y];
             }
         }
-
 
 
         for (var cName in chart.groupObjs) {
@@ -345,8 +345,10 @@ function makeDistroChart(settings) {
     chart.update = function () {
         // Update chart size based on view port size
         // - This doesn't change any direct attributes, just stores the variables for use in below calculations
-        chart.width = parseInt(chart.objs.chartDiv.style("width"), 10) - (chart.margin.left + chart.margin.right);
-        chart.height = parseInt(chart.objs.chartDiv.style("height"), 10) - (chart.margin.top + chart.margin.bottom);
+        // chart.width = parseInt(chart.objs.chartDiv.style("width"), 10) - (chart.margin.left + chart.margin.right);
+        //chart.width = chart.settings.chartSize['width'] - (chart.margin.left + chart.margin.right);
+        // chart.height = parseInt(chart.objs.chartDiv.style("height"), 10) - (chart.margin.top + chart.margin.bottom);
+        //chart.height = chart.settings.chartSize['height'] - (chart.margin.top + chart.margin.bottom);
 
         // Update scale functions
         chart.xScale.rangeBands([0, chart.width]);
@@ -383,6 +385,7 @@ function makeDistroChart(settings) {
      * Prepare the chart html elements
      */
     !function prepareChart() {
+
         if (chart.settings.chartAlignment == 'vertical') {
             verticalChartPrepare();
         }
@@ -401,7 +404,7 @@ function makeDistroChart(settings) {
         // Capture the inner div for the chart (where the chart actually is)
         chart.selector = chart.settings.selector + " .inner-box";
         chart.objs.chartDiv = d3.select(chart.selector);
-        d3.select(window).on('resize.' + chart.selector, chart.update);
+        d3.select(window).on('resize' + chart.selector, chart.update);
 
         // Create the svg
         chart.objs.svg = chart.objs.chartDiv.append("svg")
@@ -429,21 +432,26 @@ function makeDistroChart(settings) {
             .attr("dy", ".71em")
             .style("text-ancohor", "middle")
             .text(chart.yAxisLable);
-
+        chart.update();
         // Create tooltip div
-        chart.objs.tooltip = chart.objs.mainDiv.append('div').attr('class', 'tooltip');
+        var x = $("#chart-distro1");
+        chart.objs.tooltips = chart.objs.mainDiv.append('div').attr('class', 'tooltip');
         for (var cName in chart.groupObjs) {
             chart.groupObjs[cName].g = chart.objs.g.append("g").attr("class", "group");
             chart.groupObjs[cName].g.on("mouseover", function () {
-                chart.objs.tooltip
+                var pageX = d3.event.pageX;
+                var pageY = d3.event.pageY;
+
+
+                chart.objs.tooltips
                     .style("display", null)
-                    .style("left", (d3.event.pageX+20) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");
+                    .style("left", (pageX) + (x.position()['left']- 70) + "px")
+                    .style("top", (pageY) - (x.position()['top']+ 540) + "px");
             }).on("mouseout", function () {
-                chart.objs.tooltip.style("display", "none");
+                chart.objs.tooltips.style("display", "none");
             }).on("mousemove", tooltipHover(cName, chart.groupObjs[cName].metrics))
         }
-        chart.update();
+
     }();
 
     /**
@@ -763,7 +771,7 @@ function makeDistroChart(settings) {
 
         chart.violinPlots.prepareViolin();
 
-        d3.select(window).on('resize.' + chart.selector + '.violinPlot', chart.violinPlots.update);
+        d3.select(window).on('resize' + chart.selector + '.violinPlot', chart.violinPlots.update);
         chart.violinPlots.update();
         return chart;
     };

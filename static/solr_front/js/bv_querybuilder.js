@@ -133,7 +133,8 @@ function getBuscaRealizada(facets_col2){
           'ordem': 0,
           'collection':bv_collection,
           //Envia versão filtrada do selectedFacets
-          'selected_facets_col1': cleanSelectedFacets(),
+          'selected_facets_col1': AllCleanSelectedFacets(selectedFacets)
+
       };
 
   }
@@ -145,7 +146,9 @@ function getBuscaRealizada(facets_col2){
           'ordem': 0,
           'collection':bv_collection,
           //Envia versão filtrada do selectedFacets
-          'selected_facets_col1': cleanSelectedFacets(),
+          'selected_facets_col1': AllCleanSelectedFacets(selectedFacets)
+              // {'filtro':cleanSelectedFacets(selectedFacets['filtro'])
+              // ,'wordcloud':cleanSelectedFacets(selectedFacets['wordcloud'])}
       };
 
 

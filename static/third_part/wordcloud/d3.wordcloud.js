@@ -80,11 +80,11 @@
     }
 
     function draw(data, bounds) {
-      // var w = layout.size()[0],
-      //     h = layout.size()[1];
+      var w = layout.size()[0],
+          h = layout.size()[1];
 
-      var w = chartDiv.clientWidth;
-      var h = chartDiv.clientHeight;
+      // var w = chartDiv.clientWidth;
+      // var h = chartDiv.clientHeight;
 
       svg.attr("width", w).attr("height", h);
 
@@ -150,7 +150,7 @@
         // Configurando escala hardcoded na mao.
         // Alterar para ficar dinamico e escalavel de acordo com
         // o resize da tela.
-        scaling = 1.4
+        // scaling = 1.4;
 
       vis.transition()
         .attr("transform", "translate(" + [w >> 1, h >> 1] + ")scale(" + scaling + ")");

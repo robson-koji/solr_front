@@ -26,6 +26,19 @@ $(document).ready(function(){
 
 
     /*
+    * Contrai / expande as sessoes
+    */
+    $('.title-section__icon[data-target*="#graficos_mn"]').on('click', function(){
+      // console.log("\n\n\n\-----------------")
+
+      // recuperaBoxPlotChart()
+
+      // $(this).parent().next().toggle();
+    });
+
+
+
+    /*
     * Nao estah funcionado.
     * Verificar a diferenca entre funil (subcollection) e uma
     * collection principal para apresentar diferentes msgs.
@@ -97,10 +110,6 @@ $(document).ready(function(){
     });
 
 
-
-
-
-
     // Para montagem do graficos stacked bar ao clicar nos radio buttons.
     $("#eixo_y input:radio").click(function() {
       recuperaGraficoDuplo()
@@ -150,8 +159,9 @@ $(document).ready(function(){
     // Limpa o Json de facets que envia para o servidor.
     $('#limpar_facets').click(function(){
       // console.log('limpar_facets')
-      selectedFacets = {}
-      selectedFacets_wc = {}
+      selectedFacets['filtro'] = {}
+      selectedFacets['wordcloud'] = {}
+
       getData()
       $('#filtros_aplicados').hide()
     });
@@ -163,7 +173,7 @@ $(document).ready(function(){
       li_value = $(this).attr('value')
 
       // Remove o elemento clicado do array do Json, cuja chave eh a categoria
-      selectedFacets[ul_value] = $.grep( selectedFacets[ul_value], function( value ) {
+      selectedFacets['filtro'][ul_value] = $.grep( selectedFacets['filtro'][ul_value], function( value ) {
          return value != li_value;
       });
       // Chama funcao que faz chamada Ajax no servidor.
@@ -182,15 +192,15 @@ $(document).ready(function(){
 
         // Se jah existe a chave no json, appenda na lista caso o elemento
         // ainda nao exista na lista.
-        if(selectedFacets.hasOwnProperty(parent)){
-          if (!$.inArray(valor, selectedFacets[parent]) > -1){
-            selectedFacets[parent].push(valor)
+        if(selectedFacets['filtro'].hasOwnProperty(parent)){
+          if (!$.inArray(valor, selectedFacets['filtro'][parent]) > -1){
+            selectedFacets['filtro'][parent].push(valor)
           }
         }
         // Se nao existe a chave no json, cria a chave e inicializa com uma lista
         // e respectivo elemento na lista.
         else{
-          selectedFacets[parent] = [valor]
+          selectedFacets['filtro'][parent] = [valor]
         }
         // Chama funcao que faz chamada Ajax no servidor.
         getData()
@@ -217,7 +227,7 @@ $(document).ready(function(){
         trigger.addClass('is-closed');
         isClosed = false;
       } else {
-        overlay.show();
+        overlay.show();ca
         trigger.removeClass('is-closed');
         trigger.addClass('is-open');
         isClosed = true;
@@ -226,6 +236,7 @@ $(document).ready(function(){
     $('[data-toggle="offcanvas"]').click(function () {
           $('#wrapper').toggleClass('toggled');
     });
+
 });
 
 
@@ -262,6 +273,7 @@ $(window).load(function(){
 
   // stringify necessario, pois dentro da função ocorre um parser
   getData( JSON.stringify(query) )
+
 
 });
 
@@ -311,13 +323,6 @@ var jsonPrettyPrint = {
 $(document).ready(function(){
   $('.dropdown-toggle').dropdown()
 });
-
-
-
-
-
-
-
 
 
 /*
