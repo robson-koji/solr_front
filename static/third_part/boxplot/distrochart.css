@@ -2,11 +2,12 @@
 /*Primary Chart*/
 
 /*Nested divs for responsiveness*/
-.chart-wrapper {
+.chart-wrapper #chart-distro1 {
     max-width: 800px; /*Overwritten by the JS*/
     min-width: 304px;
     margin-bottom: 8px;
     background-color: white;
+    /*position: absolute;*/
 }
 
 .chart-wrapper .inner-wrapper {
@@ -54,7 +55,7 @@
     display: none;
 }
 
-.chart-wrapper div.tooltip {
+.chart-wrapper div.tooltip{
     position: absolute;
     text-align: left;
     padding: 3px;
@@ -133,13 +134,13 @@
     stroke-width: 4px;
 }
 
-/* Non-Chart Styles for demo*/
-.chart-options {
-    padding-left: 25px;
-    min-width: 200px;
-    font-size: 13px;
-    font-family: sans-serif;
-}
+/*!* Non-Chart Styles for demo*!*/
+/*.chart-options {*/
+    /*padding-left: 25px;*/
+    /*min-width: 200px;*/
+    /*font-size: 13px;*/
+    /*font-family: sans-serif;*/
+/*}*/
 
 .chart-options button {
     margin: 3px;

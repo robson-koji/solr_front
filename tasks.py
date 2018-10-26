@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import requests
+import logging
 import pandas
 import uuid
 import csv
@@ -15,6 +16,8 @@ from solr_front import settings_sf
 from django.conf import settings
 # from bv.celery import app
 from celery import shared_task
+
+logger = logging.getLogger(__name__)
 
 
 
@@ -84,6 +87,22 @@ def makeCsv(se, collection, nome, email, para, msg, column_names=''):
     else:
         del data_list[-1]
 
+    if not response.status_code == 200:
+        logger.error("---------------------------\n")
+        logger.error(
+            "Solr HTTP Response ERROR: %s ( %s ). Method: %s" % (response.status_code, response.reason, "tasks.py makeCsv"))
+        logger.error("For HTTP 400 Solr log used to tell what is wrong with the request.")
+        logger.error("Solr URL Error: %s \n" % (solr_url))
+        logger.error("---------------------------\n")
+
+    if '"EXCEPTION":' in response.content:
+        logger.error("---------------------------\n")
+        logger.error(
+            "Solr HTTP Response ERROR: %s. Method: %s" % (response.content, "tasks.py makeCsv"))
+        logger.error("For HTTP 400 Solr log used to tell what is wrong with the request.")
+        logger.error("Solr URL Error: %s \n" % (solr_url))
+        logger.error("---------------------------\n")
+
     # Handle filesystem to store csv file and write de file
     rel_path = os.path.relpath(settings_sf.DOWNLOAD_FILES)
     arquivo_csv = str(uuid.uuid4())+'.csv'
@@ -94,9 +113,10 @@ def makeCsv(se, collection, nome, email, para, msg, column_names=''):
         if column_names:
             csv_file.write(";".join(cn.encode('utf-8') for cn in column_names) + '\n')
         for dl in data_list:
+            # import pdb; pdb.set_trace()
             csv_file.write(dl['csv'].encode('utf-8'))
             csv_file.write('\n')
-
+    
     # Assembly and send email.
     assunto = u'Exportação em Excel (CSV)'
     corpo = nome + u' (' + email + u') ' +u'enviou um arquivo em Excel (CSV) com os resultados de sua pesquisa'+u'.\n\n'

@@ -24,10 +24,10 @@ var default_level_2 = "{{ multilevel_barchart_1.default_level_2 }}"
 
 
     <span class="span_ordena" id="ordena_barchart_ordena" style="margin-left:10px">
-			<button id="ordena_barchart_y_axis" class="btn btn-default" data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Eixo Y crescente" data-original-title="Ordena pelo eixy Y">
+			<button id="ordena_barchart_y_axis" class="btn btn-default" data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Eixo Y crescente" data-original-title="Ordena pelo eixo Y">
 				<i class="glyphicon glyphicon-sort-by-alphabet ordena_barchart_ordena"></i>
 			</button>
-				<button id="ordena_barchart_y_axis-rev" class="btn btn-default" data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Eixo Y descrescente" data-original-title="Ordena pelo eixy Y">
+				<button id="ordena_barchart_y_axis-rev" class="btn btn-default" data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Eixo Y descrescente" data-original-title="Ordena pelo eixo Y">
 					<i class="glyphicon glyphicon-sort-by-alphabet-alt ordena_barchart_ordena"></i>
 				</button>
 				<button id="ordena_barchart_qt" class="btn btn-default"  data-toggle="popover" title="" data-trigger="hover" data-placement="top" data-content="Eixo X crescente" data-original-title="Ordena pelo tamanho das barras">
@@ -389,7 +389,7 @@ function drawStackChart(original_dataset, redraw_legend, y_axis, qt_bar, normali
         .domain([0, xMax])
         .range([0, width]),
     months = dataset[0].map(function (d) {
-        return d.y;
+        return filter_facet_string(d.y);
     }),
     // _ = console.log(months),
 
@@ -416,7 +416,7 @@ function drawStackChart(original_dataset, redraw_legend, y_axis, qt_bar, normali
         return xScale(d.x0);
     })
         .attr('y', function (d, i) {
-        return yScale(d.y);
+        return yScale(filter_facet_string(d.y));
     })
         .attr('height', function (d) {
         return yScale.rangeBand();
@@ -427,6 +427,7 @@ function drawStackChart(original_dataset, redraw_legend, y_axis, qt_bar, normali
         .on('mouseover', function (d) {
         var xPos = parseFloat(d3.select(this).attr('x')) / 2 + width / 2;
         var yPos = parseFloat(d3.select(this).attr('y')) + yScale.rangeBand() / 2;
+
 
         d3.select('#tooltip')
             .style('left', xPos + 'px')
@@ -525,7 +526,7 @@ function drawStackChart(original_dataset, redraw_legend, y_axis, qt_bar, normali
           .attr('fill', 'black')
           .attr('x', 15)
           .attr('y', i * 15 + 15)
-          .text(s);
+          .text(filter_facet_string(s));
           // console.log(s)
       // Cor de fundo da legenda
       group_legend.append('rect')
@@ -560,9 +561,16 @@ function responsivefy(svg) {
 
     // get width of container and resize svg to fit it
     function resize() {
-        var targetWidth = parseInt(container.style("width"));
-        svg.attr("width", targetWidth);
-        svg.attr("height", Math.round(targetWidth / aspect));
+				if (container.style("width").indexOf('%') !== -1){
+					svg.attr("width", '');
+	        svg.attr("height", '');				}
+				else{
+	        var targetWidth = parseInt(container.style("width"));
+	        svg.attr("width", targetWidth);
+	        svg.attr("height", Math.round(targetWidth / aspect));
+				}
     }
+		// debugger;
 }
 </script>
+</div>
