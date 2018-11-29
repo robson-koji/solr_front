@@ -34,7 +34,7 @@ function makeDistroChart(settings) {
         yTicks: 1,
         scale: 'linear',
         // chartSize: {width: 1800, height: 1450},
-        margin: {top: 15, right: 45, bottom: 120, left: 50},
+        margin: {top: 40, right: 45, bottom: 120, left: 80},
         constrainExtremes: false,
         chartAlignment: 'horizontal',
         color: d3.scale.category10()
@@ -428,7 +428,7 @@ function makeDistroChart(settings) {
             .attr("class", "label")
             .attr("transform", "rotate(-90)")
             .attr("y", -70)
-            .attr("x", -chart.height / 2)
+            .attr("x", -chart.height+50 / 2)
             .attr("dy", ".71em")
             .style("text-ancohor", "middle")
             .text(chart.yAxisLable);

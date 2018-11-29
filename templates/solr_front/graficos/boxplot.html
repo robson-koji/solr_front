@@ -75,17 +75,18 @@
     //console.log(parentDiv)
     var margin = {
         top: 12,
-        left: 50,
-        right: 50,
+        left: 80,
+        right: 45,
         bottom: 10
     };
 
 
     function drawBoxPlotChart(data, op1, op2) {
-        var width = parentDiv.clientWidth - margin.left - margin.right;
-        var height = parentDiv.clientHeight - margin.top - margin.bottom;
+        var width = parentDiv.clientWidth - margin.left - margin.right || 1200;
+        var height = parentDiv.clientHeight - margin.top - margin.bottom || 500;
+        console.log(parentDiv.clientWidth,parentDiv.clientHeight);
         var conceptName = $('#nivel_2.boxplot_options').find(":selected").text();
-        $('#chart-distro1').empty().show();
+        $("#chart-distro1").empty().show();
         // d3.csv('/static-files/third_part/boxplot/data.csv', function (error, data) {
         //data.forEach(function (d) {
         //  d.metrics = +d.metrics;
