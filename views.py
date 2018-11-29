@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.views import redirect_to_login
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, HttpResponseServerError
 from django.views.generic.edit import FormView, CreateView, UpdateView
 from django.shortcuts import redirect, render, render_to_response
@@ -35,7 +36,7 @@ from solr_front.models import *
 from solr_front.forms import *
 
 from solr_front import *
-from utils.nested_dict2dict import create_one_dict
+from solr_front.utils.nested_dict2dict import *
 
 from django.contrib.auth.decorators import login_required
 
@@ -143,7 +144,8 @@ class NavigateCollection(View):
             self.vertice_inicial = self.request.session['navigation'].itervalues().next()
 
     def get_navigation_tree(self):
-        """ Retorna arvore de navegacao """
+        """ Retorna arvore de navegacao. Essa estrutura de dados soh pode ser utilizada para apresentacao.
+        Ela eh uma estrutura minima do self.request.session['navigation'] """
 
         request = self.request
         if not 'navigation' in request.session:
@@ -494,7 +496,7 @@ class StreamingExpressions(View):
             raise
 
 
-    def get_gn_search(self, selected_facets):
+    def get_gn_search(self, fq, selected_facets):
         """
         Build the graph search expression.
         gatherNode function as in Solr Streaming Expression.
@@ -510,9 +512,13 @@ class StreamingExpressions(View):
         fl = self.origin_field
         sort = self.origin_field
 
+        fq_string = ''
+        if fq:
+            fq_string = 'fq='+fq+','
+
         selected_facets = selected_facets.replace('"*"', '*')
-        search_se = 'search(%s, qt="/export", q=*:*, fl="%s", sort="%s asc", %s, %s)'
-        search_se = search_se % (self.collection, fl, sort, fq_exclude_parent, selected_facets)
+        search_se = 'search(%s, qt="/export", q=*:*, fl="%s", sort="%s asc", %s %s, %s)'
+        search_se = search_se % (self.collection, fl, sort, fq_string, fq_exclude_parent, selected_facets)
 
         #gather_nodes = 'gatherNodes( %s, %s, walk="numero_processo->projeto_pai", gather="numero_processo")'
         gather_nodes = 'gatherNodes( %s, %s, walk="%s->%s", gather="%s"'
@@ -627,8 +633,11 @@ class SolrQueries(LoginRequiredMixin, View):
             facets = '('
             for item in value:
                 # double quotes bumps Solr.
-                item = item.replace('"', '\\"')
-                facets += '"' + item + '"{}'.format(bo_options)
+                if not isinstance(item, int):
+                    item = item.replace('"', '\\"')
+                    facets += '"' + item + '"{}'.format(bo_options)
+                else:
+                    facets += str(item) +  ' '
 
             facets = facets.rstrip(bo_options)
             se_fq = 'fq=' + key + ':' + facets + '), '
@@ -1785,6 +1794,7 @@ class GatherNodesView(EntryPointView):
     """ Gather graph structure """
 
     def json_response(self):
+
         if 'gather_nodes' in COLLECTIONS[self.collection]['COLLECTION']['omite_secoes']:
             return
 
@@ -1795,8 +1805,9 @@ class GatherNodesView(EntryPointView):
 
 
         try:
-            self.se.get_gn_search(self.selected_facets['selected_facets_se'])
+            self.se.get_gn_search(self.fq, self.selected_facets['selected_facets_se'])
             retorno = self.se.get_gn_totalization()
+
             solr_json = {'content': json.dumps(retorno)}
             solr_json = {'content': retorno, "outcome_type":"table", 'headers':[('level','Nível','','center'), ('fomento_status_facet','Linha de fomento','',''), ('count(*)','Quantidade','number','center'), ('sum(valor_concedido)', 'Valor concedido','currency','right')]}
             return solr_json
@@ -2024,12 +2035,16 @@ class HomeBuscador(LoginRequiredMixin, TemplateView):
 
         template_name = find_template(base_name, folder=kwargs['template'])
         try:
+          if kwargs['template'] in settings_sf.TEMPLATE_AUTHENTHICATION and request.user.is_authenticated():
             return render(request, template_name, {'erro': erro, 'collections': collections, 'template': kwargs[
-                'template']})  # , context_instance=RequestContext(self.request))
+              'template']})
+          elif kwargs['template'] in settings_sf.TEMPLATE_AUTHENTHICATION and not request.user.is_authenticated():
+            return redirect_to_login(request.path)
+          else:
+            return render(request, template_name, {'erro': erro, 'collections': collections, 'template': kwargs[
+              'template']})  # , context_instance=RequestContext(self.request))
         except Exception as e:
-            raise
-            # raise GenericLoggerException(self, e, inspect.stack())
-
+          raise
 
 class HomeCollection(LoginRequiredMixin, TemplateView):
     """
@@ -2192,7 +2207,7 @@ class CleanSession(TemplateView):
             raise GenericLoggerException(self, e, inspect.stack())
 
 
-class ExportDataView(View):
+class ExportDataView(EntryPointView):
     """
     Create Report
     If no join is required due to search on the first level only,
@@ -2201,24 +2216,13 @@ class ExportDataView(View):
     to get de join query from database in order to export data.
     """
 
-    def dispatch(self, request, *args, **kwargs):
-        self.collection = self.kwargs['collection']
-        self.navigate = NavigateCollection(self.request, self.collection)
-        self.vertice = self.navigate.get_vertice(int(self.kwargs['id']))
-        self.solr_queries = SolrQueries(self.collection)
-        return super(ExportDataView, self).dispatch(request, *args, **kwargs)
+    def json_response(self):
+        from urlparse import parse_qs
+        from django.http import QueryDict
 
-    def get(self, request, *args, **kwargs):
-        if not self.vertice['parent_id']:
-            se = self.vertice['initial_search']
-        else:
-            navigation = self.navigate.get_navigation_tree()
-            # Recupera o id do hash_join para pegar no db o hash_join
-            # Com essa streaming expression eh possivel recuperar os dados no Solr.
-            hash_querybuilder = navigation[0]["hash_querybuilder"]
-            se = RelatedCollectionsCheck.objects.get(hash_querybuilder=hash_querybuilder).join
-        # recria form apartir do request
-        form = ExportForm(request.GET)
+        form  = ExportForm(QueryDict(self.body_json['form'].encode('ASCII')))  # Query strings use only ASCII code points so it is safe.
+
+        se = self.se.get_search(self.collection, self.selected_facets['selected_facets_se'])
 
         if form.is_valid():
             # There exists a report field, with all values set.
@@ -2238,7 +2242,8 @@ class ExportDataView(View):
         else:
             data = {'message': 'erro', 'status': 500, 'error': form.errors}
 
-        return JsonResponse(data)
+        return data
+        # return JsonResponse(data)
 
     def dict_values_to_string(self, data):
 
@@ -2323,7 +2328,7 @@ class ExportDataView(View):
             # converte para dataframe
             if settings_sf.USE_CELERY:
                 makeData_celery.delay(data_list, nome, email, para, msg, fields, 'csv', column_names)
-                # makeData_celery(data_list, nome, email, para, msg, fields, 'csv', column_names)
+                #makeData_celery(data_list, nome, email, para, msg, fields, 'csv', column_names)
             else:
                 return HttpResponse('Celery not found. You have to have Celery installed  to use this feature.',
                                     content_type='text/plain')

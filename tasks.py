@@ -116,7 +116,7 @@ def makeCsv(se, collection, nome, email, para, msg, column_names=''):
             # import pdb; pdb.set_trace()
             csv_file.write(dl['csv'].encode('utf-8'))
             csv_file.write('\n')
-    
+
     # Assembly and send email.
     assunto = u'Exportação em Excel (CSV)'
     corpo = nome + u' (' + email + u') ' +u'enviou um arquivo em Excel (CSV) com os resultados de sua pesquisa'+u'.\n\n'
@@ -137,22 +137,20 @@ def makeData(data_list, nome, email, para, msg, fields, formato, column_names):
     # gera nome do arquivo usando uuid
     arquivo_name = str(uuid.uuid4())
 
-    rel_path = os.path.relpath(settings.EXPORTACAO_CSV_PATH, settings.MEDIA_ROOT)
-
+    rel_path = os.path.relpath(settings_sf.DOWNLOAD_FILES)
+    
     if formato == 'json':
         arquivo_name += '.json'
-        data_frame.to_json( os.path.join(settings.EXPORTACAO_CSV_PATH, arquivo_name) )
+        data_frame.to_json( os.path.join(settings_sf.DOWNLOAD_FILES, arquivo_name) )
     elif formato == 'csv':
         arquivo_name += '.csv'
-        data_frame.to_csv( os.path.join(settings.EXPORTACAO_CSV_PATH, arquivo_name), columns=fields, header=column_names, sep=';', encoding='utf-8-sig' , index = False)
+        data_frame.to_csv( os.path.join(settings_sf.DOWNLOAD_FILES, arquivo_name), columns=fields, header=column_names, sep=';', encoding='utf-8-sig' , index = False)
     elif formato  == 'excel':
         arquivo_name += '.xls'
-        data_frame.to_excel( os.path.join(settings.EXPORTACAO_CSV_PATH, arquivo_name),index = False )
+        data_frame.to_excel( os.path.join(settings_sf.DOWNLOAD_FILES, arquivo_name),index = False )
 
-
-
-    url_file = os.path.join(settings.MEDIA_URL,rel_path, arquivo_name)
-    abspath_arquivo = os.path.join(settings.EXPORTACAO_CSV_PATH, arquivo_name)
+    url_file = os.path.join(settings_sf.DOWNLOAD_FILES_URL, arquivo_name)
+    abspath_arquivo = os.path.join(settings_sf.DOWNLOAD_FILES, arquivo_name)
     # send mail
     assunto = u'Exportação em Excel (CSV)'
     corpo = nome + u' (' + email + u') ' +u'enviou um arquivo em Excel (CSV) com os resultados de sua pesquisa'+u'.\n\n'

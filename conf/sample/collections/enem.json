@@ -1,0 +1,116 @@
+{
+  "COLLECTION":{
+        "label": "Enem",
+        "omite_secoes": ["refine", "busca", "documentos", "related_collections", "pivot_table", "wordcloud", "gather_nodes"],
+        "campo_dinamico_busca": "cross_collection_enem"
+  },
+
+  "FACETS":[
+      {"groupBy": {"id": "sobre", "label": "Sobre a pesquisa", "order": 1},
+             "facetGroup": [
+                 {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "ANO_facet", "label": "Ano de pesquisa do Enem"}]}
+             ]},
+
+            {"groupBy": {"id": "ident_inscritos", "label": "Identificação dos inscritos", "order": 2},
+             "facetGroup": [
+               {"label": "", "render": "barChart_1", "facets": [{"chave": "NU_IDADE", "label": "Idade"}]},
+               {"label": "", "render": "halfPieChart", "facets": [{"chave": "TP_SEXO", "label": "Sexo"}]},
+               {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "REGIAO_NASCIMENTO_facet", "label": "Região de Nascimento"}]},
+               {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "REGIAO_RESIDENCIA_facet", "label": "Região de Residencia"}]},
+               {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "TP_COR_RACA", "label": "Cor/Raça"}]},
+               {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "TP_ESTADO_CIVIL", "label": "Estado civil"}]},
+               {"label": "", "render": "halfPieChart",
+                  "facets": [{"chave": "IN_DEFICIENCIA_FISICA", "label": "Deficiencia fisica"}]},
+               {"label": "", "render": "halfPieChart",
+                  "facets": [{"chave": "IN_DEFICIENCIA_MENTAL", "label": "Deficiencia mental"}]}
+             ]},
+
+            {"groupBy": {"id": "ident_prova", "label": "Identificação da prova", "order": 3},
+             "facetGroup": [
+               {"label": "", "render": "barChart_1",
+                  "facets": [{"chave": "REGIAO_PROVA_facet", "label": "Regiao da prova"}]},
+               {"label": "", "render": "halfPieChart",
+                     "facets": [{"chave": "TP_LINGUA", "label": "Idioma selecionado"}]}
+             ]}
+
+    ],
+
+    "OUTCOMES": [
+        {"label": "Total de inscritos", "facet": {"ID": ["*"]}, "docs": {}, "type": ["main"], "order": 1}
+
+    ],
+
+
+  "SANKEY_CHART":{
+      "default_level_1": {"value": "REGIAO_PROVA_facet", "label": "Região da prova"},
+        "default_level_2": {"value": "TP_ESCOLA", "label": "Tipo de Escola"},
+        "default_level_3": {"value": "REGIAO_NASCIMENTO_facet", "label": "Região de Nascimento"},
+        "options": [{"value": "TP_COR_RACA", "label": "Cor/Raça"},
+                    {"value": "REGIAO_NASCIMENTO_facet", "label": "Região de Nascimento"},
+                    {"value": "REGIAO_PROVA_facet", "label": "Região da prova"},
+                    {"value": "TP_ESTADO_CIVIL", "label": "Estado civil"},
+                    {"value": "TP_LINGUA", "label": "Idioma selecionado"},
+                    {"value": "TP_ESCOLA", "label": "Tipo de Escola"},
+                    {"value": "IN_DEFICIENCIA_FISICA", "label": "Deficiencia fisica"},
+                    {"value": "IN_DEFICIENCIA_MENTAL", "label": "Deficiencia mental"}
+
+                  ]
+  },
+
+  "BUBBLE_CHART": {
+    "default_level_1": {"value": "REGIAO_PROVA_facet", "label": "Região da prova"},
+      "default_level_2": {"value": "TP_ESCOLA", "label": "Tipo de Escola"},
+      "default_level_3": {"value": "REGIAO_NASCIMENTO_facet", "label": "Região de Nascimento"},
+      "options": [{"value": "TP_COR_RACA", "label": "Cor/Raça"},
+                  {"value": "REGIAO_NASCIMENTO_facet", "label": "Região de Nascimento"},
+                  {"value": "REGIAO_PROVA_facet", "label": "Região da prova"},
+                  {"value": "TP_ESTADO_CIVIL", "label": "Estado civil"},
+                  {"value": "TP_LINGUA", "label": "Idioma selecionado"},
+                  {"value": "TP_ESCOLA", "label": "Tipo de Escola"}
+
+                ]
+  },
+
+  "BOXPLOT_CHART":{
+        "default_level_1": {"value": "SG_UF_RESIDENCIA", "label": "UF de residencia"},
+        "default_level_2": {"value": "NU_IDADE", "label": "Idade"},
+        "options_x": [
+            {"value": "SG_UF_RESIDENCIA", "label": "UF de residencia"},
+            {"value": "TP_SEXO", "label": "Sexo"},
+            {"value": "TP_LINGUA", "label": "Idioma da prova"}
+        ],
+        "options_y": [
+            {"value": "NU_IDADE", "label": "Idade"},
+            {"value": "NU_NOTA_REDACAO", "label": "Nota Redação"}
+        ]
+  },
+
+    "MULTILEVEL_BARCHART_1":{
+        "default_level_1": "TP_SEXO",
+        "default_level_2": "REGIAO_PROVA_facet",
+        "y_axis": [
+          {"value": "TP_SEXO", "label": "Sexo"},
+          {"value": "REGIAO_PROVA_facet", "label": "Região da prova"},
+          {"value": "REGIAO_NASCIMENTO_facet", "label": "Região de Nascimento"},
+          {"value": "TP_COR_RACA", "label": "Cor/Raça"}
+
+
+        ],
+        "y_stratification": [
+          {"value": "TP_SEXO", "label": "Sexo"},
+          {"value": "TP_COR_RACA", "label": "Cor/Raça"},
+          {"value": "TP_LINGUA", "label": "Idioma selecionado"},
+          {"value": "TP_ESCOLA", "label": "Tipo de Escola"},
+          {"value": "IN_DEFICIENCIA_FISICA", "label": "Deficiencia fisica"},
+          {"value": "IN_DEFICIENCIA_MENTAL", "label": "Deficiencia mental"}
+
+
+
+        ]
+    }
+}

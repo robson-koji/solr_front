@@ -12,7 +12,7 @@ SOLR_URL = ''
 
 DOWNLOAD_FILES = ''
 
-
+TEMPLATE_AUTHENTHICATION = ['proj_aval']
 try:
     from local_settings import *
 except ImportError as e:
