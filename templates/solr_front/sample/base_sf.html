@@ -560,87 +560,110 @@
 
 
 
-					 <!-- modal Exportação csv!-->
-				   <div id="exp_csv" class="modal" data-easein="swoopIn" tabindex="-1" role="dialog" aria-labelledby="'exp_csv_ModalLabel" aria-hidden="false">
-				     <div class="modal-dialog">
-				       <div class="modal-content">
-				         <div class="modal-header">
-				           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				           <h4 class="modal-title" id="exp_csv_ModalLabel">Exportar a pesquisa para Excel</h4>
-				         </div>
-				         <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-									 <style media="screen">
-									 	#form_csv input {
-											width: 100%;
-										}
-										#form_csv textarea {
-										width: 100%;
-									}
-									 </style>
-
-										 <form id="form_csv" >
-											 {{form_csv.as_p}}
-										 </form>
-										 <p  id="msg_log" hidden></p>
-				         </div>
-				         <div class="modal-footer">
-									 <!-- link para fazer a solicitação -->
-											<script type="text/javascript">
-											$("#form_csv").submit(function(e) {
-
-													var url = "{% url 'export_data' collection=collection id=id template=template%}"; // the script where you handle the form input.
-
-													$.ajax({
-																 type: "GET",
-																 url: url,
-																 data: $("#form_csv").serialize(), // serializes the form's elements.
-																 success: function(data)
-																 {
-
-																	 // limpa menssagem de retorno princiapl
-																	 	$('#msg_log').html('')
-																		// limpa mensagens individuais nos campos
-																		$('.msg_error').remove()
 
 
-																		if(data.status == 500){
 
-																			// remove alerta com mensagem de erro
-																			// $('#msg_log').addClass("alert alert-danger")
+				 					 <!-- modal Exportação csv!-->
+				 				   <div id="exp_csv" class="modal" data-easein="swoopIn" tabindex="-1" role="dialog" aria-labelledby="'exp_csv_ModalLabel" aria-hidden="false">
+				 				     <div class="modal-dialog">
+				 				       <div class="modal-content">
+				 				         <div class="modal-header">
+				 				           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				 				           <h4 class="modal-title" id="exp_csv_ModalLabel">Exportar a pesquisa para Excel</h4>
+				 				         </div>
+				 				         <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+				 									 <style media="screen">
+				 									 	#form_csv input {
+				 											width: 100%;
+				 										}
+				 										#form_csv textarea {
+				 										width: 100%;
+				 									}
+				 									 </style>
 
-																			for(erro in data.error){
+				 										 <form id="form_csv" >
+				 											 {{form_csv.as_p}}
+				 										 </form>
+				 										 <p  id="msg_log" hidden></p>
+				 				         </div>
+				 				         <div class="modal-footer">
+				 									 <!-- link para fazer a solicitação -->
+				 											<script type="text/javascript">
+				 											$("#form_csv").submit(function(e) {
+
+				 													var url = "{% url 'export_data' collection=collection id=id template=template%}"; // the script where you handle the form input.
+
+				 													$(this).append('<input type="hidden" name="timestamp" value=' + Date.now() + '>');
 
 
-																				for(var i = 0; i < data.error[erro].length; i++){
-																					var msg = document.createElement('p')
-																					$(msg).addClass('msg_error')
-																					$(msg).css('color','red')
-																				msg.innerHTML = data.error[erro][i]
-																					$('[name="'+erro+'"').after(msg)
-																				}
+				 													var result_cp_gd = getBuscaRealizada({});
+				 													result_cp_gd['form'] = $("#form_csv").serialize()
 
-																			}
-																		}else{
-																			// $('#msg_log').removeClass("alert alert-danger")
-																			$('#msg_log').addClass("alert alert-success")
-																			$('#msg_log').append(data.message)
-																		}
-																		$('#msg_log').show()
-																		 console.log(data)
+				 													$.ajax({
+				 																 type: "POST",
+				 																 url: url,
+				 																 dataType: 'json',
+				 												         headers: {
+				 												             "cache-control": "no-cache",
+				 												             'X-Requested-With': 'XMLHttpRequest',
+				 												             "Content-Type": "application/json; charset=utf-8",
+				 												             "Accept": "application/json",
+				 												             'X-CSRFToken': csrf, //a varivel csrf provem da pagina html
+				 												             'csrfmiddlewaretoken': csrf
+				 												         },
+				 												         data: JSON.stringify(result_cp_gd),
 
-																		 // lima todos os campos
-																		 // $('#form_csv').trigger("reset")
-																 }
-															 });
 
-													e.preventDefault(); // avoid to execute the actual submit of the form.
-												});
-											</script>
-			            <button class="btn btn-default form_facet_submit" id="div_id' + id + '" onclick="$('#form_csv').submit()">Enviar</button>
-				            <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-				         </div>
-							 </div>
-						 </div>
-					 </div>
+				 																 success: function(data)
+				 																 {
+
+				 																	 // limpa menssagem de retorno princiapl
+				 																	 	$('#msg_log').html('')
+				 																		// limpa mensagens individuais nos campos
+				 																		$('.msg_error').remove()
+
+
+				 																		if(data.status == 500){
+
+				 																			// remove alerta com mensagem de erro
+				 																			// $('#msg_log').addClass("alert alert-danger")
+
+				 																			for(erro in data.error){
+
+
+				 																				for(var i = 0; i < data.error[erro].length; i++){
+				 																					var msg = document.createElement('p')
+				 																					$(msg).addClass('msg_error')
+				 																					$(msg).css('color','red')
+				 																				msg.innerHTML = data.error[erro][i]
+				 																					$('[name="'+erro+'"').after(msg)
+				 																				}
+
+				 																			}
+				 																		}else{
+				 																			// $('#msg_log').removeClass("alert alert-danger")
+				 																			$('#msg_log').addClass("alert alert-success")
+				 																			$('#msg_log').append(data.message)
+				 																			$('#send_report').hide()
+				 																		}
+				 																		$('#msg_log').show()
+				 																		 console.log(data)
+
+				 																		 // lima todos os campos
+				 																		 // $('#form_csv').trigger("reset")
+				 																 }
+				 															 });
+
+				 													e.preventDefault(); // avoid to execute the actual submit of the form.
+				 												});
+				 											</script>
+
+				 											<button class="btn btn-success form_facet_submit" id="send_report" onclick="$('#form_csv').submit()">Enviar</button>
+				 											<button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+
+				 				         </div>
+				 							 </div>
+				 						 </div>
+				 					 </div>
 
 </html>
