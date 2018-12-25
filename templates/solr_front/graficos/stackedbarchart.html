@@ -443,18 +443,18 @@ function drawStackChart(original_dataset, redraw_legend, y_axis, qt_bar, normali
 
 
 
-    xAxis = d3.svg.axis()
+    xAxisSolrFrontStackedBarChart = d3.svg.axis()
         .scale(xScale)
         .orient('bottom'),
 
-    yAxis = d3.svg.axis()
+    yAxisSolrFrontStackedBarChart = d3.svg.axis()
         .scale(yScale)
         .orient('left')
         .innerTickSize(-width)
         .outerTickSize(0)
         .tickPadding(10),
 
-    yAxisRight = d3.svg.axis()
+    yAxisRightSolrFrontStackedBarChart = d3.svg.axis()
         .scale(yScale)
         .orient('left')
         .outerTickSize(0),
@@ -462,11 +462,11 @@ function drawStackChart(original_dataset, redraw_legend, y_axis, qt_bar, normali
     svg.append('g')
         .attr('class', 'axis')
         .attr('transform', 'translate(0,' + height + ')')
-        .call(xAxis);
+        .call(xAxisSolrFrontStackedBarChart);
 
     svg.append('g')
         .attr('class', 'axis')
-        .call(yAxis)
+        .call(yAxisSolrFrontStackedBarChart)
         .attr('transform', 'translate(0,' + -9 + ')')
         .selectAll("text")
         .attr("transform", 'translate( 0, 10 )')
@@ -478,7 +478,7 @@ function drawStackChart(original_dataset, redraw_legend, y_axis, qt_bar, normali
 
     svg.append('g')
         .attr('class', 'axis')
-        .call(yAxisRight)
+        .call(yAxisRightSolrFrontStackedBarChart)
         .attr('transform', 'translate(' + width + ',' + -9 + ')')
         .selectAll("text")
         .attr("transform", 'translate( 0, 10 )')

@@ -136,6 +136,7 @@ function getData(busca_realizada_str) {
 
                     getTotalizadores()
                     collectionsRelacionadas()
+
                     if (omite_secoes.indexOf('stackedbarchart') === -1) {
                         recuperaGraficoDuplo(busca_realizada)
                     }
@@ -155,10 +156,16 @@ function getData(busca_realizada_str) {
                         recuperaBoxPlotChart(busca_realizada)
                     }
                     if (omite_secoes.indexOf('gather_nodes') === -1) {
-                        gatherNodes(busca_realizada)
+                      gatherNodes(busca_realizada)
+                      gatherNodesChart(busca_realizada)
                     }
+
+
+
                     $(".group_half_pie_chart").empty()
                     geraCharts(data.facet_counts.hierarquico)
+
+
 
                     //pega e apresenta documentos apartir da pagina 1
                     paginator(1)
@@ -469,6 +476,7 @@ function gatherNodes() {
             xhr['gatherNodes'].abort();
             xhr['gatherNodes'] = null;
     }
+
 
     xhr['gatherNodes'] = $.ajax({
         url: url,
