@@ -103,9 +103,9 @@
 
 
 		<!-- modal animated-->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js" type="text/javascript"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.ui.min.js"></script>
+		<script src='{% static "solr_front/js/external_lib/modernizr.js" %}' type="text/javascript"></script>
+		<script src='{% static "solr_front/js/external_lib/velocity.min.js" %}'></script>
+		<script src='{% static "solr_front/js/external_lib/velocity.ui.min.js" %}'></script>
 		<link rel="stylesheet" href='{% static "solr_front/css/external_lib/modal_animated.css" %}' type="text/css" media="all"/>
 
 
@@ -509,8 +509,8 @@
 		<script src='{% static "solr_front/js/bv_reports.js" %}'></script>
 	  <script src='{% static "solr_front/js/main.js" %}'></script>
 
-		<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+		<link href="{% static "solr_front/css/external_lib/bootstrap-editable.css" %}" rel="stylesheet">
+		<script src='{% static "solr_front/js/external_lib/bootstrap-editable.min.js" %}'></script>
 
 
 		<!-- Para baixar os CSVs dos facets e dos graficos -->

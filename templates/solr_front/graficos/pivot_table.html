@@ -4,9 +4,10 @@
 
 <link href='{% static "solr_front/css/sankey_chart.css" %}' rel="stylesheet">
 <!-- optional: mobile support with jqueryui-touch-punch -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 
- <script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
+<script type="text/javascript" src="{% static "third_part/pivot_table/external_lib/jquery.ui.touch-punch.min.js"%}"></script>
+<script type="text/javascript" src="{% static "third_part/pivot_table/external_lib/plotly-basic-latest.min.js"%}"></script>
+
 
 <link rel="stylesheet" type="text/css" href="{% static "third_part/pivot_table/pivot.css" %}">
 <script type="text/javascript" src="{% static "third_part/pivot_table/pivot.js"%}"></script>
@@ -14,7 +15,7 @@
 <script type="text/javascript" src="{% static "third_part/pivot_table/export_renderers.js"%}"></script>
 <script type="text/javascript" src="{% static "third_part/pivot_table/plotly_renderers.js"%}"></script>
 {% comment %}
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+<script type="text/javascript" src="{% static "third_part/pivot_table/external_lib/papaparse.min.js"%}"></script>
 {% endcomment %}
 
 <script type="text/javascript">
