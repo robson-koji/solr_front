@@ -284,6 +284,8 @@ TableComponent.prototype.template = function () {
                 data_type = this.contexto.headers[j][2]
                 value = check_number_currency(data_type, this.contexto.content[i][id])
 
+                if (j == 0 && value == 'NULL'){ value = -1}
+
                 // Assembly div
                 div_table += '<td ' + td_class + '>' + value + '</td>'
             }

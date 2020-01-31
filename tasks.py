@@ -8,7 +8,7 @@ import csv
 import os
 import tempfile
 from django.core.mail import send_mail
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from solr_front import settings_sf
 
 from django.conf import settings
@@ -158,7 +158,9 @@ def makeData(data_list, nome, email, para, msg, fields, formato, column_names):
             c = 0
             arquivo_name += '.csv'
             with open(os.path.join(settings_sf.DOWNLOAD_FILES, arquivo_name), 'wb') as output_file:
-                print 'Criando CSV'
+                print 'Criando CSV %s em: %s' % (arquivo_name, settings_sf.DOWNLOAD_FILES)
+
+                output_file.write(u'\ufeff'.encode('utf8'))
                 for i in parser:
                     dic_linha = dict(i)
                     if c == 0:
@@ -169,8 +171,9 @@ def makeData(data_list, nome, email, para, msg, fields, formato, column_names):
                     if 'EOF' not in dic_linha.keys():
                         dic_linha_f = {}
                         for k, v in dic_linha.items():
+                            # import pdb; pdb.set_trace()
                             if isinstance(dic_linha[k], list):
-                                dic_linha_f[k] = ''.join(v).encode('utf8')
+                                dic_linha_f[k] = '|'.join(v).encode('utf8')
                             else:
                                 dic_linha_f[k] = ''.join([str(v)]).encode('utf8')
                         dict_writer.writerow(dic_linha_f)
@@ -181,8 +184,7 @@ def makeData(data_list, nome, email, para, msg, fields, formato, column_names):
             raise exc
 
         try:
-            data_list.close()
-            os.remove(data_list.name)
+            os.remove(data_list)
         except:
             pass
 
