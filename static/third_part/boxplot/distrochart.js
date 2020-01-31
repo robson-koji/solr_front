@@ -184,10 +184,20 @@ function makeDistroChart(settings) {
             metrics.quartile3 = values[0].quartile3;
             //metrics.max = values[0].max;
             metrics.iqr = metrics.quartile3 - metrics.quartile1;
-            metrics.lowerInnerFence = metrics.quartile1 - (1.5 * metrics.iqr);
             metrics.upperInnerFence = metrics.quartile3 + (1.5 * metrics.iqr);
-            metrics.lowerOuterFence = metrics.quartile1 - (3 * metrics.iqr);
             metrics.upperOuterFence = metrics.quartile3 + (3 * metrics.iqr);
+
+            metrics.lowerInnerFence = 0
+            metrics.lowerOuterFence = 0
+
+            if (metrics.quartile1 - (1.5 * metrics.iqr) > 0){
+              metrics.lowerInnerFence = metrics.quartile1 - (1.5 * metrics.iqr);
+            }
+            if (metrics.quartile1 - (3 * metrics.iqr) >0){              
+              metrics.lowerOuterFence = metrics.quartile1 - (3 * metrics.iqr);
+            }
+
+
 
 // lower inner fence: Q1 - 1.5*IQ
 // upper inner fence: Q3 + 1.5*IQ

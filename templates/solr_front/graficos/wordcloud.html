@@ -42,6 +42,22 @@
         </select>
     {% endif %}
 
+    <script>
+    {% if wordcloud_chart.nao_rotaciona %}
+      // Para nao rotacionar as palavras.
+      function cloudRotate() {
+          return 0
+      }
+
+    {% else %}
+      function cloudRotate() {
+          return (~~(Math.random() * 6) - 3) * 30;
+      }
+    {% endif %}
+  </script>
+
+
+
 
     <div class="ajax-loaders">
         <img src="{% static 'solr_front/img/ajax-loader.gif' %}" alt=""/>
@@ -59,9 +75,7 @@
     </div>
 
 </div>
-<script>
 
-</script>
 
 </body>
 </html>
