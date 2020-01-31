@@ -157,7 +157,10 @@ function getData(busca_realizada_str) {
                     }
                     if (omite_secoes.indexOf('gather_nodes') === -1) {
                       gatherNodes(busca_realizada)
-                      gatherNodesChart(busca_realizada)
+
+                      // Graficos somente para a BV. Criar uma configuracao no
+                      recuperaGroupedBarChart_BV(busca_realizada)
+                      recuperaBarChartFinanceiro_BV(busca_realizada)
                     }
 
 

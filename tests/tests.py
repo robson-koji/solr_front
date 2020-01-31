@@ -12,7 +12,10 @@ import json
 
 
 class HomePageTestCase(TestCase):
+
     # fixtures = ['geral.json','portal.json']
+    #fixtures = ['portal/fixtures/caixa_pesquisa.json']
+
     def setUp(self):
 
         settings.DEBUG = True
@@ -30,7 +33,10 @@ class HomePageTestCase(TestCase):
 
 
 class FirstLoadTestCase(TestCase):
+
     # fixtures = ['geral.json','portal.json']
+    #fixtures = ['portal/fixtures/caixa_pesquisa.json']
+
     def setUp(self):
         settings.DEBUG = True
         settings.TEST_RUNNER = 'tests.tests_with_no_db.NoDbTestRunner'
@@ -168,7 +174,7 @@ class FirstLoadTestCase(TestCase):
         self.assertEqual( json_data['result'][0]['x_axis'], 'SP')
         self.assertEqual( json_data['result'][0]['y_axis']['count'], 1133824)
 
-        self.assertGreaterEqual( json_data['result'][0]['y_axis']['quartile1'], 17)
+        self.assertGreaterEqual( json_data['result'][0]['y_axis']['quartile1'], 15)
         self.assertLessEqual( json_data['result'][0]['y_axis']['quartile1'], 18)
         self.assertGreaterEqual( json_data['result'][0]['y_axis']['quartile3'],  23)
         self.assertLessEqual( json_data['result'][0]['y_axis']['quartile3'],  24)

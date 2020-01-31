@@ -226,8 +226,7 @@ function recuperaWordCloudChart(busca_realizada_str) {
 }
 
 
-// var nodes = []
-// var link = []
+
 
 function recuperaSankeyChart(busca_realizada_str) {
     // Recupera os valores da busca.

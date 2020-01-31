@@ -3,7 +3,7 @@
 
 templates/solr_front/custom/*
 
-
+static/solr_front/custom
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
